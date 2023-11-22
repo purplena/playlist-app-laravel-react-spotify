@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Upvote extends Model
+class UpvotedSong extends Model
 {
-    use HasFactory;
+  use HasFactory;
 }
