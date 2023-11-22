@@ -15,10 +15,6 @@ return new class extends Migration
       $table->id();
       $table->foreignId('company_id')->constrained();
       $table->foreignId('song_id')->constrained();
-      // $table->unsignedBigInteger('company_id');
-      // $table->unsignedBigInteger('song_id');
-      // $table->foreign('company_id')->references('id')->on('companies');
-      // $table->foreign('song_id')->references('id')->on('songs');
       $table->timestamps();
     });
   }
