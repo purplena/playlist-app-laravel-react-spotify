@@ -13,9 +13,9 @@ class RequestedSong extends Model
 {
   use HasFactory;
 
-  public function upvotedSongs(): HasMany
+  public function upvotes(): HasMany
   {
-    return $this->hasMany(UpvotedSong::class);
+    return $this->hasMany(Upvote::class);
   }
   public function song(): BelongsTo
   {

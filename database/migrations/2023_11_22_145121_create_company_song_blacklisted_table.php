@@ -11,10 +11,10 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('upvotes', function (Blueprint $table) {
+    Schema::create('company_song_blacklisted', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('requested_song_id')->constrained();
-      $table->foreignId('user_id')->constrained();
+      $table->foreignId('company_id')->constrained();
+      $table->foreignId('song_id')->constrained();
       $table->timestamps();
     });
   }
@@ -24,6 +24,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('upvoted_songs');
+    Schema::dropIfExists('company_song_blacklisted');
   }
 };

@@ -11,7 +11,7 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('blacklisted_songs', function (Blueprint $table) {
+    Schema::create('company_song', function (Blueprint $table) {
       $table->id();
       $table->foreignId('company_id')->constrained();
       $table->foreignId('song_id')->constrained();
@@ -24,6 +24,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('blacklisted_songs');
+    Schema::dropIfExists('company_song');
   }
 };
