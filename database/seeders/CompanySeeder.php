@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Song;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -26,10 +27,11 @@ class CompanySeeder extends Seeder
 
     Company::factory()
       ->has(User::factory()->owner())
-      ->count(10)
+      // ->hasAttached(Song::all()->take(5))
+      ->count(2)
       ->create();
-
-    // Company::factory()->count(2)->create();
-    // User::factory()->owner()->create();
   }
+
+  // Company::factory()->count(2)->create();
+  // User::factory()->owner()->create();
 }

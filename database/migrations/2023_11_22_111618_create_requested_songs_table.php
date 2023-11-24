@@ -16,7 +16,6 @@ return new class extends Migration
       $table->foreignId('song_id')->constrained();
       $table->foreignId('user_id')->constrained();
       $table->foreignId('company_id')->constrained();
-      $table->timestamp('played_at');
       $table->timestamps();
     });
   }
