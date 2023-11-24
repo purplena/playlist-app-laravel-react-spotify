@@ -14,11 +14,14 @@ return new class extends Migration
     Schema::create('companies', function (Blueprint $table) {
       $table->id();
       $table->string('name');
+      $table->string('slug');
       $table->string('tel');
       $table->string('zip');
       $table->string('country');
       $table->string('city');
-      $table->string('addresse');
+      $table->string('address');
+      $table->json('spotify_playlist_data');
+      $table->string('qr_code');
       $table->string('logo');
       $table->timestamps();
     });

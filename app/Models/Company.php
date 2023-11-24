@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\BlacklistedSong;
 use App\Models\RequestedSong;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Company extends Model
 {
   use HasFactory;
+
+  protected $casts = [
+    'spotify_playlist_data' => 'array'
+  ];
 
   public function users(): HasMany
   {
@@ -25,7 +28,7 @@ class Company extends Model
 
   public function blacklistedSongs(): BelongsToMany
   {
-    return $this->belongsToMany(Song::class, 'blacklisted_songs', 'company_id', 'song_id');
+    return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id');
   }
 
   public function songs(): BelongsToMany

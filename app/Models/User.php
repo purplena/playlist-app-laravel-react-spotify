@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\RequestedSong;
-use App\Models\UpvotedSong;
+use App\Models\Upvote;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -51,7 +51,6 @@ class User extends Authenticatable
    * @var array<string, string>
    */
   protected $casts = [
-    'email_verified_at' => 'datetime',
     'password' => 'hashed',
   ];
 
@@ -65,8 +64,8 @@ class User extends Authenticatable
     return $this->hasMany(RequestedSong::class);
   }
 
-  public function upvotedSongs(): HasMany
+  public function upvotes(): HasMany
   {
-    return $this->hasMany(UpvotedSong::class);
+    return $this->hasMany(Upvote::class);
   }
 }
