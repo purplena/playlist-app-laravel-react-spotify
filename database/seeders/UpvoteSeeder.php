@@ -11,10 +11,13 @@ class UpvoteSeeder extends Seeder
 {
   public function run(): void
   {
-    for ($i = 0; $i < 20; $i++) {
+    $requestedSongs = RequestedSong::all();
+    $users = User::where('role', 2)->get();
+
+    for ($i = 0; $i < 50; $i++) {
       Upvote::create([
-        'requested_song_id' => RequestedSong::all()->random()->id,
-        'user_id' => User::where('role', 2)->get()->random()->id,
+        'requested_song_id' => $requestedSongs->random()->id,
+        'user_id' => $users->random()->id,
       ]);
     }
   }
