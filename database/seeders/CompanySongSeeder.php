@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Song;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -10,7 +11,7 @@ class CompanySongSeeder extends Seeder
 {
   public function run(): void
   {
-    $songs = DB::table('songs')
+    $songs = Song::query()
       ->select('songs.*')
       ->leftJoin('company_song_blacklisted', 'company_song_blacklisted.song_id', '=', 'songs.id')
       ->whereNull('company_song_blacklisted.song_id')

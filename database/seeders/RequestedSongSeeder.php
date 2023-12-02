@@ -13,7 +13,7 @@ class RequestedSongSeeder extends Seeder
 {
   public function run(): void
   {
-    $songs = DB::table('songs')
+    $songs = Song::query()
       ->select('songs.*')
       ->leftJoin('company_song_blacklisted', 'company_song_blacklisted.song_id', '=', 'songs.id')
       ->whereNull('company_song_blacklisted.song_id')
