@@ -6,18 +6,18 @@ use App\Models\Company;
 use App\Models\RequestedSong;
 use App\Models\Song;
 use App\Models\User;
+use App\Repositories\SongRepository;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class RequestedSongSeeder extends Seeder
 {
+  public function __construct(private SongRepository $songRepository)
+  {
+  }
+
   public function run(): void
   {
-    $songs = Song::query()
-      ->select('songs.*')
-      ->leftJoin('company_song_blacklisted', 'company_song_blacklisted.song_id', '=', 'songs.id')
-      ->whereNull('company_song_blacklisted.song_id')
-      ->get();
+    $songs = $this->songRepository->getNotBlacklistedSongs();
     $users = User::where('role', 2)->get();
     $companies = Company::all();
 
