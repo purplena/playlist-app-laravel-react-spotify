@@ -15,6 +15,7 @@ return new class extends Migration
       $table->id();
       $table->string('spotify_id');
       $table->json('song_data');
+      $table->timestamps();
     });
   }
 

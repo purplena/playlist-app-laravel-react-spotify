@@ -28,11 +28,11 @@ class Company extends Model
 
   public function blacklistedSongs(): BelongsToMany
   {
-    return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id');
+    return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id')->withTimestamps();
   }
 
   public function songs(): BelongsToMany
   {
-    return $this->belongsToMany(Song::class, 'company_song', 'company_id', 'song_id');
+    return $this->belongsToMany(Song::class, 'company_song', 'company_id', 'song_id')->withTimestamps();
   }
 }
