@@ -16,5 +16,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/companies', [CompanyController::class, 'index']);
-Route::get('/companies/{company}', [CompanyController::class, 'show']);
+Route::get('/', fn () => view('home'));

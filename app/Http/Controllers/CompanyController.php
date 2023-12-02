@@ -15,10 +15,6 @@ class CompanyController extends Controller
   public function index()
   {
     $company = Company::all();
-    // 
-    // $response = "test";
-
-    // dd($response);
 
     return CompanyResource::collection($company);
   }
