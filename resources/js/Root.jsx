@@ -1,22 +1,22 @@
 import React from "react";
+import { Box } from "@mui/material";
+import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 
 export default function Root() {
     return (
         <>
-            <nav>
-                <ul>
-                    <li>
-                        <a href="#">Test</a>
-                    </li>
-                    <li>
-                        <a href="#">Test</a>
-                    </li>
-                </ul>
-            </nav>
-            <div id="detail">
+            <Navbar />
+            <Box
+                sx={{
+                    paddingLeft: "1rem",
+                    paddingRight: "1rem",
+                    marginTop: "3rem",
+                }}
+                id="detail"
+            >
                 <Outlet />
-            </div>
+            </Box>
         </>
     );
 }
