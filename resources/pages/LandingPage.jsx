@@ -13,7 +13,7 @@ const LandingPage = () => {
             <Typography variant="h4" component="h1">
                 Êtes-vous prêt à
             </Typography>
-            <Stack direction="column" spacing={1} sx={{ textAlign: "right" }}>
+            <Stack direction="column" spacing={1} textAlign={"right"} >
                 {texts.map((text) => {
                     return (
                         <Typography key={text} variant="h5" component="h2">

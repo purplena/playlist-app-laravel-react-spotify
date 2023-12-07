@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import {Box, Button, Stack, Typography} from "@mui/material";
 import { Link, generatePath } from "react-router-dom";
 
 const Home = () => {
@@ -14,12 +14,9 @@ const Home = () => {
 
     return (
         <>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                }}
+            <Stack
+                direction="column"
+                spacing={2}
             >
                 <Typography variant="h4" component="h1">
                     Profitons de ce moment !
@@ -37,9 +34,12 @@ const Home = () => {
                         </Button>
                     );
                 })}
-            </Box>
-            <Box sx={{ marginTop: "5rem", textAlign: "center" }}>
-                <Link href="#">Se connecter/ S’inscrire</Link>
+            </Stack>
+            <Box
+                mt={10}
+                textAlign={"center"}
+            >
+                <Link to="#">Se connecter/ S’inscrire</Link>
             </Box>
         </>
     );
