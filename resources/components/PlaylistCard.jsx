@@ -11,8 +11,8 @@ const PlaylistCard = ({ requestedSong, index }) => {
             direction="row"
             justifyContent="space-between"
             alignItems="center"
-            padding={"16px"}
-            sx={{ backgroundColor: "#cfff5e" }}
+            padding={2}
+            sx={{ border: "1px solid black" }}
         >
             <Typography variant="body2">#{index + 1}</Typography>
             <Stack direction="row" spacing={2}>

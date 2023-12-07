@@ -7,14 +7,7 @@ export default function Root() {
     return (
         <>
             <Navbar />
-            <Box
-                sx={{
-                    paddingLeft: "1rem",
-                    paddingRight: "1rem",
-                    marginTop: "3rem",
-                }}
-                id="detail"
-            >
+            <Box paddingLeft={2} paddingRight={2} marginTop={6} id="detail">
                 <Outlet />
             </Box>
         </>

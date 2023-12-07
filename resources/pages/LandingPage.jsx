@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 
 const LandingPage = () => {
     const texts = [
@@ -9,25 +9,19 @@ const LandingPage = () => {
     ];
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 4,
-            }}
-        >
+        <Stack direction="column" spacing={5}>
             <Typography variant="h4" component="h1">
                 Êtes-vous prêt à
             </Typography>
-            <Box sx={{ textAlign: "right" }}>
+            <Stack direction="column" spacing={1} sx={{ textAlign: "right" }}>
                 {texts.map((text) => {
                     return (
-                        <Typography key={text} variant="h4" component="h2">
+                        <Typography key={text} variant="h5" component="h2">
                             {text}
                         </Typography>
                     );
                 })}
-            </Box>
+            </Stack>
 
             <Button
                 variant="contained"
@@ -37,7 +31,7 @@ const LandingPage = () => {
             >
                 Continuer
             </Button>
-        </Box>
+        </Stack>
     );
 };
 export default LandingPage;

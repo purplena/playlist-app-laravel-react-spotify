@@ -2,20 +2,19 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PlaylistCard from "../components/PlaylistCard";
+import { apiUrl } from "../js/App";
 
 const RequestedSongs = () => {
     const [requestedSongs, setRequestedSongs] = useState([]);
     const { id } = useParams();
 
     useEffect(() => {
-        fetch(`http://playlist-app.localhost/api/companies/${id}/songs`)
+        fetch(`${apiUrl}/companies/${id}/songs`)
             .then((res) => res.json())
             .then((data) => {
                 setRequestedSongs(data.data);
             });
     }, [id]);
-
-    console.log(requestedSongs);
 
     return (
         <>
@@ -31,13 +30,9 @@ const RequestedSongs = () => {
                 spacing={2}
                 justifyContent="center"
                 alignItems="center"
-                marginTop={"2rem"}
+                mt={4}
             >
-                <Typography
-                    variant="subtitle2"
-                    textAlign={"center"}
-                    marginTop={"16px"}
-                >
+                <Typography variant="subtitle2" textAlign={"center"} mt={21}>
                     Voulez-vous suggérer une chanson?
                 </Typography>
                 <Button
@@ -54,7 +49,7 @@ const RequestedSongs = () => {
                 direction="column"
                 spacing={3}
                 justifyContent="center"
-                mt={"3rem"}
+                mt={6}
             >
                 {requestedSongs.map((requestedSong, index) => {
                     return (
