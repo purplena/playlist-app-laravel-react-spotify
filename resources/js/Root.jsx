@@ -7,7 +7,7 @@ export default function Root() {
     return (
         <>
             <Navbar />
-            <Box paddingLeft={2} paddingRight={2} marginTop={6} id="detail">
+            <Box paddingLeft={2} paddingRight={2} mt={6} id="main-container">
                 <Outlet />
             </Box>
         </>

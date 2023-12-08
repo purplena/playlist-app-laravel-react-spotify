@@ -21,7 +21,7 @@ const RequestedSongs = () => {
             <Typography variant="h4" component="h1" textAlign="center">
                 Créer de l’ambiance musicale
             </Typography>
-            <Typography variant="body1" textAlign="center" marginTop={"1rem"}>
+            <Typography variant="body1" textAlign="center" mt={2}>
                 Chaque jour, nous sélectionnons les 10 chansons les plus votées
                 pour les ajouter à notre playlist
             </Typography>
