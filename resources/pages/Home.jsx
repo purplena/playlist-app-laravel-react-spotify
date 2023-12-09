@@ -4,10 +4,13 @@ import { Link, generatePath } from "react-router-dom";
 
 const Home = () => {
     const menuItems = [
-        { title: "Sugérrez une chanson", href: "#" },
+        {
+            title: "Sugérrez une chanson",
+            href: generatePath("/:id/songs/search", { id: 1 }),
+        },
         {
             title: "Chansons d'aujourd'hui",
-            href: generatePath("/companies/:id/songs", { id: 1 }),
+            href: generatePath("/:id/songs", { id: 1 }),
         },
         { title: "Voir la carte", href: "#" },
     ];

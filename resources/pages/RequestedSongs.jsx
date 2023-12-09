@@ -1,6 +1,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { generatePath, useParams } from "react-router-dom";
 import PlaylistCard from "../components/PlaylistCard";
 import { apiUrl } from "../js/App";
 
@@ -9,7 +9,7 @@ const RequestedSongs = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        fetch(`${apiUrl}/companies/${id}/songs`)
+        fetch(`${apiUrl}/${id}/songs`)
             .then((res) => res.json())
             .then((data) => {
                 setRequestedSongs(data.data);
@@ -39,7 +39,7 @@ const RequestedSongs = () => {
                     variant="contained"
                     disableElevation
                     size="small"
-                    href="#"
+                    href={generatePath("/:id/songs/search", { id: 1 })}
                     sx={{ textTransform: "uppercase" }}
                 >
                     suggérer

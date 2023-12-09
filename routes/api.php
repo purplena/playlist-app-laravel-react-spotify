@@ -23,5 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/companies', [CompanyController::class, 'index']);
 Route::get('/companies/{company}', [CompanyController::class, 'show']);
-Route::get('/companies/{company}/songs', [RequestedSongController::class, 'index']);
-Route::get('/companies/{company}/songs/search', [RequestedSongController::class, 'search']);
+Route::get('/{company}/songs', [RequestedSongController::class, 'index']);
+Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']);

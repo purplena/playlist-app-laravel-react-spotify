@@ -38,7 +38,14 @@ const ButtonAppBar = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Button color="inherit">Login</Button>
+                    <Button
+                        href={generatePath("/:id/login", {
+                            id: 1,
+                        })}
+                        color="inherit"
+                    >
+                        Se connecter
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Menu
@@ -53,22 +60,35 @@ const ButtonAppBar = () => {
             >
                 <Box sx={{ width: "100vw" }}>
                     <MenuItem onClick={handleClose}>
-                        <Link to="/home" underline="none" color="inherit">
-                            Accueil
-                        </Link>
+                        <Link to="/home">Accueil</Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                         <Link
-                            to={generatePath("/companies/:id/songs", {
+                            to={generatePath("/:id/songs", {
                                 id: 1,
                             })}
-                            underline="none"
-                            color="inherit"
                         >
                             Chansons d'aujourd'hui
                         </Link>
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem onClick={handleClose}>
+                        <Link
+                            to={generatePath("/:id/songs/search", {
+                                id: 1,
+                            })}
+                        >
+                            Suggérer une chanson
+                        </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                        <Link
+                            to={generatePath("/:id/login", {
+                                id: 1,
+                            })}
+                        >
+                            Se connecter/ S’inscrire
+                        </Link>
+                    </MenuItem>
                 </Box>
             </Menu>
         </Box>

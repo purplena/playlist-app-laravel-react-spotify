@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\RequestedSong;
 use App\Services\SpotifyApi;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RequestedSongController extends Controller
 {
@@ -18,7 +19,7 @@ class RequestedSongController extends Controller
   /**
    * Display a listing of the resource.
    */
-  public function index(Company $company)
+  public function index(Company $company): JsonResource
   {
     $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
       ->withCount('upvotes')
@@ -29,12 +30,31 @@ class RequestedSongController extends Controller
     return RequestedSongResource::collection($requestedSongs);
   }
 
-  public function search(Request $request): JsonResponse
+  public function search(Request $request)
   {
     // $results = app(SpotifyApi::class)->getClient()->search($request->query('q'), 'track');
     $results = $this->spotifyApi->getClient()->search($request->query('q'), 'track');
 
-    return response()->json($results);
+    return response()->json(RequestedSongController::searchResultsBuilder($results));
+  }
+
+  public static function searchResultsBuilder($results)
+  {
+    $i = 1;
+    foreach ($results->tracks->items as $track) {
+      $newResultsArray[] = [
+        'id' => $i,
+        'spotify_id' => $track->id,
+        'song_data' => [
+          'song_name' => $track->name,
+          'artist_name' => $track->artists[0]->name,
+          'album_cover_img' => $track->album->images[0]->url
+        ]
+      ];
+      $i++;
+    }
+
+    return $newResultsArray;
   }
 
 
