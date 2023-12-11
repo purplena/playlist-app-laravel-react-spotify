@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\CompanyController;
-use App\Models\Company;
 use Illuminate\Support\Facades\Route;
 
 

@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DTO\SongDTO;
+use \Illuminate\Http\JsonResponse;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
+use App\Services\SpotifyApi;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RequestedSongController extends Controller
 {
+  public function __construct(protected SpotifyApi $spotifyApi)
+  {
+  }
 
   /**
    * Display a listing of the resource.
    */
-  public function index(Company $company)
+  public function index(Company $company): JsonResource
   {
     $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
       ->withCount('upvotes')
@@ -22,6 +29,18 @@ class RequestedSongController extends Controller
       ->get();
 
     return RequestedSongResource::collection($requestedSongs);
+  }
+
+  public function search(Request $request): JsonResponse
+  {
+    // $results = app(SpotifyApi::class)->getClient()->search($request->query('q'), 'track');
+    $results = $this->spotifyApi->getClient()->search($request->query('q'), 'track');
+
+    return response()->json(
+      collect($results->tracks->items)->map(function ($track) {
+        return SongDTO::fromObjectToArray($track);
+      })->toArray()
+    );
   }
 
   /**

@@ -1,23 +1,23 @@
 import React from "react";
-import {Box, Button, Stack, Typography} from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { Link, generatePath } from "react-router-dom";
 
 const Home = () => {
     const menuItems = [
-        { title: "Sugérrez une chanson", href: "#" },
+        {
+            title: "Sugérrez une chanson",
+            href: generatePath("/:id/songs/search", { id: 1 }),
+        },
         {
             title: "Chansons d'aujourd'hui",
-            href: generatePath("/companies/:id/songs", { id: 1 }),
+            href: generatePath("/:id/songs", { id: 1 }),
         },
         { title: "Voir la carte", href: "#" },
     ];
 
     return (
         <>
-            <Stack
-                direction="column"
-                spacing={2}
-            >
+            <Stack direction="column" spacing={2}>
                 <Typography variant="h4" component="h1">
                     Profitons de ce moment !
                 </Typography>
@@ -35,10 +35,7 @@ const Home = () => {
                     );
                 })}
             </Stack>
-            <Box
-                mt={10}
-                textAlign={"center"}
-            >
+            <Box mt={10} textAlign={"center"}>
                 <Link to="#">Se connecter/ S’inscrire</Link>
             </Box>
         </>

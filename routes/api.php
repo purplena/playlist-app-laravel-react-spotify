@@ -5,6 +5,7 @@ use App\Http\Controllers\RequestedSongController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,11 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   return $request->user();
 });
-Route::get('/test', function () {
 
-  dd("ok");
-});
 Route::get('/companies', [CompanyController::class, 'index']);
 Route::get('/companies/{company}', [CompanyController::class, 'show']);
-Route::get('/companies/{company}/songs', [RequestedSongController::class, 'index']);
-// Route::get('/companies/1/songs', [RequestedSongController::class, 'index']);
+Route::get('/{company}/songs', [RequestedSongController::class, 'index']);
+Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']);
