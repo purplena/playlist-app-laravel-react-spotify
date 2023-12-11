@@ -23,7 +23,7 @@ function Search() {
                     <Grid container spacing={3}>
                         {searchResults.map((song) => {
                             return (
-                                <Grid item xs={6} key={song.id}>
+                                <Grid item xs={6} key={song.spotify_id}>
                                     <SongSearchCard song={song} />
                                 </Grid>
                             );

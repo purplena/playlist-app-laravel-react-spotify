@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DTO\SongDTO;
 use \Illuminate\Http\JsonResponse;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
@@ -30,33 +31,17 @@ class RequestedSongController extends Controller
     return RequestedSongResource::collection($requestedSongs);
   }
 
-  public function search(Request $request)
+  public function search(Request $request): JsonResponse
   {
     // $results = app(SpotifyApi::class)->getClient()->search($request->query('q'), 'track');
     $results = $this->spotifyApi->getClient()->search($request->query('q'), 'track');
 
-    return response()->json(RequestedSongController::searchResultsBuilder($results));
+    return response()->json(
+      collect($results->tracks->items)->map(function ($track) {
+        return SongDTO::fromObjectToArray($track);
+      })->toArray()
+    );
   }
-
-  public static function searchResultsBuilder($results)
-  {
-    $i = 1;
-    foreach ($results->tracks->items as $track) {
-      $newResultsArray[] = [
-        'id' => $i,
-        'spotify_id' => $track->id,
-        'song_data' => [
-          'song_name' => $track->name,
-          'artist_name' => $track->artists[0]->name,
-          'album_cover_img' => $track->album->images[0]->url
-        ]
-      ];
-      $i++;
-    }
-
-    return $newResultsArray;
-  }
-
 
   /**
    * Store a newly created resource in storage.
