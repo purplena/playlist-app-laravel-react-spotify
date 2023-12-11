@@ -1,6 +1,41 @@
-import { createTheme } from "@mui/material";
+import {createTheme, responsiveFontSizes} from "@mui/material";
 
-const openSans = "Open Sans, sans-serif";
-const russo = "Russo One, sans-serif";
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    // mode: 'dark',
+  },
+  typography: {
+    fontFamily: "Open Sans, sans-serif",
+    h1: {
+      fontFamily: "Russo One, sans-serif",
+      fontSize: "4rem"
+    },
+    h2: {
+      fontFamily: "Russo One, sans-serif",
+    },
+    h3: {
+      fontFamily: "Russo One, sans-serif",
+    },
+    h4: {
+      fontFamily: "Russo One, sans-serif",
+    }
+  },
+  components: {
+    MuiAppBar: {
+      '& .MuiMenu-list' : {
+        padding: 0
+      }
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          fontFamily: "Open Sans, sans-serif",
+        }
+      }
+    }
+  }
+});
 
-export const theme = createTheme();
+export default responsiveFontSizes(theme);

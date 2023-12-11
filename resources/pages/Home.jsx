@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
-import { Link, generatePath } from "react-router-dom";
+import { generatePath } from "react-router-dom";
+import Link from "../components/Link";
 
 const Home = () => {
     const menuItems = [
@@ -18,7 +19,7 @@ const Home = () => {
     return (
         <>
             <Stack direction="column" spacing={2}>
-                <Typography variant="h4" component="h1">
+                <Typography variant="h1" component="h1">
                     Profitons de ce moment !
                 </Typography>
                 {menuItems.map((menuItem) => {

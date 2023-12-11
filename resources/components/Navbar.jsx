@@ -6,7 +6,8 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Menu, MenuItem, Paper } from "@mui/material";
-import { Link, generatePath } from "react-router-dom";
+import { generatePath } from "react-router-dom";
+import Link from "../components/Link";
 
 const ButtonAppBar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -49,13 +50,18 @@ const ButtonAppBar = () => {
                 </Toolbar>
             </AppBar>
             <Menu
-                style={{ top: "10px" }}
+                style={{ top: "10px"}}
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
                 MenuListProps={{
                     "aria-labelledby": "basic-button",
+                }}
+                sx={{
+                    "& .MuiMenu-list": {
+                        padding: 0
+                    }
                 }}
             >
                 <Box sx={{ width: "100vw" }}>
