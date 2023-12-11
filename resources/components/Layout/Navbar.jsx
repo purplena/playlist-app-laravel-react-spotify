@@ -60,7 +60,13 @@ const ButtonAppBar = () => {
             >
                 <Box sx={{ width: "100vw" }}>
                     <MenuItem onClick={handleClose}>
-                        <Link to="/home">Accueil</Link>
+                        <Link
+                            to={generatePath("/:id/home", {
+                                id: 1,
+                            })}
+                        >
+                            Accueil
+                        </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                         <Link

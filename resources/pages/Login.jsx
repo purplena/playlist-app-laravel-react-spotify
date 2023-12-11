@@ -2,9 +2,9 @@ import React from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import LoginSocialMediaIButton from "../components/LoginSocialMediaIButton";
+import LoginSocialMediaIButton from "../components/Button/LoginSocialMediaButton";
 import { Box, Stack, TextField, Typography } from "@mui/material";
-import SignUpButton from "../components/SignUpButton";
+import SignUpButton from "../components/Button/SignUpButton";
 import { generatePath } from "react-router-dom";
 
 const Login = () => {

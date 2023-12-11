@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { generatePath, useParams } from "react-router-dom";
-import PlaylistCard from "../components/PlaylistCard";
+import PlaylistCard from "../components/Playlist/PlaylistCard";
 import { apiUrl } from "../js/App";
 
 const RequestedSongs = () => {

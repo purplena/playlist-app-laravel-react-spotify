@@ -14,15 +14,11 @@ export default function SongSearchCard({ song }) {
                 image={song.song_data.album_cover_img}
             />
             <CardContent>
-                <Typography gutterBottom variant="body1" component="h2">
-                    {song.song_data.song_name.length >= 14
-                        ? song.song_data.song_name.slice(0, 14) + "..."
-                        : song.song_data.song_name}
+                <Typography gutterBottom variant="body1" component="h2" noWrap>
+                    {song.song_data.song_name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {song.song_data.artist_name.length >= 14
-                        ? song.song_data.artist_name.slice(0, 14) + "..."
-                        : song.song_data.artist_name}
+                <Typography variant="body2" color="text.secondary" noWrap>
+                    {song.song_data.artist_name}
                 </Typography>
             </CardContent>
         </Card>

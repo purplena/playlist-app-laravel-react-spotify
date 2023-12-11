@@ -1,60 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { apiUrl } from "../js/App";
-import { useParams } from "react-router-dom";
-import SearchBar from "../components/SearchBar";
+import React from "react";
+import { useSearchSong } from "../hooks/useSearchSong";
+import SearchBar from "../components/Form/SearchBar";
 import { Grid, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import SongSearchCard from "../components/SongSearchCard";
-import { useDebounce } from "@uidotdev/usehooks";
+import SongSearchCard from "../components/Playlist/SongSearchCard";
 
 function Search() {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [searchResults, setSearchResults] = useState([]);
-    const debouncedSearchTerm = useDebounce(searchTerm, 500);
-    const { id } = useParams();
-
-    // const handleSearch = async () => {
-    //     setIsLoading(true);
-    //     const response = await axios.get(`${apiUrl}/${id}/songs/search`, {
-    //         params: {
-    //             q: searchTerm,
-    //         },
-    //     });
-    //     const data = response.data;
-    //     setSearchResults(data);
-    //     setIsLoading(false);
-    // };
-
-    // useEffect(() => {
-    //     setSearchTerm("");
-    // }, [searchResults]);
-
-    const handleInput = (e) => {
-        setSearchResults([]);
-        setSearchTerm(e.target.value);
-    };
-
-    useEffect(() => {
-        const handleSearch = async () => {
-            setIsLoading(true);
-            if (debouncedSearchTerm) {
-                const response = await axios.get(
-                    `${apiUrl}/${id}/songs/search`,
-                    {
-                        params: {
-                            q: searchTerm,
-                        },
-                    }
-                );
-                const data = response.data;
-                setSearchResults(data);
-            }
-            setIsLoading(false);
-        };
-        handleSearch();
-    }, [debouncedSearchTerm]);
+    const { isLoading, searchResults, handleInput } = useSearchSong();
 
     return (
         <>
