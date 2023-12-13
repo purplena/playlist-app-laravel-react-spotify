@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RequestedSongController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -31,3 +33,4 @@ Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']
 Route::post('/user/login', [LoginController::class, 'authenticate']);
 Route::post('/user/logout', [LoginController::class, 'logout']);
 Route::post('/user/me', [LoginController::class, 'me']);
+Route::post('/user/register', [RegisterController::class, 'store']);

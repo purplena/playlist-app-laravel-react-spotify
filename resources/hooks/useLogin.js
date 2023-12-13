@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { useUserStore } from "../js/useUserStore";
 import { apiUrl } from "../js/App";
 
 export const useLogin = () => {
-    const [message, setMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     let navigate = useNavigate();
     const { setUser } = useUserStore();
 
@@ -23,7 +23,7 @@ export const useLogin = () => {
                 .then((response) => {
                     console.log(response.data.user);
                     if (response.data.user) {
-                        setMessage(null);
+                        setErrorMessage(null);
                         setUser(response.data.user);
                         navigate("/");
                     }
@@ -40,7 +40,7 @@ export const useLogin = () => {
     };
 
     return {
-        message,
+        errorMessage,
         login,
     };
 };

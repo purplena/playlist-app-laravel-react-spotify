@@ -8,7 +8,7 @@ import { useLogin } from "../hooks/useLogin";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { message, login } = useLogin();
+    const { errorMessage, login } = useLogin();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -39,7 +39,9 @@ const Login = () => {
                         autoComplete="off"
                         textAlign="center"
                     >
-                        {message && <Alert severity="error">{message}</Alert>}
+                        {errorMessage && (
+                            <Alert severity="error">{errorMessage}</Alert>
+                        )}
                         <TextField
                             style={{ width: "250px" }}
                             id="email"

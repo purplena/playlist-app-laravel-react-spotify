@@ -16,7 +16,6 @@ return new class extends Migration
       $table->string('email')->unique();
       $table->string('password');
       $table->string('username')->nullable();
-      $table->string('img_path')->nullable();
       $table->integer('role');
       $table->foreignId('company_id')->nullable()->constrained();
       $table->rememberToken();

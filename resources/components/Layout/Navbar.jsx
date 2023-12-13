@@ -5,8 +5,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Menu, MenuItem } from "@mui/material";
-import { Link, generatePath } from "react-router-dom";
+import { Link, Menu, MenuItem } from "@mui/material";
+import { generatePath } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 
 const ButtonAppBar = () => {
@@ -66,7 +66,8 @@ const ButtonAppBar = () => {
                 <Box sx={{ width: "100vw" }}>
                     <MenuItem onClick={handleClose}>
                         <Link
-                            to={generatePath("/:id/home", {
+                            underline="none"
+                            href={generatePath("/:id/home", {
                                 id: 1,
                             })}
                         >
@@ -75,7 +76,8 @@ const ButtonAppBar = () => {
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                         <Link
-                            to={generatePath("/:id/songs", {
+                            underline="none"
+                            href={generatePath("/:id/songs", {
                                 id: 1,
                             })}
                         >
@@ -84,7 +86,8 @@ const ButtonAppBar = () => {
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                         <Link
-                            to={generatePath("/:id/songs/search", {
+                            underline="none"
+                            href={generatePath("/:id/songs/search", {
                                 id: 1,
                             })}
                         >
@@ -93,9 +96,14 @@ const ButtonAppBar = () => {
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                         {user ? (
-                            <Link onClick={handleLogout}>Se deconnecter</Link>
+                            <Link underline="none" onClick={handleLogout}>
+                                Se deconnecter
+                            </Link>
                         ) : (
-                            <Link to={generatePath("/login")}>
+                            <Link
+                                underline="none"
+                                href={generatePath("/login")}
+                            >
                                 Se connecter/ S’inscrire
                             </Link>
                         )}
