@@ -6,7 +6,6 @@ import { apiUrl } from "../js/App";
 export const useLogin = () => {
     const [message, setMessage] = useState("");
     let navigate = useNavigate();
-    const { id } = useParams();
     const { setUser } = useUserStore();
 
     const login = async (email, password) => {
@@ -18,7 +17,7 @@ export const useLogin = () => {
                 password,
             };
             axios
-                .post(`${apiUrl}/${id}/user/login`, payload, {
+                .post(`${apiUrl}/user/login`, payload, {
                     headers: { Accept: "application/json" },
                 })
                 .then((response) => {

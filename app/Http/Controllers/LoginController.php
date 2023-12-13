@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\AuthenticateUserRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
 
 class LoginController extends Controller
 {
@@ -24,13 +25,9 @@ class LoginController extends Controller
   /**
    * Store a newly created resource in storage.
    */
-  public function authenticate(Request $request)
+  public function authenticate(AuthenticateUserRequest $request): JsonResponse
   {
-
-    $credentials = $request->validate([
-      'email' => ['required', 'email'],
-      'password' => ['required'],
-    ]);
+    $credentials = $request->validated();
 
     if (Auth::attempt($credentials)) {
       $request->session()->regenerate();
@@ -44,7 +41,7 @@ class LoginController extends Controller
     return response()->json(['status' => false], HttpResponse::HTTP_BAD_REQUEST);
   }
 
-  public function logout(Request $request)
+  public function logout(Request $request): JsonResponse
   {
     auth()->logout();
     $request->session()->invalidate();
@@ -77,7 +74,7 @@ class LoginController extends Controller
     //
   }
 
-  public function me()
+  public function me(): JsonResponse
   {
     return response()->json(['status' => true, 'user' => auth()->user()]);
   }

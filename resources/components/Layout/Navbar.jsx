@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,17 +6,13 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Menu, MenuItem } from "@mui/material";
-import { Link, generatePath, useParams, useNavigate } from "react-router-dom";
-import { apiUrl } from "../../js/App";
-import { useUserStore } from "../../js/useUserStore";
+import { Link, generatePath } from "react-router-dom";
+import { useLogout } from "../../hooks/useLogout";
 
 const ButtonAppBar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const { id } = useParams();
     const open = Boolean(anchorEl);
-    let navigate = useNavigate();
-
-    const { user, setUser } = useUserStore();
+    const { user, handleLogout } = useLogout();
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -24,19 +20,6 @@ const ButtonAppBar = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const handleLogout = () => {
-        axios
-            .post(`${apiUrl}/${id}/user/logout`)
-            .then((response) => {
-                setUser(null);
-                console.log(user);
-                navigate("/");
-            })
-            .catch((err) => {
-                console.log(err);
-            });
     };
 
     return (
@@ -64,12 +47,7 @@ const ButtonAppBar = () => {
                             Se deconnecter
                         </Button>
                     ) : (
-                        <Button
-                            href={generatePath("/:id/login", {
-                                id: 1,
-                            })}
-                            color="inherit"
-                        >
+                        <Button href={generatePath("/login")} color="inherit">
                             Se connecter
                         </Button>
                     )}
@@ -117,11 +95,7 @@ const ButtonAppBar = () => {
                         {user ? (
                             <Link onClick={handleLogout}>Se deconnecter</Link>
                         ) : (
-                            <Link
-                                to={generatePath("/:id/login", {
-                                    id: 1,
-                                })}
-                            >
+                            <Link to={generatePath("/login")}>
                                 Se connecter/ S’inscrire
                             </Link>
                         )}

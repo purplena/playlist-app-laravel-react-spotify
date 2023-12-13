@@ -1,20 +1,11 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import Navbar from "../components/Layout/Navbar";
-import { Outlet, useParams } from "react-router-dom";
-import { useUserStore } from "./useUserStore";
-import { apiUrl } from "./App";
+import { Outlet } from "react-router-dom";
+import { useMe } from "../hooks/useMe";
 
 export default function Root() {
-    const { setUser } = useUserStore();
-    const { id } = useParams();
-
-    useEffect(() => {
-        axios.post(`${apiUrl}/${id}/user/me`).then((response) => {
-            setUser(response.data.user);
-            console.log(response.data.user);
-        });
-    }, []);
+    useMe();
 
     return (
         <>

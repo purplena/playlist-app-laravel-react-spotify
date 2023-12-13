@@ -30,11 +30,11 @@ export const router = createBrowserRouter([
                 element: <SearchSong />,
             },
             {
-                path: "/:id/login",
+                path: "/login",
                 element: <Login />,
             },
             {
-                path: "/:id/signup",
+                path: "/signup",
                 element: <SignUp />,
             },
         ],

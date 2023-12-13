@@ -10,7 +10,8 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const { message, login } = useLogin();
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        e.preventDefault();
         login(email, password);
     };
 
@@ -27,19 +28,20 @@ const Login = () => {
                     <Typography variant="h6" component="h1" textAlign="center">
                         Vous avez un mot de passe? Continuez avec votre email
                     </Typography>
-                    {message && <Alert severity="error">{message}</Alert>}
                     <Stack
-                        direction="row"
+                        onSubmit={handleLogin}
+                        component="form"
+                        direction="column"
                         alignItems="center"
                         justifyContent="center"
-                        sx={{
-                            "& > :not(style)": { m: 1, width: "25ch" },
-                        }}
+                        spacing={2}
                         noValidate
                         autoComplete="off"
                         textAlign="center"
                     >
+                        {message && <Alert severity="error">{message}</Alert>}
                         <TextField
+                            style={{ width: "250px" }}
                             id="email"
                             label="Email"
                             variant="standard"
@@ -47,6 +49,7 @@ const Login = () => {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                         <TextField
+                            style={{ width: "250px" }}
                             id="password"
                             label="Mot de pass"
                             type="password"
@@ -54,7 +57,7 @@ const Login = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <Button variant="outlined" onClick={handleLogin}>
+                        <Button type="submit" variant="outlined">
                             Se connecter
                         </Button>
                     </Stack>
@@ -67,11 +70,7 @@ const Login = () => {
                     >
                         Pas de compte? Inscrivez-vous s'il vous plaît
                     </Typography>
-                    <SignUpButton
-                        path={generatePath("/:id/signup", {
-                            id: 1,
-                        })}
-                    />
+                    <SignUpButton path={generatePath("/signup")} />
                 </Stack>
             </Stack>
         </>
