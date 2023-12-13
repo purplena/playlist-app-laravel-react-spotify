@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException as ValidationValidationException;
+use Illuminate\Support\Facades\Response;
 
 class LoginController extends Controller
 {
@@ -41,14 +41,7 @@ class LoginController extends Controller
       ]);
     }
 
-    // if ($validator->fails()) {
-    //   return response()->json(['status' => false, 'message' => 'fix errors', 'errors' => $validator->errors()], 500);
-    // }
-    // $credentials = $request->only('email', 'password');
-    // if (auth()->attempt($credentials, $request->filled('remember'))) {
-    //   return response()->json(['status' => true, 'user' => auth()->user()]);
-    // }
-    return response()->json(['status' => false, 'message' => 'invalid username or password'], 500);
+    return response()->json(['status' => false], HttpResponse::HTTP_BAD_REQUEST);
   }
 
   public function logout(Request $request)

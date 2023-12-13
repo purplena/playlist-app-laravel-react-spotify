@@ -1,42 +1,17 @@
 import React, { useState } from "react";
-import { Stack, TextField, Typography, Button } from "@mui/material";
+import { Stack, TextField, Typography, Button, Alert } from "@mui/material";
 import SignUpButton from "../components/Button/SignUpButton";
-import { generatePath, useParams, useNavigate } from "react-router-dom";
-import { apiUrl } from "../js/App";
-import { useUserStore } from "../js/useUserStore";
+import { generatePath } from "react-router-dom";
 import SocialMediaIconsColumn from "../components/Layout/SocialMediaIconsColumn";
+import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { id } = useParams();
-    let navigate = useNavigate();
-    const { setUser, user } = useUserStore();
+    const { message, login } = useLogin();
 
     const handleLogin = async () => {
-        // make request first to sanctum/csrf-cookie endpoint
-        //to initialize CSRF protection for the application
-        axios.get("/sanctum/csrf-cookie").then(() => {
-            const payload = {
-                email,
-                password,
-            };
-            axios
-                .post(`${apiUrl}/${id}/user/login`, payload, {
-                    headers: { Accept: "application/json" },
-                })
-                .then((response) => {
-                    console.log(response.data.user);
-                    if (response.data.user) {
-                        alert("Login success");
-                        setUser(response.data.user);
-                        navigate("/");
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        });
+        login(email, password);
     };
 
     return (
@@ -52,6 +27,7 @@ const Login = () => {
                     <Typography variant="h6" component="h1" textAlign="center">
                         Vous avez un mot de passe? Continuez avec votre email
                     </Typography>
+                    {message && <Alert severity="error">{message}</Alert>}
                     <Stack
                         direction="row"
                         alignItems="center"
@@ -73,6 +49,7 @@ const Login = () => {
                         <TextField
                             id="password"
                             label="Mot de pass"
+                            type="password"
                             variant="standard"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
