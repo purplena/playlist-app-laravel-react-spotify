@@ -1,41 +1,48 @@
-import React from "react";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import LoginSocialMediaIButton from "../components/Button/LoginSocialMediaButton";
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Stack, TextField, Typography, Button } from "@mui/material";
 import SignUpButton from "../components/Button/SignUpButton";
-import { generatePath } from "react-router-dom";
+import { generatePath, useParams, useNavigate } from "react-router-dom";
+import { apiUrl } from "../js/App";
+import { useUserStore } from "../js/useUserStore";
+import SocialMediaIconsColumn from "../components/Layout/SocialMediaIconsColumn";
 
 const Login = () => {
-    const buttons = [
-        {
-            icon: <GoogleIcon />,
-            mediaName: "GOOGLE",
-        },
-        {
-            icon: <FacebookIcon />,
-            mediaName: "FACEBOOK",
-        },
-        {
-            icon: <TwitterIcon />,
-            mediaName: "TWITTER",
-        },
-    ];
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const { id } = useParams();
+    let navigate = useNavigate();
+    const { setUser, user } = useUserStore();
+
+    const handleLogin = async () => {
+        // make request first to sanctum/csrf-cookie endpoint
+        //to initialize CSRF protection for the application
+        axios.get("/sanctum/csrf-cookie").then(() => {
+            const payload = {
+                email,
+                password,
+            };
+            axios
+                .post(`${apiUrl}/${id}/user/login`, payload, {
+                    headers: { Accept: "application/json" },
+                })
+                .then((response) => {
+                    console.log(response.data.user);
+                    if (response.data.user) {
+                        alert("Login success");
+                        setUser(response.data.user);
+                        navigate("/");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        });
+    };
 
     return (
         <>
             <Stack direction="column" spacing={8}>
-                <Stack direction="column" spacing={2}>
-                    {buttons.map((button) => {
-                        return (
-                            <LoginSocialMediaIButton
-                                key={button.mediaName}
-                                {...button}
-                            />
-                        );
-                    })}
-                </Stack>
+                <SocialMediaIconsColumn />
                 <Stack
                     direction="column"
                     spacing={2}
@@ -45,8 +52,10 @@ const Login = () => {
                     <Typography variant="h6" component="h1" textAlign="center">
                         Vous avez un mot de passe? Continuez avec votre email
                     </Typography>
-                    <Box
-                        component="form"
+                    <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="center"
                         sx={{
                             "& > :not(style)": { m: 1, width: "25ch" },
                         }}
@@ -58,13 +67,20 @@ const Login = () => {
                             id="email"
                             label="Email"
                             variant="standard"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <TextField
                             id="password"
                             label="Mot de pass"
                             variant="standard"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
-                    </Box>
+                        <Button variant="outlined" onClick={handleLogin}>
+                            Se connecter
+                        </Button>
+                    </Stack>
                 </Stack>
                 <Stack direction="column" spacing={2}>
                     <Typography

@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RequestedSongController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -25,3 +28,6 @@ Route::get('/companies', [CompanyController::class, 'index']);
 Route::get('/companies/{company}', [CompanyController::class, 'show']);
 Route::get('/{company}/songs', [RequestedSongController::class, 'index']);
 Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']);
+Route::post('/{company}/user/login', [LoginController::class, 'authenticate']);
+Route::post('/{company}/user/logout', [LoginController::class, 'logout']);
+Route::post('/{company}/user/me', [LoginController::class, 'me']);

@@ -12,8 +12,8 @@ const SignUp = () => {
     const [username, setUsername] = useState(null);
     const { id } = useParams();
 
-    const handleSubmit = async () => {
-        // e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
         const response = await axios.post(`${apiUrl}/${id}/store`, {
             email,
@@ -57,12 +57,14 @@ const SignUp = () => {
                         id="email"
                         label="Email"
                         variant="standard"
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
                         id="password"
                         label="Mot de pass"
                         variant="standard"
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <TextField
@@ -70,6 +72,7 @@ const SignUp = () => {
                         label="Nom d'utilisateur"
                         variant="standard"
                         helperText="optionel"
+                        value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <SignUpButton
