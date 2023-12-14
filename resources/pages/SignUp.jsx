@@ -1,29 +1,19 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { apiUrl } from "../js/App";
-import { Stack, TextField, Typography } from "@mui/material";
-import { generatePath } from "react-router-dom";
-import SignUpButton from "../components/Button/SignUpButton";
-import { useParams } from "react-router-dom";
+import { Button, Stack, TextField, Typography } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import { useSignUp } from "../hooks/useSignUp";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [username, setUsername] = useState(null);
-    const { id } = useParams();
+    const [username, setUsername] = useState("");
+    // const { signup, renderFieldError } = useSignUp();
+    const { signup, errors } = useSignUp();
 
-    const handleSubmit = async () => {
-        // e.preventDefault();
-
-        const response = await axios.post(`${apiUrl}/${id}/store`, {
-            email,
-            password,
-            username,
-        });
-        return response.data;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        signup(email, password, username);
     };
-
-    // handleSubmit();
 
     return (
         <>
@@ -41,42 +31,56 @@ const SignUp = () => {
                 </Typography>
                 <Stack
                     component="form"
-                    sx={{
-                        "& > :not(style)": { m: 1, width: "25ch" },
-                    }}
+                    spacing={2}
                     noValidate
                     autoComplete="off"
                     textAlign="center"
                     direction="column"
                     justifyContent="center"
                     alignItems="center"
-                    spacing={4}
                     onSubmit={handleSubmit}
                 >
                     <TextField
+                        error={errors ? true : false}
+                        style={{ width: "250px" }}
                         id="email"
-                        label="Email"
+                        label={errors ? "Error" : "Email"}
                         variant="standard"
+                        value={email}
+                        helperText={errors?.email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
+                        error={errors ? true : false}
+                        style={{ width: "250px" }}
                         id="password"
-                        label="Mot de pass"
+                        label={errors ? "Error" : "Mot de passe"}
+                        type="password"
                         variant="standard"
+                        value={password}
+                        helperText={errors?.password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <TextField
+                        error={errors?.username ? true : false}
+                        style={{ width: "250px" }}
                         id="username"
-                        label="Nom d'utilisateur"
+                        label={errors?.username ? "Error" : "Username"}
                         variant="standard"
-                        helperText="optionel"
+                        value={username}
+                        helperText={
+                            errors?.username ? errors?.username : "optionel"
+                        }
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <SignUpButton
-                        path={generatePath("/:id/store", {
-                            id: 1,
-                        })}
-                    />
+
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        endIcon={<SendIcon />}
+                    >
+                        S’inscrire
+                    </Button>
                 </Stack>
             </Stack>
         </>

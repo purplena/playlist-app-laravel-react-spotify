@@ -1,41 +1,26 @@
-import React from "react";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import LoginSocialMediaIButton from "../components/Button/LoginSocialMediaButton";
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Stack, TextField, Typography, Button, Alert } from "@mui/material";
 import SignUpButton from "../components/Button/SignUpButton";
 import { generatePath } from "react-router-dom";
+import SocialMediaIconsColumn from "../components/Layout/SocialMediaIconsColumn";
+import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
-    const buttons = [
-        {
-            icon: <GoogleIcon />,
-            mediaName: "GOOGLE",
-        },
-        {
-            icon: <FacebookIcon />,
-            mediaName: "FACEBOOK",
-        },
-        {
-            icon: <TwitterIcon />,
-            mediaName: "TWITTER",
-        },
-    ];
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const { errors, login } = useLogin();
+
+    console.log(errors);
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        login(email, password);
+    };
 
     return (
         <>
             <Stack direction="column" spacing={8}>
-                <Stack direction="column" spacing={2}>
-                    {buttons.map((button) => {
-                        return (
-                            <LoginSocialMediaIButton
-                                key={button.mediaName}
-                                {...button}
-                            />
-                        );
-                    })}
-                </Stack>
+                <SocialMediaIconsColumn />
                 <Stack
                     direction="column"
                     spacing={2}
@@ -45,26 +30,46 @@ const Login = () => {
                     <Typography variant="h6" component="h1" textAlign="center">
                         Vous avez un mot de passe? Continuez avec votre email
                     </Typography>
-                    <Box
+                    <Stack
+                        onSubmit={handleLogin}
                         component="form"
-                        sx={{
-                            "& > :not(style)": { m: 1, width: "25ch" },
-                        }}
+                        direction="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        spacing={2}
                         noValidate
                         autoComplete="off"
                         textAlign="center"
                     >
+                        {errors?.loginError && (
+                            <Alert severity="error">{errors.loginError}</Alert>
+                        )}
+
                         <TextField
+                            error={errors ? true : false}
+                            style={{ width: "250px" }}
                             id="email"
-                            label="Email"
+                            label={errors ? "Error" : "Email"}
                             variant="standard"
+                            value={email}
+                            helperText={errors?.email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <TextField
+                            error={errors ? true : false}
+                            style={{ width: "250px" }}
                             id="password"
-                            label="Mot de pass"
+                            label={errors ? "Error" : "Mot de passe"}
+                            type="password"
                             variant="standard"
+                            value={password}
+                            helperText={errors?.password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
-                    </Box>
+                        <Button type="submit" variant="outlined">
+                            Se connecter
+                        </Button>
+                    </Stack>
                 </Stack>
                 <Stack direction="column" spacing={2}>
                     <Typography
@@ -74,11 +79,7 @@ const Login = () => {
                     >
                         Pas de compte? Inscrivez-vous s'il vous plaît
                     </Typography>
-                    <SignUpButton
-                        path={generatePath("/:id/signup", {
-                            id: 1,
-                        })}
-                    />
+                    <SignUpButton path={generatePath("/signup")} />
                 </Stack>
             </Stack>
         </>

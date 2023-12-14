@@ -36,7 +36,9 @@ const Home = () => {
                 })}
             </Stack>
             <Box mt={10} textAlign={"center"}>
-                <Link to="#">Se connecter/ S’inscrire</Link>
+                <Link to={generatePath("/login")}>
+                    Se connecter/ S’inscrire
+                </Link>
             </Box>
         </>
     );
