@@ -8,7 +8,7 @@ import { useLogin } from "../hooks/useLogin";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { errorMessage, login } = useLogin();
+    const { renderFieldError, login } = useLogin();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -39,9 +39,8 @@ const Login = () => {
                         autoComplete="off"
                         textAlign="center"
                     >
-                        {errorMessage && (
-                            <Alert severity="error">{errorMessage}</Alert>
-                        )}
+                        {renderFieldError("loginError")}
+                        {renderFieldError("email")}
                         <TextField
                             style={{ width: "250px" }}
                             id="email"
@@ -50,10 +49,11 @@ const Login = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
+                        {renderFieldError("password")}
                         <TextField
                             style={{ width: "250px" }}
                             id="password"
-                            label="Mot de pass"
+                            label="Mot de passe"
                             type="password"
                             variant="standard"
                             value={password}

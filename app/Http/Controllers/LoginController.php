@@ -12,17 +12,6 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
   /**
-   * Display a listing of the resource.
-   */
-
-
-
-  public function index(Request $request)
-  {
-    //
-  }
-
-  /**
    * Store a newly created resource in storage.
    */
   public function authenticate(AuthenticateUserRequest $request): JsonResponse
@@ -38,7 +27,10 @@ class LoginController extends Controller
       ]);
     }
 
-    return response()->json(['status' => false], HttpResponse::HTTP_BAD_REQUEST);
+    return response()->json([
+      'status' => false,
+      'message' => __('auth.failed')
+    ], HttpResponse::HTTP_BAD_REQUEST);
   }
 
   public function logout(Request $request): JsonResponse
@@ -47,31 +39,6 @@ class LoginController extends Controller
     $request->session()->invalidate();
     $request->session()->regenerateToken();
     return response()->json(['status' => true, 'message' => 'logged out']);
-  }
-
-
-  /**
-   * Display the specified resource.
-   */
-  public function show(string $id)
-  {
-    //
-  }
-
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, string $id)
-  {
-    //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(string $id)
-  {
-    //
   }
 
   public function me(): JsonResponse

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 export const useForm = () => {
     const [errors, setErrors] = useState(null);
-    const [message, setMessage] = useState("");
 
     function renderFieldError(field) {
         if (errors && errors.hasOwnProperty(field)) {
@@ -16,8 +15,6 @@ export const useForm = () => {
     return {
         errors,
         setErrors,
-        message,
-        setMessage,
         renderFieldError,
     };
 };

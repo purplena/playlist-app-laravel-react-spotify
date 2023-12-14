@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useUserStore } from "../js/useUserStore";
 import { apiUrl } from "../js/App";
+import { useForm } from "./useForm";
 
 export const useLogin = () => {
-    const [errorMessage, setErrorMessage] = useState("");
     let navigate = useNavigate();
     const { setUser } = useUserStore();
+    const { setErrors, renderFieldError } = useForm();
 
     const login = async (email, password) => {
         // make request first to sanctum/csrf-cookie endpoint
@@ -23,24 +23,28 @@ export const useLogin = () => {
                 .then((response) => {
                     console.log(response.data.user);
                     if (response.data.user) {
-                        setErrorMessage(null);
                         setUser(response.data.user);
                         navigate("/");
                     }
                 })
                 .catch((error) => {
-                    console.log(error);
-                    if (error.response) {
-                        if (!error.response.data.status) {
-                            setMessage("Email et/ou mot de passe incorrect(s)");
-                        }
+                    if (!error.response?.data?.status) {
+                        setErrors({
+                            loginError: [error.response.data.message],
+                        });
+                    }
+                    if (
+                        error.response.data.email ||
+                        error.response.data.password
+                    ) {
+                        setErrors(error.response.data);
                     }
                 });
         });
     };
 
     return {
-        errorMessage,
         login,
+        renderFieldError,
     };
 };
