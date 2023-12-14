@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router";
 import { useUserStore } from "../js/useUserStore";
 import { apiUrl } from "../js/App";
-import { useForm } from "./useForm";
+import { useState } from "react";
+// import { useForm } from "./useForm";
 
 export const useLogin = () => {
     let navigate = useNavigate();
     const { setUser } = useUserStore();
-    const { setErrors, renderFieldError } = useForm();
+    const [errors, setErrors] = useState(null);
+    // const { setErrors, renderFieldError, errors } = useForm();
 
     const login = async (email, password) => {
         // make request first to sanctum/csrf-cookie endpoint
@@ -45,6 +47,7 @@ export const useLogin = () => {
 
     return {
         login,
-        renderFieldError,
+        // renderFieldError,
+        errors,
     };
 };

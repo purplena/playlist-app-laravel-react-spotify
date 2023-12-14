@@ -8,7 +8,9 @@ import { useLogin } from "../hooks/useLogin";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { renderFieldError, login } = useLogin();
+    const { errors, login } = useLogin();
+
+    console.log(errors);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -39,24 +41,29 @@ const Login = () => {
                         autoComplete="off"
                         textAlign="center"
                     >
-                        {renderFieldError("loginError")}
-                        {renderFieldError("email")}
+                        {errors?.loginError && (
+                            <Alert severity="error">{errors.loginError}</Alert>
+                        )}
+
                         <TextField
+                            error={errors ? true : false}
                             style={{ width: "250px" }}
                             id="email"
-                            label="Email"
+                            label={errors ? "Error" : "Email"}
                             variant="standard"
                             value={email}
+                            helperText={errors?.email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        {renderFieldError("password")}
                         <TextField
+                            error={errors ? true : false}
                             style={{ width: "250px" }}
                             id="password"
-                            label="Mot de passe"
+                            label={errors ? "Error" : "Mot de passe"}
                             type="password"
                             variant="standard"
                             value={password}
+                            helperText={errors?.password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <Button type="submit" variant="outlined">

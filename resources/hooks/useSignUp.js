@@ -2,12 +2,14 @@ import { apiUrl } from "../js/App";
 import axios from "axios";
 import { useUserStore } from "../js/useUserStore";
 import { useNavigate } from "react-router";
-import { useForm } from "./useForm";
+import { useState } from "react";
+// import { useForm } from "./useForm";
 
 export const useSignUp = () => {
     let navigate = useNavigate();
     const { setUser } = useUserStore();
-    const { setErrors, renderFieldError } = useForm();
+    const [errors, setErrors] = useState(null);
+    // const { setErrors, renderFieldError } = useForm();
 
     const signup = (email, password, username) => {
         axios
@@ -32,6 +34,7 @@ export const useSignUp = () => {
 
     return {
         signup,
-        renderFieldError,
+        // renderFieldError,
+        errors,
     };
 };

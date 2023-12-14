@@ -7,7 +7,8 @@ const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    const { signup, renderFieldError } = useSignUp();
+    // const { signup, renderFieldError } = useSignUp();
+    const { signup, errors } = useSignUp();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,31 +40,40 @@ const SignUp = () => {
                     alignItems="center"
                     onSubmit={handleSubmit}
                 >
-                    {renderFieldError("email")}
                     <TextField
+                        error={errors ? true : false}
+                        style={{ width: "250px" }}
                         id="email"
-                        label="Email"
+                        label={errors ? "Error" : "Email"}
                         variant="standard"
                         value={email}
+                        helperText={errors?.email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    {renderFieldError("password")}
                     <TextField
+                        error={errors ? true : false}
+                        style={{ width: "250px" }}
                         id="password"
-                        label="Mot de pass"
+                        label={errors ? "Error" : "Mot de passe"}
+                        type="password"
                         variant="standard"
                         value={password}
+                        helperText={errors?.password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    {renderFieldError("username")}
                     <TextField
+                        error={errors?.username ? true : false}
+                        style={{ width: "250px" }}
                         id="username"
-                        label="Nom d'utilisateur"
+                        label={errors?.username ? "Error" : "Username"}
                         variant="standard"
-                        helperText="optionel"
                         value={username}
+                        helperText={
+                            errors?.username ? errors?.username : "optionel"
+                        }
                         onChange={(e) => setUsername(e.target.value)}
                     />
+
                     <Button
                         variant="contained"
                         type="submit"

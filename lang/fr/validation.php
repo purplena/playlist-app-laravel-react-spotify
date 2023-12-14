@@ -151,6 +151,6 @@ return [
   'uuid' => 'Le champ :attribute doit être un UUID valide.',
 
   'attributes' => [
-    'password' => 'mot de pass',
+    'password' => 'mot de passe',
   ],
 ];
