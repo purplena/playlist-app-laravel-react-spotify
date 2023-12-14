@@ -4,20 +4,19 @@ import { useUserStore } from "../js/useUserStore";
 
 export const useLogout = () => {
     const { user, setUser } = useUserStore();
-    let navigate = useNavigate();
 
-    const handleLogout = () => {
-        axios
+
+    const handleLogout = async () => {
+        return axios
             .post(`${apiUrl}/user/logout`)
-            .then(() => {
+            .then((response) => {
                 setUser(null);
-                console.log(user);
-                navigate("/");
+                return response;
             })
             .catch((err) => {
                 console.log(err);
             });
     };
 
-    return { user, handleLogout };
+    return { user, logout: handleLogout };
 };
