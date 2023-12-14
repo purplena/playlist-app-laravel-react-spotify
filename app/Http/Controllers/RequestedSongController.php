@@ -7,9 +7,11 @@ use \Illuminate\Http\JsonResponse;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
+use App\Models\User;
 use App\Services\SpotifyApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 
 class RequestedSongController extends Controller
 {
@@ -22,11 +24,20 @@ class RequestedSongController extends Controller
    */
   public function index(Company $company): JsonResource
   {
+    $user = auth()->user();
     $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
       ->withCount('upvotes')
       ->whereDate('created_at', today())
       ->orderBy('upvotes_count', 'desc')
       ->get();
+
+    if ($user) {
+      $upvotes = $user->upvotes()->whereDate('created_at', today())->get();
+      $requestedSongs = $requestedSongs->map(function ($item) use ($upvotes) {
+        $item->is_upvoted_by = $upvotes->contains('requested_song_id', $item->id);
+        return $item;
+      });
+    }
 
     return RequestedSongResource::collection($requestedSongs);
   }
@@ -41,6 +52,10 @@ class RequestedSongController extends Controller
         return SongDTO::fromObjectToArray($track);
       })->toArray()
     );
+  }
+
+  public function addToFavorites(Request $request)
+  {
   }
 
   /**

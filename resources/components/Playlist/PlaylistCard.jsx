@@ -1,9 +1,33 @@
-import React from "react";
-import { Paper, Stack, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-// import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 
-const PlaylistCard = ({ requestedSong, index }) => {
+const PlaylistCard = ({ requestedSong, index, user }) => {
+    let navigate = useNavigate();
+    const [likes, setLikes] = useState(requestedSong.upvotes_count);
+    const [isUpvoted, setIsUpvoted] = useState(requestedSong.is_upvoted_by);
+    const requestedSongId = requestedSong.id;
+
+    const handleUpvote = () => {
+        if (!user) {
+            navigate("/login");
+        }
+
+        axios
+            .post(`${apiUrl}/${id}/songs/${requestedSongId}/upvote`)
+            .then((response) => {
+                // setRequestedSongs(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        setIsUpvoted(!isUpvoted);
+        isUpvoted ? setLikes(likes - 1) : setLikes(likes + 1);
+    };
+
     return (
         <Stack
             direction="row"
@@ -33,10 +57,10 @@ const PlaylistCard = ({ requestedSong, index }) => {
                 justifyContent="space-between"
                 alignItems="center"
             >
-                <Typography variant="body2">
-                    {requestedSong.upvotes.length} likes
-                </Typography>
-                <ThumbUpOutlinedIcon />
+                <Typography variant="body2">{likes} likes</Typography>
+                <Box onClick={handleUpvote}>
+                    {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
+                </Box>
             </Stack>
         </Stack>
     );

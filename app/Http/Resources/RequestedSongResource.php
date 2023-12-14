@@ -20,9 +20,11 @@ class RequestedSongResource extends JsonResource
     return [
       'id' => $this->id,
       'song' => SongResource::make($this->whenLoaded('song')),
-      'upvotes' => UpvoteResource::collection($this->whenLoaded('upvotes')),
+      // 'upvotes' => UpvoteResource::collection($this->whenLoaded('upvotes')),
+      'upvotes_count' => $this->upvotes_count,
       'company_id' => $this->company_id,
       'created_at' => $this->created_at,
+      'is_upvoted_by' => $this->is_upvoted_by
     ];
   }
 }
