@@ -3,12 +3,15 @@ import { useNavigate } from "react-router";
 import { Box, Paper, Stack, Typography } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { apiUrl } from "../../js/App";
+import { useParams } from "react-router-dom";
 
 const PlaylistCard = ({ requestedSong, index, user }) => {
     let navigate = useNavigate();
     const [likes, setLikes] = useState(requestedSong.upvotes_count);
     const [isUpvoted, setIsUpvoted] = useState(requestedSong.is_upvoted_by);
     const requestedSongId = requestedSong.id;
+    const { id } = useParams();
 
     const handleUpvote = () => {
         if (!user) {
@@ -18,7 +21,7 @@ const PlaylistCard = ({ requestedSong, index, user }) => {
         axios
             .post(`${apiUrl}/${id}/songs/${requestedSongId}/upvote`)
             .then((response) => {
-                // setRequestedSongs(response.data.data);
+                console.log(response);
             })
             .catch((error) => {
                 console.log(error);
