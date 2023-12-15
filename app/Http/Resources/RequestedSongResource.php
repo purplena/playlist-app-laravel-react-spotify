@@ -24,7 +24,9 @@ class RequestedSongResource extends JsonResource
       'upvotes_count' => $this->upvotes_count,
       'company_id' => $this->company_id,
       'created_at' => $this->created_at,
-      'is_upvoted_by' => $this->is_upvoted_by
+      'is_upvoted_by' => $this->whenLoaded('upvotes', function() use ($request) {
+          return $this->hasVoted($request->user());
+      })
     ];
   }
 }

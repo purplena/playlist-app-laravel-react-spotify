@@ -24,21 +24,12 @@ class RequestedSongController extends Controller
    */
   public function index(Company $company): JsonResource
   {
-    $user = auth()->user();
     $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
       ->withCount('upvotes')
       ->whereDate('created_at', today())
       ->orderBy('upvotes_count', 'desc')
       ->get();
-
-    if ($user) {
-      $upvotes = $user->upvotes()->whereDate('created_at', today())->get();
-      $requestedSongs = $requestedSongs->map(function ($item) use ($upvotes) {
-        $item->is_upvoted_by = $upvotes->contains('requested_song_id', $item->id);
-        return $item;
-      });
-    }
-
+    
     return RequestedSongResource::collection($requestedSongs);
   }
 

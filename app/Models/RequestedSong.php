@@ -32,4 +32,15 @@ class RequestedSong extends Model
   {
     return $this->belongsTo(Company::class);
   }
+    
+    public function hasVoted(?User $user)
+    {
+        if ($user) {
+            return (bool) $this->upvotes->filter(function($upvote) use ($user) {
+                return $upvote->user_id === $user->id;
+            })->count();
+        }
+        
+        return false;
+  }
 }
