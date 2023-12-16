@@ -4,9 +4,11 @@ import SearchBar from "../components/Form/SearchBar";
 import { Grid, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import SongSearchCard from "../components/Playlist/SongSearchCard";
+import { useUserStore } from "../js/useUserStore";
 
 function Search() {
     const { isLoading, searchResults, handleInput } = useSearchSong();
+    const { user } = useUserStore();
 
     return (
         <>
@@ -24,7 +26,7 @@ function Search() {
                         {searchResults.map((song) => {
                             return (
                                 <Grid item xs={6} key={song.spotify_id}>
-                                    <SongSearchCard song={song} />
+                                    <SongSearchCard song={song} user={user} />
                                 </Grid>
                             );
                         })}
