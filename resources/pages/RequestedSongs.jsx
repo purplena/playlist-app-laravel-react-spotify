@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { generatePath, useParams } from "react-router-dom";
 import PlaylistCard from "../components/Playlist/PlaylistCard";
@@ -54,11 +54,12 @@ const RequestedSongs = () => {
                     suggérer
                 </Button>
             </Stack>
-            <Stack
-                direction="column"
-                spacing={3}
-                justifyContent="center"
+            <Grid
+                container
+                gap={3}
                 mt={6}
+                justifyContent="center"
+                flexBasis="flex-start"
             >
                 {requestedSongs.map((requestedSong, index) => {
                     return (
@@ -70,8 +71,9 @@ const RequestedSongs = () => {
                         />
                     );
                 })}
-            </Stack>
+            </Grid>
         </>
     );
 };
+
 export default RequestedSongs;

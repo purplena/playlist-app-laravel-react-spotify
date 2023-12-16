@@ -21,9 +21,9 @@ class RequestedSongSeeder extends Seeder
     $users = User::where('role', 2)->get();
     $companies = Company::all();
 
-    for ($i = 0; $i < 30; $i++) {
+    foreach ($songs as $song) {
       RequestedSong::create([
-        'song_id' => $songs->random()->id,
+        'song_id' => $song->id,
         'user_id' => $users->random()->id,
         'company_id' => $companies->random()->id
       ]);

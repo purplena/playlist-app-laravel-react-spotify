@@ -1,71 +1,97 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import React from "react";
+import { Box, Paper, Stack, Typography, Grid } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { apiUrl } from "../../js/App";
-import { useParams } from "react-router-dom";
+import { useUpvote } from "../../hooks/useUpvote";
 
 const PlaylistCard = ({ requestedSong, index, user }) => {
-    let navigate = useNavigate();
-    const [likes, setLikes] = useState(requestedSong.upvotes_count);
-    const [isUpvoted, setIsUpvoted] = useState(requestedSong.is_upvoted_by);
-    const requestedSongId = requestedSong.id;
-    const { id } = useParams();
-
+    const { upvote, isUpvoted, likes } = useUpvote(requestedSong, user);
     const handleUpvote = () => {
-        if (!user) {
-            navigate("/login");
-        }
-
-        axios
-            .post(`${apiUrl}/${id}/songs/${requestedSongId}/upvote`)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-        setIsUpvoted(!isUpvoted);
-        isUpvoted ? setLikes(likes - 1) : setLikes(likes + 1);
+        upvote();
     };
 
     return (
-        <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            padding={2}
-            sx={{ border: "1px solid black" }}
+        <Paper
+            sx={{
+                width: 300,
+                p: 2,
+            }}
         >
-            <Typography variant="body2">#{index + 1}</Typography>
-            <Stack direction="row" spacing={2}>
-                <Paper
-                    elevation={0}
-                    sx={{ borderRadius: "50%", width: "30px", height: "30px" }}
-                />
-                <Stack direction="column">
-                    <Typography variant="body1" fontWeight="bold">
-                        Titre: {requestedSong.song.song_data.song_name}
-                    </Typography>
-                    <Typography variant="body1">
-                        Artiste: {requestedSong.song.song_data.artist_name}
-                    </Typography>
-                </Stack>
-            </Stack>
-            <Stack
-                direction="row"
-                spacing={2}
-                justifyContent="space-between"
-                alignItems="center"
-            >
-                <Typography variant="body2">{likes} likes</Typography>
-                <Box onClick={handleUpvote}>
-                    {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
-                </Box>
-            </Stack>
-        </Stack>
+            <Grid container spacing={2}>
+                <Grid item>
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            borderRadius: "50%",
+                            width: "50px",
+                            height: "50px",
+                            background: "#1769aa",
+                        }}
+                    />
+                </Grid>
+                <Grid item xs container>
+                    <Grid item xs container direction="column" spacing={2}>
+                        <Grid item xs>
+                            <Typography
+                                gutterBottom
+                                variant="subtitle1"
+                                component="div"
+                            >
+                                #{index + 1}
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    width: 186,
+                                }}
+                                variant="body2"
+                                gutterBottom
+                                noWrap
+                            >
+                                Titre:{" "}
+                                <Box component="span" fontWeight="700">
+                                    {requestedSong.song.song_data.song_name}
+                                </Box>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    width: 186,
+                                }}
+                                noWrap
+                            >
+                                Artiste:{" "}
+                                <Box component="span" fontWeight="700">
+                                    {requestedSong.song.song_data.artist_name}
+                                </Box>
+                            </Typography>
+                        </Grid>
+                        <Stack
+                            direction="row"
+                            pl={2}
+                            mt={2}
+                            spacing={4}
+                            alignItems="center"
+                        >
+                            <Typography variant="body2">
+                                {likes} {likes == 1 ? " like" : " likes"}
+                            </Typography>
+
+                            <Typography
+                                sx={{ cursor: "pointer" }}
+                                variant="body2"
+                                onClick={handleUpvote}
+                            >
+                                {isUpvoted ? (
+                                    <ThumbUpIcon />
+                                ) : (
+                                    <ThumbUpOutlinedIcon />
+                                )}
+                            </Typography>
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Paper>
     );
 };
 export default PlaylistCard;

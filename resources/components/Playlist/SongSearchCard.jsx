@@ -9,7 +9,7 @@ export default function SongSearchCard({ song }) {
         <Card sx={{ maxWidth: 150 }}>
             <CardMedia
                 component="img"
-                alt="green iguana"
+                alt={song.song_data.artist_name}
                 height="140"
                 image={song.song_data.album_cover_img}
             />
