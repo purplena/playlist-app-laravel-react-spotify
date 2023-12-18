@@ -25,7 +25,8 @@ class RequestedSongResource extends JsonResource
       'created_at' => $this->created_at,
       'is_upvoted_by' => $this->whenLoaded('upvotes', function () use ($request) {
         return $this->hasVoted($request->user());
-      })
+      }),
+      // 'is_requested' =>  $this->hasRequested($request->song()->spotify_id),
     ];
   }
 }

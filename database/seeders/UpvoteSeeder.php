@@ -12,7 +12,7 @@ class UpvoteSeeder extends Seeder
   public function run(): void
   {
     $requestedSongs = RequestedSong::all();
-    $users = User::where('role', 2)->get();
+    $users = User::where('role', User::ROLE_CLIENT)->get();
 
     foreach ($users as $user) {
       Upvote::create([

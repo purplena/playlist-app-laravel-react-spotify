@@ -44,4 +44,9 @@ class RequestedSong extends Model
 
     return false;
   }
+
+  // public function hasRequested($spotifyId)
+  // {
+  //   return $this->song->contains('spotify_id', $spotifyId);
+  // }
 }
