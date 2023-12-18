@@ -1,20 +1,29 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { generatePath, useParams } from "react-router-dom";
 import PlaylistCard from "../components/Playlist/PlaylistCard";
+import { useUserStore } from "../js/useUserStore";
 import { apiUrl } from "../js/App";
 
 const RequestedSongs = () => {
     const [requestedSongs, setRequestedSongs] = useState([]);
     const { id } = useParams();
+    const { user } = useUserStore();
 
     useEffect(() => {
-        fetch(`${apiUrl}/${id}/songs`)
-            .then((res) => res.json())
-            .then((data) => {
-                setRequestedSongs(data.data);
+        getSongs();
+    }, []);
+
+    const getSongs = () => {
+        axios
+            .get(`${apiUrl}/${id}/songs`)
+            .then((response) => {
+                setRequestedSongs(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
             });
-    }, [id]);
+    };
 
     return (
         <>
@@ -45,23 +54,26 @@ const RequestedSongs = () => {
                     suggérer
                 </Button>
             </Stack>
-            <Stack
-                direction="column"
-                spacing={3}
-                justifyContent="center"
+            <Grid
+                container
+                gap={3}
                 mt={6}
+                justifyContent="center"
+                flexBasis="flex-start"
             >
                 {requestedSongs.map((requestedSong, index) => {
                     return (
                         <PlaylistCard
+                            user={user}
                             key={requestedSong.id}
                             requestedSong={requestedSong}
                             index={index}
                         />
                     );
                 })}
-            </Stack>
+            </Grid>
         </>
     );
 };
+
 export default RequestedSongs;

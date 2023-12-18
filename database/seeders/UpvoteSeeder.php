@@ -14,10 +14,10 @@ class UpvoteSeeder extends Seeder
     $requestedSongs = RequestedSong::all();
     $users = User::where('role', 2)->get();
 
-    for ($i = 0; $i < 50; $i++) {
+    foreach ($users as $user) {
       Upvote::create([
         'requested_song_id' => $requestedSongs->random()->id,
-        'user_id' => $users->random()->id,
+        'user_id' => $user->id,
       ]);
     }
   }

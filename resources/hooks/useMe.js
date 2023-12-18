@@ -8,7 +8,6 @@ export const useMe = () => {
     useEffect(() => {
         axios.post(`${apiUrl}/user/me`).then((response) => {
             setUser(response.data.user);
-            console.log(response.data.user);
         });
     }, []);
 };

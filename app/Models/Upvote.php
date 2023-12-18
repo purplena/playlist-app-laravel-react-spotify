@@ -13,6 +13,8 @@ class Upvote extends Model
 {
   use HasFactory;
 
+  protected $fillable = ['requested_song_id', 'user_id'];
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
