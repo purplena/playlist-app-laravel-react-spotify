@@ -6,7 +6,7 @@ import { generatePath } from "react-router-dom";
 import SocialMediaIconsColumn from "../components/Layout/SocialMediaIconsColumn";
 import { useLogin } from "../hooks/useLogin";
 
-const Login = () => {
+const Login = ({ redirect = "/" }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { errors, login } = useLogin();
@@ -16,7 +16,7 @@ const Login = () => {
         e.preventDefault();
         const response = await login(email, password);
         if (response?.data?.status) {
-            navigate("/");
+            navigate(redirect);
         }
     };
 

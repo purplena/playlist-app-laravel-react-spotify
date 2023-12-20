@@ -1,13 +1,23 @@
 import { useUserStore } from "../js/useUserStore";
 import { apiUrl } from "../js/App";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useMe = () => {
-    const { setUser } = useUserStore();
+    const { setUser, user } = useUserStore();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        axios.post(`${apiUrl}/user/me`).then((response) => {
-            setUser(response.data.user);
-        });
+        setIsLoading(true);
+        axios
+            .post(`${apiUrl}/user/me`)
+            .then((response) => {
+                setUser(response.data.user);
+            })
+            .finally(() => setIsLoading(false));
     }, []);
+
+    return {
+        isLoading,
+        user,
+    };
 };
