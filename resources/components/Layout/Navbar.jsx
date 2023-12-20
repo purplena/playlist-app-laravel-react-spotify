@@ -8,11 +8,21 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, Menu, MenuItem } from "@mui/material";
 import { generatePath } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
+import { useNavigate } from "react-router";
 
 const ButtonAppBar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const { user, handleLogout } = useLogout();
+    const { user, logout } = useLogout();
+    let navigate = useNavigate();
+
+    const handleLogout = async () => {
+        const response = await logout();
+        console.log(response);
+        if (response?.data?.status) {
+            navigate("/");
+        }
+    };
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);

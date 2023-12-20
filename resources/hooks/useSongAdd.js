@@ -2,20 +2,16 @@ import { useNavigate } from "react-router";
 import { apiUrl } from "../js/App";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { useUserStore } from "../js/useUserStore";
 
-export const useSongAdd = (
-    song,
-    user,
-    setOpen,
-    setModalMessage,
-    setModalHeader
-) => {
-    let navigate = useNavigate();
-    const { id } = useParams();
-    const spotifyId = song.spotify_id;
+export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
     const [isAdded, setIsAdded] = useState(song.is_requested);
     const [isLoading, setIsLoading] = useState(false);
     const intialStateIsAdded = isAdded;
+    let navigate = useNavigate();
+    const { id } = useParams();
+    const spotifyId = song.spotify_id;
+    const { user } = useUserStore();
 
     const addSong = () => {
         if (!user) {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { Stack, TextField, Typography, Button, Alert } from "@mui/material";
 import SignUpButton from "../components/Button/SignUpButton";
 import { generatePath } from "react-router-dom";
@@ -9,12 +10,14 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { errors, login } = useLogin();
-
-    console.log(errors);
+    let navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        login(email, password);
+        const response = await login(email, password);
+        if (response?.data?.status) {
+            navigate("/");
+        }
     };
 
     return (
