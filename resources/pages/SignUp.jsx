@@ -2,17 +2,22 @@ import React, { useState } from "react";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useSignUp } from "../hooks/useSignUp";
+import { useNavigate } from "react-router";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    // const { signup, renderFieldError } = useSignUp();
     const { signup, errors } = useSignUp();
+    let navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        signup(email, password, username);
+        const response = await signup(email, password, username);
+        console.log(response);
+        if (response?.data?.status) {
+            navigate("/");
+        }
     };
 
     return (

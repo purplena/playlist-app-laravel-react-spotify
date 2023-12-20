@@ -10,14 +10,12 @@ import { useSongAdd } from "../../hooks/useSongAdd";
 
 export default function SongSearchCard({
     song,
-    user,
     setOpen,
     setModalMessage,
     setModalHeader,
 }) {
     const { addSong, isAdded } = useSongAdd(
         song,
-        user,
         setOpen,
         setModalMessage,
         setModalHeader
