@@ -28,6 +28,7 @@ Route::get('/{company}/songs', [RequestedSongController::class, 'index'])
   ->name('company.songs');
 Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']);
 Route::post('/{company}/songs/{requestedSong}/upvote', [RequestedSongController::class, 'upvote']);
+Route::post('/{company}/songs/{spotifyId}/store', [RequestedSongController::class, 'store']);
 Route::post('/user/login', [LoginController::class, 'authenticate']);
 Route::post('/user/logout', [LoginController::class, 'logout']);
 Route::post('/user/me', [LoginController::class, 'me']);

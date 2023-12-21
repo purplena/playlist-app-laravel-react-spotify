@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Song extends Model
 {
   use HasFactory;
+  protected $fillable = ['spotify_id', 'song_data'];
 
   protected $casts = [
     'song_data' => 'array'

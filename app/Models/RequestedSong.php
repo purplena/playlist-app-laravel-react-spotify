@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class RequestedSong extends Model
 {
   use HasFactory;
+  protected $fillable = ['song_id', 'user_id', 'company_id'];
 
   public function upvotes(): HasMany
   {

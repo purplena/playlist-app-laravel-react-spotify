@@ -1,29 +1,19 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Alert, Button, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { generatePath, useParams } from "react-router-dom";
+import { generatePath } from "react-router-dom";
 import PlaylistCard from "../components/Playlist/PlaylistCard";
-import { useUserStore } from "../js/useUserStore";
-import { apiUrl } from "../js/App";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useGetRequestedSongs } from "../hooks/useGetRequestedSongs";
 
 const RequestedSongs = () => {
-    const [requestedSongs, setRequestedSongs] = useState([]);
-    const { id } = useParams();
-    const { user } = useUserStore();
+    const [isLoading, setIsLoading] = useState(false);
+    const { getSongs, requestedSongs, serverErrorMessage } =
+        useGetRequestedSongs(setIsLoading);
 
     useEffect(() => {
+        setIsLoading(true);
         getSongs();
     }, []);
-
-    const getSongs = () => {
-        axios
-            .get(`${apiUrl}/${id}/songs`)
-            .then((response) => {
-                setRequestedSongs(response.data.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
 
     return (
         <>
@@ -54,6 +44,11 @@ const RequestedSongs = () => {
                     suggérer
                 </Button>
             </Stack>
+            {isLoading && (
+                <Stack justifyContent="center" alignItems="center" mt={4}>
+                    <CircularProgress />
+                </Stack>
+            )}
             <Grid
                 container
                 gap={3}
@@ -61,16 +56,30 @@ const RequestedSongs = () => {
                 justifyContent="center"
                 flexBasis="flex-start"
             >
-                {requestedSongs.map((requestedSong, index) => {
-                    return (
-                        <PlaylistCard
-                            user={user}
-                            key={requestedSong.id}
-                            requestedSong={requestedSong}
-                            index={index}
-                        />
-                    );
-                })}
+                {serverErrorMessage && (
+                    <Alert variant="outlined" severity="error">
+                        Oups! Il y a un problem. Réessayez plus tard.
+                    </Alert>
+                )}
+                {requestedSongs.length > 0 ? (
+                    requestedSongs.map((requestedSong, index) => {
+                        return (
+                            <PlaylistCard
+                                key={requestedSong.id}
+                                requestedSong={requestedSong}
+                                index={index}
+                            />
+                        );
+                    })
+                ) : (
+                    <Typography
+                        variant="subtitle2"
+                        textAlign={"center"}
+                        mt={21}
+                    >
+                        Oups! Il n'y a pas de chansons suggérées...
+                    </Typography>
+                )}
             </Grid>
         </>
     );
