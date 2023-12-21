@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { generatePath } from "react-router-dom";
+import Link from "../components/Layout/Link";
 
 const Home = () => {
     const menuItems = [
@@ -36,7 +37,7 @@ const Home = () => {
                 })}
             </Stack>
             <Box mt={10} textAlign={"center"}>
-                <Link underline="none" href={generatePath("/login")}>
+                <Link underline="none" to={generatePath("/login")}>
                     Se connecter/ S’inscrire
                 </Link>
             </Box>
