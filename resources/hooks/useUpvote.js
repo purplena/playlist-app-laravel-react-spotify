@@ -6,14 +6,14 @@ import { useState } from "react";
 export const useUpvote = (requestedSong, user) => {
     let navigate = useNavigate();
     const { id } = useParams();
-    const requestedSongId = requestedSong.id;
     const [likes, setLikes] = useState(requestedSong.upvotes_count);
     const [isUpvoted, setIsUpvoted] = useState(requestedSong.is_upvoted_by);
     const [isLoading, setIsLoading] = useState(false);
-    const intialStateUpvote = isUpvoted;
-    const intialStateLikes = likes;
 
     const upvote = () => {
+        const requestedSongId = requestedSong.id;
+        const intialStateUpvote = isUpvoted;
+        const intialStateLikes = likes;
         if (!user) {
             navigate("/login");
         }

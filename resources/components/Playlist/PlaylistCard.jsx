@@ -3,8 +3,10 @@ import { Box, Paper, Stack, Typography, Grid } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useUpvote } from "../../hooks/useUpvote";
+import { useUserStore } from "../../js/useUserStore";
 
-const PlaylistCard = ({ requestedSong, index, user }) => {
+const PlaylistCard = ({ requestedSong, index }) => {
+    const { user } = useUserStore();
     const { upvote, isUpvoted, likes } = useUpvote(requestedSong, user);
     const handleUpvote = () => {
         upvote();

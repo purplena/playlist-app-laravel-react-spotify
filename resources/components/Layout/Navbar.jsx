@@ -18,7 +18,6 @@ const ButtonAppBar = () => {
 
     const handleLogout = async () => {
         const response = await logout();
-        console.log(response);
         if (response?.data?.status) {
             navigate("/");
         }
