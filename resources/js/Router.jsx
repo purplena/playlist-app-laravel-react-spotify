@@ -13,6 +13,9 @@ import CompanyRoot from "./CompanyRoot";
 import CompanyLogin from "../pages/CompanyLogin";
 import CompanyHome from "../pages/CompanyHome";
 import ProtectedCompanyRoot from "./ProtectedCompanyRoot";
+import CompanyRequestedSongs from "../pages/CompanyRequestedSongs";
+import CompanyPlaylist from "../pages/CompanyPlaylist";
+import CompanyBlacklist from "../pages/CompanyBlacklist";
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +63,18 @@ export const router = createBrowserRouter([
                             {
                                 path: "",
                                 element: <CompanyHome />,
+                            },
+                            {
+                                path: "songs",
+                                element: <CompanyRequestedSongs />,
+                            },
+                            {
+                                path: "playlist",
+                                element: <CompanyPlaylist />,
+                            },
+                            {
+                                path: "blacklist",
+                                element: <CompanyBlacklist />,
                             },
                         ],
                     },

@@ -7,11 +7,14 @@ import { useUserStore } from "./useUserStore";
 export default function ProtectedCompanyRoot() {
     const { user } = useUserStore();
     let navigate = useNavigate();
+    console.log(user);
 
     useEffect(() => {
         if (!user) {
+            console.log("No user found");
             navigate(generatePath("/manager/login"));
         } else if (user.role != 1) {
+            console.log("User does not have required role");
             navigate(generatePath("/"));
         }
     }, [user]);

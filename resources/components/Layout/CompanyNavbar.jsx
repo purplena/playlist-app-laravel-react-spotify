@@ -89,6 +89,7 @@ function CompanyNavbar() {
                                     key={menuItem.page}
                                     path={menuItem.path}
                                     menuItem={menuItem.page}
+                                    onClickHandler={handleCloseNavMenu}
                                 />
                             ))}
                         </Menu>

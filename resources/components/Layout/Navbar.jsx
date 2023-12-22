@@ -106,6 +106,7 @@ const ButtonAppBar = () => {
                             key={menuItem.page}
                             path={menuItem.path}
                             menuItem={menuItem.page}
+                            onClickHandler={handleClose}
                         />
                     ))}
                     {user ? (
@@ -117,6 +118,7 @@ const ButtonAppBar = () => {
                         <MenuItemCustom
                             path={generatePath("/login")}
                             menuItem={"Se connecter"}
+                            onClickHandler={handleClose}
                         />
                     )}
                 </Box>
