@@ -6,19 +6,18 @@ const MenuItemCustom = ({
     path = "",
     menuItem,
     menuItemColor = "primary",
-    onClickHandler = "",
+    onClickHandler,
 }) => {
     return (
         <>
-            <MenuItem>
-                <Link
-                    underline="none"
-                    to={path}
-                    sx={{ color: menuItemColor }}
-                    onClick={onClickHandler}
-                >
-                    {menuItem}
-                </Link>
+            <MenuItem
+                component={Link}
+                underline="none"
+                to={path}
+                sx={{ color: menuItemColor }}
+                onClick={onClickHandler}
+            >
+                {menuItem}
             </MenuItem>
         </>
     );

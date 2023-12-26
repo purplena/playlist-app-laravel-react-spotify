@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export const useMe = () => {
     const { setUser, user } = useUserStore();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
