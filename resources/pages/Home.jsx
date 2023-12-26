@@ -1,7 +1,8 @@
 import React from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { generatePath } from "react-router-dom";
 import Link from "../components/Layout/Link";
+import LinkButton from "../components/Button/LinkButton";
 
 const Home = () => {
     const menuItems = [
@@ -24,15 +25,15 @@ const Home = () => {
                 </Typography>
                 {menuItems.map((menuItem) => {
                     return (
-                        <Button
+                        <LinkButton
                             key={menuItem.title}
-                            variant="contained"
                             disableElevation
                             size="small"
-                            href={menuItem.href}
+                            to={menuItem.href}
+                            width="100%"
                         >
                             {menuItem.title}
-                        </Button>
+                        </LinkButton>
                     );
                 })}
             </Stack>

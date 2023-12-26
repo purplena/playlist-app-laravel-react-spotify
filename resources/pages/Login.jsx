@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { Stack, TextField, Typography, Button, Alert } from "@mui/material";
-import SignUpButton from "../components/Button/SignUpButton";
 import { generatePath } from "react-router-dom";
 import SocialMediaIconsColumn from "../components/Layout/SocialMediaIconsColumn";
 import { useLogin } from "../hooks/useLogin";
+import SendIcon from "@mui/icons-material/Send";
+import LinkButton from "../components/Button/LinkButton";
 
 const Login = ({ redirect = "/" }) => {
     const [email, setEmail] = useState("");
@@ -74,7 +75,12 @@ const Login = ({ redirect = "/" }) => {
                         </Button>
                     </Stack>
                 </Stack>
-                <Stack direction="column" spacing={2}>
+                <Stack
+                    direction="column"
+                    spacing={2}
+                    justifyContent="center"
+                    alignItems="center"
+                >
                     <Typography
                         variant="body1"
                         component="h1"
@@ -82,7 +88,12 @@ const Login = ({ redirect = "/" }) => {
                     >
                         Pas de compte? Inscrivez-vous s'il vous plaît
                     </Typography>
-                    <SignUpButton path={generatePath("/signup")} />
+                    <LinkButton
+                        to={generatePath("/signup")}
+                        endIcon={<SendIcon />}
+                    >
+                        S’inscrire
+                    </LinkButton>
                 </Stack>
             </Stack>
         </>

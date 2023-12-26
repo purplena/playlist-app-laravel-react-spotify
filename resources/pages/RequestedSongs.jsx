@@ -4,6 +4,7 @@ import { generatePath } from "react-router-dom";
 import PlaylistCard from "../components/Playlist/PlaylistCard";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGetRequestedSongs } from "../hooks/useGetRequestedSongs";
+import LinkButton from "../components/Button/LinkButton";
 
 const RequestedSongs = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -34,15 +35,13 @@ const RequestedSongs = () => {
                 <Typography variant="subtitle2" textAlign={"center"} mt={21}>
                     Voulez-vous suggérer une chanson?
                 </Typography>
-                <Button
-                    variant="contained"
+                <LinkButton
                     disableElevation
                     size="small"
-                    href={generatePath("/:id/songs/search", { id: 1 })}
-                    sx={{ textTransform: "uppercase" }}
+                    to={generatePath("/:id/songs/search", { id: 1 })}
                 >
                     suggérer
-                </Button>
+                </LinkButton>
             </Stack>
             {isLoading && (
                 <Stack justifyContent="center" alignItems="center" mt={4}>

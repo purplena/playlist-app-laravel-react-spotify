@@ -2,10 +2,10 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import SimpleButton from "../Button/SimpleButton";
 import { generatePath } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
+import LinkButton from "../Button/LinkButton";
 
 const style = {
     position: "absolute",
@@ -55,13 +55,13 @@ export default function ModalWindow({
                 <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
                     {modalMessage}
                 </Typography>
-                <SimpleButton
-                    variant={"contained"}
-                    path={generatePath("/:id/songs", {
+                <LinkButton
+                    to={generatePath("/:id/songs", {
                         id: 1,
                     })}
-                    message={"Chansons d'aujourd'hui"}
-                />
+                >
+                    Chansons d'aujourd'hui
+                </LinkButton>
             </Box>
         </Modal>
     );

@@ -5,11 +5,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, Menu, MenuItem, Stack } from "@mui/material";
+import { Menu } from "@mui/material";
 import { generatePath } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 import { useNavigate } from "react-router";
 import MenuItemCustom from "../Menu/MenuItemCustom";
+import LinkButton from "../Button/LinkButton";
 
 const ButtonAppBar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -80,12 +81,13 @@ const ButtonAppBar = () => {
                                 Se deconnecter
                             </Button>
                         ) : (
-                            <Button
-                                href={generatePath("/login")}
+                            <LinkButton
+                                variant="text"
+                                to={generatePath("/login")}
                                 color="inherit"
                             >
                                 Se connecter
-                            </Button>
+                            </LinkButton>
                         )}
                     </Box>
                 </Toolbar>
