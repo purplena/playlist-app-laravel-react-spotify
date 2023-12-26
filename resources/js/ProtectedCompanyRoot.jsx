@@ -7,7 +7,6 @@ import { useUserStore } from "./useUserStore";
 export default function ProtectedCompanyRoot() {
     const { user } = useUserStore();
     let navigate = useNavigate();
-    console.log(user);
 
     useEffect(() => {
         if (!user) {

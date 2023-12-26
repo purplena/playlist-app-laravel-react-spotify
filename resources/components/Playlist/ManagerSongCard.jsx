@@ -52,7 +52,7 @@ const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
                                 gutterBottom
                                 noWrap
                             >
-                                Titre:{" "}
+                                {"Titre: "}
                                 <Box component="span" fontWeight="700">
                                     {title}
                                 </Box>
@@ -64,7 +64,7 @@ const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
                                 }}
                                 noWrap
                             >
-                                Artiste:{" "}
+                                {"Artiste: "}
                                 <Box component="span" fontWeight="700">
                                     {artist}
                                 </Box>
