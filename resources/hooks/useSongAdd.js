@@ -38,14 +38,11 @@ export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
             .then((response) => {
                 if (response.data.status == "added") {
                     setModalHeader("BRAVO!");
-                    setModalMessage(response.data.message);
-                    setOpen(true);
-                }
-                if (response.data.status == "deleted") {
+                } else {
                     setModalHeader("C'EST FAIT!");
-                    setModalMessage(response.data.message);
-                    setOpen(true);
                 }
+                setModalMessage(response.data.message);
+                setOpen(true);
             })
             .catch((error) => {
                 if (error.response.data.error == "forbidden") {

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Stack, TextField, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useSignUp } from "../hooks/useSignUp";
 import { useNavigate } from "react-router";
+import LinkButton from "../components/Button/LinkButton";
+import { generatePath } from "react-router-dom";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -79,13 +81,12 @@ const SignUp = () => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
 
-                    <Button
-                        variant="contained"
-                        type="submit"
+                    <LinkButton
+                        to={generatePath("/signup")}
                         endIcon={<SendIcon />}
                     >
                         S’inscrire
-                    </Button>
+                    </LinkButton>
                 </Stack>
             </Stack>
         </>

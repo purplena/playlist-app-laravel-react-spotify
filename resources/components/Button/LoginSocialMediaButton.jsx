@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "@mui/material";
+import LinkButton from "./LinkButton";
 
 const LoginSocialMediaButton = ({ icon, mediaName }) => {
     return (
-        <Button variant="outlined" startIcon={icon}>
+        <LinkButton variant="outlined" startIcon={icon}>
             Continue avec {mediaName}
-        </Button>
+        </LinkButton>
     );
 };
 export default LoginSocialMediaButton;

@@ -38,30 +38,19 @@ class RequestedSongController extends Controller
   {
     $results = $this->spotifyApi->getClient()->search($request->query('q'), 'track');
 
-    $array = collect($results->tracks->items)->map(function ($track) {
+    $spotifyIdCollection = collect($company->requestedSongs()
+      ->with('song')
+      ->whereDate('created_at', today())->get())
+      ->pluck('song.spotify_id');
+
+    $response = collect($results->tracks->items)->map(function ($track) {
       return SongDTO::fromObjectToArray($track);
+    })->map(function ($item) use ($spotifyIdCollection) {
+      $item['is_requested'] = $spotifyIdCollection->contains($item['spotify_id']);
+      return $item;
     })->toArray();
 
-    $requestedSongsByCompany = $company->requestedSongs()
-      ->with('song')
-      ->whereDate('created_at', today())
-      ->get();
-
-    foreach ($requestedSongsByCompany as $requestedSongByCompany) {
-      $spotifyIdArray[] = $requestedSongByCompany->song->spotify_id;
-    }
-
-    foreach ($array as &$item) {
-      $spotifyId = $item['spotify_id'];
-
-      if (in_array($spotifyId, $spotifyIdArray)) {
-        $item['is_requested'] = true;
-      } else {
-        $item['is_requested'] = false;
-      }
-    }
-
-    return response()->json($array);
+    return response()->json($response);
   }
 
   public function upvote(Company $company, RequestedSong $requestedSong)

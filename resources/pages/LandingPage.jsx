@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { generatePath } from "react-router";
+import LinkButton from "../components/Button/LinkButton";
 
 const LandingPage = () => {
     const texts = [
@@ -24,16 +25,15 @@ const LandingPage = () => {
                 })}
             </Stack>
 
-            <Button
-                variant="contained"
+            <LinkButton
                 disableElevation
                 size="small"
-                href={generatePath("/:id/home", {
+                to={generatePath("/:id/home", {
                     id: 1,
                 })}
             >
                 Continuer
-            </Button>
+            </LinkButton>
         </Stack>
     );
 };
