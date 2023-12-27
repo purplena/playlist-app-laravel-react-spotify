@@ -17,7 +17,8 @@ class AppServiceProvider extends ServiceProvider
     $this->app->singleton(SpotifyApi::class, function () {
       $session = new Session(
         config('services.spotify.client_id'),
-        config('services.spotify.client_secret')
+        config('services.spotify.client_secret'),
+        route('spotify.callback')
       );
 
       return new SpotifyApi($session, new SpotifyWebAPI());

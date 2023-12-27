@@ -2,32 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\SpotifyApi;
+use Illuminate\Support\Arr;
 use SpotifyWebAPI\Session;
 use SpotifyWebAPI\SpotifyWebAPI;
 
 class SpotifyController extends Controller
 {
+  public function __construct(protected SpotifyApi $spotifyApi)
+  {
+  }
   public function redirect()
   {
+    $data = $this->spotifyApi->generateAuthorizeUrl();
+    session()->put('spotify.state', $data['state']);
 
-    $session = new Session(
-      config('services.spotify.client_id'),
-      config('services.spotify.client_secret'),
-      route('spotify.callback')
-    );
-
-    $state = $session->generateState();
-    $options = [
-      'scope' => [
-        'playlist-modify-public'
-      ],
-      'state' => $state,
-    ];
-
-    session()->put('spotify.state', $state);
-
-    return redirect($session->getAuthorizeUrl($options));
+    return redirect($data['authorizeUrl']);
   }
 
   public function callback()
@@ -46,16 +36,33 @@ class SpotifyController extends Controller
     $accessToken = $session->getAccessToken();
     $refreshToken = $session->getRefreshToken();
 
+    $company = auth()->user()->company;
+    if (Arr::get($company->spotify_playlist_data, 'refresh_token') == null) {
+      $company->update([
+        'spotify_playlist_data' => array_merge($company->spotify_playlist_data ? $company->spotify_playlist_data : [], ['refresh_token' => $refreshToken])
+      ]);
+    }
+
+    if (Arr::get($company->spotify_playlist_data, 'playlist.id')) {
+      return redirect(route('front', ['any' => 'manager']));
+    }
+
     $api = new SpotifyWebAPI();
     $api->setAccessToken($accessToken);
 
     $userId = $api->me()->id;
     $playlist = $api->createPlaylist($userId, ['name' => 'Test_Playlist']);
 
-    dd($playlist);
-    // regarder si un playlist exist (spotify_data ?null)
-    //si null, il faut creer la playlist dans spotify
-    // et il faut enregistrer dans ma base de données info de $playlist
+    $playlistData = [
+      'playlist' => $playlist,
+      'user_id' => $userId,
+      'refresh_token' => $refreshToken
+    ];
 
+    auth()->user()->company->update([
+      'spotify_playlist_data' => $playlistData
+    ]);
+
+    return redirect(route('front', ['any' => 'manager']));
   }
 }

@@ -5,8 +5,10 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RequestedSongController;
+use App\Http\Controllers\SpotifyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 
 /*
@@ -21,21 +23,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-  Route::get('/user', function (Request $request) {
-    return $request->user();
+  Route::get('/user/me', [LoginController::class, 'me']);
+  Route::post('/{company}/songs/{requestedSong}/upvote', [RequestedSongController::class, 'upvote']);
+  Route::post('/{company}/songs/{spotifyId}/store', [RequestedSongController::class, 'store']);
+
+  Route::group([], function () {
+    Route::get('/manager/blacklist', [BlackListController::class, 'index']);
+    Route::post('/manager/blacklist/delete/{blacklistedSongId}', [BlackListController::class, 'destroy']);
   });
-  Route::get('/manager/blacklist', [BlackListController::class, 'index']);
-  Route::post('/manager/blacklist/delete/{blacklistedSongId}', [BlackListController::class, 'destroy']);
 });
 
-Route::get('/companies', [CompanyController::class, 'index']);
-Route::get('/companies/{company}', [CompanyController::class, 'show']);
+// Route::get('/companies', [CompanyController::class, 'index']);
+// Route::get('/companies/{company}', [CompanyController::class, 'show']);
+
 Route::get('/{company}/songs', [RequestedSongController::class, 'index'])
   ->name('company.songs');
 Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']);
-Route::post('/{company}/songs/{requestedSong}/upvote', [RequestedSongController::class, 'upvote']);
-Route::post('/{company}/songs/{spotifyId}/store', [RequestedSongController::class, 'store']);
 Route::post('/user/login', [LoginController::class, 'authenticate']);
-Route::post('/user/logout', [LoginController::class, 'logout']);
-Route::post('/user/me', [LoginController::class, 'me']);
 Route::post('/user/register', [RegisterController::class, 'store']);
+Route::post('/user/logout', [LoginController::class, 'logout']);

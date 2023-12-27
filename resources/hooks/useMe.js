@@ -9,7 +9,7 @@ export const useMe = () => {
     useEffect(() => {
         setIsLoading(true);
         axios
-            .post(`${apiUrl}/user/me`)
+            .get(`${apiUrl}/user/me`)
             .then((response) => {
                 setUser(response.data.user);
             })

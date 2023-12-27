@@ -7,10 +7,11 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import { useLogout } from "../../hooks/useLogout";
-import { generatePath } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import MenuItemCustom from "../Menu/MenuItemCustom";
 
 function CompanyNavbar() {
+    let navigate = useNavigate();
     const [anchorElNav, setAnchorElNav] = useState(null);
     const { user, logout } = useLogout();
     const handleLogout = async () => {
