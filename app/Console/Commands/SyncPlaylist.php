@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Services\SpotifyApi;
 use Illuminate\Console\Command;
@@ -69,7 +70,45 @@ class SyncPlaylist extends Command
     }
   }
 
-  protected function addTracksToPlaylist(Company $company): void
+  protected function addTracksToPlaylist(Company $company)
   {
+
+    $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
+      ->withCount('upvotes')
+      ->whereDate('created_at', today())
+      ->orderBy('upvotes_count', 'desc')
+      ->get();
+
+    $topScores = $this->getTopThreeScores($requestedSongs);
+    $companySongs = $company->songs();
+    $existingSongIds = $companySongs->pluck('song_id')->toArray();
+
+    foreach ($requestedSongs as $requestedSong) {
+      if (in_array($requestedSong->upvotes_count, $topScores)) {
+        if (!in_array($requestedSong->song_id, $existingSongIds)) {
+          $songsToAddToSpotify[] = $requestedSong;
+        }
+      }
+    }
+
+    $api = $this->spotifyApi->getCompanyApiInstance($company);
+    $playlistId = Arr::get($company->spotify_playlist_data, 'playlist.id');
+    foreach ($songsToAddToSpotify as $songToAddToSpotify) {
+      $api->addPlaylistTracks($playlistId, [
+        $songToAddToSpotify->song->spotify_id
+      ]);
+      $companySongs->attach($songToAddToSpotify->song_id);
+    }
+  }
+
+  protected function getTopThreeScores($requestedSongs): array
+  {
+    foreach ($requestedSongs as $requestedSong) {
+      $topScores[] = $requestedSong->upvotes_count;
+    };
+    $uniqueValues = array_keys(array_flip($topScores));
+    rsort($uniqueValues);
+
+    return array_slice($uniqueValues, 0, 3);
   }
 }
