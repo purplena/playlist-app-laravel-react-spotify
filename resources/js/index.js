@@ -1,3 +1,3 @@
-import "../sass/app.scss";
-import "./init.js";
-import "./App";
+import '../sass/app.scss';
+import './init.js';
+import './App';

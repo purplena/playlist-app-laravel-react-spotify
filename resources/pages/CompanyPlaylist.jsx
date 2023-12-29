@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
 const CompanyPlaylist = () => {
-    return <div>CompanyPlaylist</div>;
+  return <div>CompanyPlaylist</div>;
 };
 export default CompanyPlaylist;

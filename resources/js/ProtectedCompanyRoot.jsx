@@ -1,26 +1,24 @@
-import React, { useEffect } from "react";
-import CompanyNavbar from "../components/Layout/CompanyNavbar";
-import { Box } from "@mui/material";
-import { Outlet, generatePath, redirect, useNavigate } from "react-router-dom";
-import { useUserStore } from "./useUserStore";
+import React, { useEffect } from 'react';
+import { Outlet, generatePath, useNavigate } from 'react-router-dom';
+import { useUserStore } from './useUserStore';
 
 export default function ProtectedCompanyRoot() {
-    const { user } = useUserStore();
-    let navigate = useNavigate();
+  const { user } = useUserStore();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!user) {
-            console.log("No user found");
-            navigate(generatePath("/manager/login"));
-        } else if (user.role != 1) {
-            console.log("User does not have required role");
-            navigate(generatePath("/"));
-        }
-    }, [user]);
-
-    if (!user || user.role != 1) {
-        return;
+  useEffect(() => {
+    if (!user) {
+      console.log('No user found');
+      navigate(generatePath('/manager/login'));
+    } else if (user.role !== 1) {
+      console.log('User does not have required role');
+      navigate(generatePath('/'));
     }
+  }, [user]);
 
-    return <Outlet />;
+  if (!user || user.role !== 1) {
+    return;
+  }
+
+  return <Outlet />;
 }

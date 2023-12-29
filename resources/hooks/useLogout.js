@@ -1,20 +1,21 @@
-import { apiUrl } from "../js/App";
-import { useUserStore } from "../js/useUserStore";
+import axios from 'axios';
+import { apiUrl } from '../js/App';
+import { useUserStore } from '../js/useUserStore';
 
 export const useLogout = () => {
-    const { user, setUser } = useUserStore();
+  const { user, setUser } = useUserStore();
 
-    const handleLogout = async () => {
-        return axios
-            .post(`${apiUrl}/user/logout`)
-            .then((response) => {
-                setUser(null);
-                return response;
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+  const handleLogout = async () => {
+    return axios
+      .post(`${apiUrl}/user/logout`)
+      .then((response) => {
+        setUser(null);
+        return response;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    return { user, logout: handleLogout };
+  return { user, logout: handleLogout };
 };
