@@ -2,13 +2,13 @@
 
 return [
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Pagination in French
     |--------------------------------------------------------------------------
     */
 
-  'previous' => '&laquo; Précédent',
-  'next' => 'Suivant &raquo;',
+    'previous' => '&laquo; Précédent',
+    'next' => 'Suivant &raquo;',
 
 ];
