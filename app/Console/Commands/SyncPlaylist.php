@@ -49,7 +49,10 @@ class SyncPlaylist extends Command
             }
 
             try {
+                // $playlist = collect($this->getAllPlaylists($api, $company))->where('id', Arr::get($company->spotify_playlist_data, 'playlist.id'));
+                // dd($playlist);
                 if (collect($this->getAllPlaylists($api, $company))->contains('id', Arr::get($company->spotify_playlist_data, 'playlist.id'))) {
+                    // dd($api->getPlaylist(Arr::get($company->spotify_playlist_data, 'playlist.id')));
                     $this->addTracksToPlaylist($api, $company);
                 } else {
                     $company->update([
