@@ -60,7 +60,7 @@ export default function ModalWindow({
             id: 1,
           })}
         >
-          Chansons d'aujourd'hui
+          {"Chansons d'aujourd'hui"}
         </LinkButton>
       </Box>
     </Modal>

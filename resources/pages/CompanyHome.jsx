@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from '@mui/material/Link';
-import { apiUrl } from '../js/App';
 import { useUserStore } from '../js/useUserStore';
 
 const CompanyHome = () => {

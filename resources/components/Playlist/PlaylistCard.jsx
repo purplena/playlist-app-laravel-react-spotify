@@ -71,7 +71,7 @@ const PlaylistCard = ({ requestedSong, index }) => {
               alignItems="center"
             >
               <Typography variant="body2">
-                {likes} {likes == 1 ? ' like' : ' likes'}
+                {likes} {likes === 1 ? ' like' : ' likes'}
               </Typography>
 
               <Typography

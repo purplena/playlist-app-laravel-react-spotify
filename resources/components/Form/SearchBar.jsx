@@ -1,10 +1,8 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { InputAdornment, Stack, TextField } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 
 export default function SearchBar({ handleInput, isLoading }) {
   return (

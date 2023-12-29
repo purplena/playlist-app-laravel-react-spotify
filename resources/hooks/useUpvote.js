@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import { apiUrl } from '../js/App';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
 export const useUpvote = (requestedSong, user) => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const useUpvote = (requestedSong, user) => {
     setIsLoading(true);
     axios
       .post(`${apiUrl}/${id}/songs/${requestedSongId}/upvote`)
-      .catch((error) => {
+      .catch(() => {
         setIsUpvoted(intialStateUpvote);
         setLikes(intialStateLikes);
       })

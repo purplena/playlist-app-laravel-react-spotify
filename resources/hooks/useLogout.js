@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { apiUrl } from '../js/App';
 import { useUserStore } from '../js/useUserStore';
 

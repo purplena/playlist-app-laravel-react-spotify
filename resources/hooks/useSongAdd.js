@@ -3,6 +3,7 @@ import { apiUrl } from '../js/App';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useUserStore } from '../js/useUserStore';
+import axios from 'axios';
 
 export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
   const [isAdded, setIsAdded] = useState(song.is_requested);
@@ -36,7 +37,7 @@ export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
         },
       ])
       .then((response) => {
-        if (response.data.status == 'added') {
+        if (response.data.status === 'added') {
           setModalHeader('BRAVO!');
         } else {
           setModalHeader("C'EST FAIT!");
@@ -45,7 +46,7 @@ export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
         setOpen(true);
       })
       .catch((error) => {
-        if (error.response.data.error == 'forbidden') {
+        if (error.response.data.error === 'forbidden') {
           setIsAdded(isAdded);
           setModalHeader('Oooooups!');
           setModalMessage(error.response.data.message);

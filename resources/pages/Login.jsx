@@ -82,7 +82,7 @@ const Login = ({ redirect = '/' }) => {
           alignItems="center"
         >
           <Typography variant="body1" component="h1" textAlign="center">
-            Pas de compte? Inscrivez-vous s'il vous plaît
+            {"Pas de compte? Inscrivez-vous s'il vous plaît"}
           </Typography>
           <LinkButton to={generatePath('/signup')} endIcon={<SendIcon />}>
             S’inscrire

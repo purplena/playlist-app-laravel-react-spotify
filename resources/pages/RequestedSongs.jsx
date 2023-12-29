@@ -1,4 +1,4 @@
-import { Alert, Button, Grid, Stack, Typography } from '@mui/material';
+import { Alert, Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { generatePath } from 'react-router-dom';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
@@ -72,7 +72,7 @@ const RequestedSongs = () => {
           })
         ) : (
           <Typography variant="subtitle2" textAlign={'center'} mt={21}>
-            Oups! Il n'y a pas de chansons suggérées...
+            {"Oups! Il n'y a pas de chansons suggérées..."}
           </Typography>
         )}
       </Grid>

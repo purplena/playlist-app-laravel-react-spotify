@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Stack } from '@mui/material';
+import { Box } from '@mui/material';
 import NavbarClient from '../components/Layout/Navbar';
 import { Outlet } from 'react-router-dom';
 import { useMe } from '../hooks/useMe';
