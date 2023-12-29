@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
+use App\Repositories\SongRepository;
 use App\Services\SpotifyApi;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -13,7 +13,7 @@ use Throwable;
 class SyncPlaylist extends Command
 {
 
-  public function __construct(protected SpotifyApi $spotifyApi)
+  public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository)
   {
     parent::__construct();
   }
@@ -39,76 +39,88 @@ class SyncPlaylist extends Command
     foreach (Company::all() as $company) {
       try {
         $api = $this->spotifyApi->getCompanyApiInstance($company);
-        try {
-          $userId = Arr::get($company->spotify_playlist_data, 'user_id');
-          $playlists = $api->getUserPlaylists($userId, [
-            'limit' => 10
-          ]);
-          if (!collect($playlists->items)->contains('id', Arr::get($company->spotify_playlist_data, 'playlist.id'))) {
-            $company->update([
-              'spotify_playlist_data' => null
-            ]);
-          } else {
-            $this->addTracksToPlaylist($company);
-          }
-        } catch (Throwable $t) {
-          //problem with user_id in spotify_playlist_data
-          // spotify_playlist_data is corrupted
-          continue;
-        }
       } catch (Throwable $t) {
-        // problem with refresh token
-        // spotify_playlist_data is corrupted
-        // make an action here
-        //for example send an email that a "reconnection to spotify is needed"
-        Log::error('Problem with refresh token', ['company' => $company]);
+        Log::error('Problem with refresh token. Reconnection to spotify is needed', ['company' => $company]);
         $company->update([
           'spotify_playlist_data' => null
         ]);
         continue;
       }
+
+      try {
+        if (collect($this->getAllPlaylists($api, $company))->contains('id', Arr::get($company->spotify_playlist_data, 'playlist.id'))) {
+          $this->addTracksToPlaylist($api, $company);
+        } else {
+          $company->update([
+            'spotify_playlist_data' => null
+          ]);
+        }
+      } catch (Throwable $t) {
+        Log::error('Problem with user_id in spotify_playlist_data. spotify_playlist_data is corrupted', ['company' => $company]);
+        continue;
+      }
     }
   }
 
-  protected function addTracksToPlaylist(Company $company)
+  protected function addTracksToPlaylist($api, Company $company)
   {
+    $songsToAddToSpotify = $this->getSongsToAddToSpotify($company);
+    $playlistId = Arr::get($company->spotify_playlist_data, 'playlist.id');
 
-    $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
-      ->withCount('upvotes')
-      ->whereDate('created_at', today())
-      ->orderBy('upvotes_count', 'desc')
-      ->get();
+    $songsToAddToSpotify->each(function ($songToAdd) use ($api, $playlistId, $company) {
+      $api->addPlaylistTracks($playlistId, [
+        $songToAdd->song->spotify_id
+      ]);
+      $company->songs()->attach($songToAdd->song_id);
+    });
+  }
 
-    $topScores = $this->getTopThreeScores($requestedSongs);
-    $companySongs = $company->songs();
-    $existingSongIds = $companySongs->pluck('song_id')->toArray();
+  protected function getAllPlaylists($api, $company): array
+  {
+    $userId = Arr::get($company->spotify_playlist_data, 'user_id');
 
-    foreach ($requestedSongs as $requestedSong) {
-      if (in_array($requestedSong->upvotes_count, $topScores)) {
-        if (!in_array($requestedSong->song_id, $existingSongIds)) {
-          $songsToAddToSpotify[] = $requestedSong;
-        }
+    $continue = true;
+    $nbElementsSeen = 0;
+    $items = [];
+    $limitPerPage = 50;
+
+    while ($continue) {
+      $playlists = $api->getUserPlaylists($userId, [
+        'limit' => $limitPerPage,
+        'offset' => $nbElementsSeen
+      ]);
+      $items = array_merge($items, $playlists->items);
+      $nbElementsSeen += $limitPerPage;
+      if ($nbElementsSeen >=  $playlists->total) {
+        $continue = false;
       }
     }
 
-    $api = $this->spotifyApi->getCompanyApiInstance($company);
-    $playlistId = Arr::get($company->spotify_playlist_data, 'playlist.id');
-    foreach ($songsToAddToSpotify as $songToAddToSpotify) {
-      $api->addPlaylistTracks($playlistId, [
-        $songToAddToSpotify->song->spotify_id
-      ]);
-      $companySongs->attach($songToAddToSpotify->song_id);
-    }
+    return $items;
+  }
+
+  protected function getSongsToAddToSpotify($company)
+  {
+    $requestedSongs = $this->songRepository->getRequestedSongsWithUpvotesCount($company);
+    $topScores = $this->getTopThreeScores($requestedSongs);
+    $companySongsIds = $company->songs()->pluck('song_id')->toArray();
+
+    return  $requestedSongs->filter(function ($requestedSong) use ($topScores) {
+      return in_array($requestedSong->upvotes_count, $topScores);
+    })
+      ->filter(function ($requestedSong) use ($companySongsIds) {
+        return !in_array($requestedSong->song_id, $companySongsIds);
+      });
   }
 
   protected function getTopThreeScores($requestedSongs): array
   {
-    foreach ($requestedSongs as $requestedSong) {
-      $topScores[] = $requestedSong->upvotes_count;
-    };
-    $uniqueValues = array_keys(array_flip($topScores));
-    rsort($uniqueValues);
-
-    return array_slice($uniqueValues, 0, 3);
+    return collect($requestedSongs->pluck('upvotes_count'))
+      ->filter(fn ($value) => $value > 0)
+      ->unique()
+      ->values()
+      ->sortDesc()
+      ->slice(0, 3)
+      ->toArray();
   }
 }
