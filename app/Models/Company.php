@@ -12,6 +12,10 @@ class Company extends Model
 {
   use HasFactory;
 
+  protected $fillable = [
+    'spotify_playlist_data'
+  ];
+
   protected $casts = [
     'spotify_playlist_data' => 'array'
   ];
