@@ -55,7 +55,11 @@ class SpotifyController extends Controller
         $playlist = $api->createPlaylist($userId, ['name' => 'Test_Playlist']);
 
         $playlistData = [
-            'playlist' => $playlist,
+            'playlist' => [
+                'id' => $playlist->id,
+                'href' => $playlist->href,
+                'snapshot_id' => $playlist->snapshot_id,
+            ],
             'user_id' => $userId,
             'refresh_token' => $refreshToken,
         ];
