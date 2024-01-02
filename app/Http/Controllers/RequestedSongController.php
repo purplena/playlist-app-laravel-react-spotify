@@ -77,9 +77,9 @@ class RequestedSongController extends Controller
     {
         $spotifyId = $request->spotifyId;
         $requestedSong =
-          RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
-              $query->where('spotify_id', $spotifyId)->whereDate('created_at', today());
-          })->first();
+        RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
+            $query->where('spotify_id', $spotifyId)->whereDate('created_at', today());
+        })->first();
 
         if ($requestedSong) {
             if ($requestedSong->upvotes()->whereDate('created_at', today())->exists()) {
