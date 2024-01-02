@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\RequestedSong;
 use App\Models\Song;
 use App\Models\Upvote;
+use App\Repositories\SongRepository;
 use App\Services\SpotifyApi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Illuminate\Http\Response;
 
 class RequestedSongController extends Controller
 {
-    public function __construct(protected SpotifyApi $spotifyApi)
+    public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository)
     {
     }
 
@@ -25,11 +26,7 @@ class RequestedSongController extends Controller
      */
     public function index(Company $company): JsonResource
     {
-        $requestedSongs = $company->requestedSongs()->with('song', 'upvotes')
-            ->withCount('upvotes')
-            ->whereDate('created_at', today())
-            ->orderBy('upvotes_count', 'desc')
-            ->get();
+        $requestedSongs = $this->songRepository->getRequestedSongsWithUpvotesCount($company);
 
         return RequestedSongResource::collection($requestedSongs);
     }
@@ -117,8 +114,14 @@ class RequestedSongController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RequestedSong $requestedSong)
+    public function destroy(RequestedSong $requestedSong): JsonResponse
     {
-        //
+        $requestedSong->upvotes()->delete();
+        RequestedSong::where('id', $requestedSong->id)->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cette chanson a été supprimée',
+        ]);
     }
 }

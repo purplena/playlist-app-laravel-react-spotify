@@ -4,12 +4,39 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useUserStore } from '../../js/useUserStore';
+import LinkButton from '../Button/LinkButton';
+import axios from 'axios';
+import { apiUrl } from '../../js/App';
 
-const PlaylistCard = ({ requestedSong, index }) => {
+const PlaylistCard = ({ requestedSong, index, onClick }) => {
   const { user } = useUserStore();
   const { upvote, isUpvoted, likes } = useUpvote(requestedSong, user);
   const handleUpvote = () => {
     upvote();
+  };
+
+  const handleSongDelete = () => {
+    console.log(requestedSong.id);
+    axios
+      .post(`${apiUrl}/manager/songs/destroy/${requestedSong.id}`)
+      .then(() => {
+        onClick(requestedSong.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSongBlacklisting = () => {
+    axios
+      .post(`${apiUrl}/manager/songs/store/${requestedSong.id}`)
+      .then((response) => {
+        console.log(response);
+        onClick(requestedSong.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -67,20 +94,45 @@ const PlaylistCard = ({ requestedSong, index }) => {
               direction="row"
               pl={2}
               mt={2}
-              spacing={4}
+              spacing={2}
               alignItems="center"
             >
-              <Typography variant="body2">
-                {likes} {likes === 1 ? ' like' : ' likes'}
-              </Typography>
-
-              <Typography
-                sx={{ cursor: 'pointer' }}
-                variant="body2"
-                onClick={handleUpvote}
-              >
-                {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
-              </Typography>
+              {user.company ? (
+                <>
+                  <Typography variant="body2">
+                    {likes} {likes === 1 ? ' like' : ' likes'}
+                  </Typography>
+                  <LinkButton
+                    onClick={handleSongDelete}
+                    sx={{ fontSize: '12px' }}
+                    variant="text"
+                    size="small"
+                  >
+                    Supprimer
+                  </LinkButton>
+                  <LinkButton
+                    sx={{ fontSize: '12px' }}
+                    variant="text"
+                    size="small"
+                    onClick={handleSongBlacklisting}
+                  >
+                    Blacklister
+                  </LinkButton>
+                </>
+              ) : (
+                <>
+                  <Typography variant="body2">
+                    {likes} {likes === 1 ? ' like' : ' likes'}
+                  </Typography>
+                  <Typography
+                    sx={{ cursor: 'pointer' }}
+                    variant="body2"
+                    onClick={handleUpvote}
+                  >
+                    {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
+                  </Typography>
+                </>
+              )}
             </Stack>
           </Grid>
         </Grid>
