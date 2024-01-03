@@ -55,7 +55,7 @@ class SyncPlaylist extends Command
             try {
                 $playlistId = Arr::get($company->spotify_playlist_data, 'playlist.id');
                 if (collect($this->getAllPlaylists($api, $company))->contains('id', $playlistId)) {
-                    $this->areSnapshotIdsIdentical($api, $company, $playlistId);
+                    $this->handlePlaylistSynchronisation($api, $company, $playlistId);
                 } else {
                     $company->update([
                         'spotify_playlist_data' => null,
