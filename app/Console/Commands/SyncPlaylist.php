@@ -54,7 +54,7 @@ class SyncPlaylist extends Command
 
             try {
                 $playlistId = Arr::get($company->spotify_playlist_data, 'playlist.id');
-                if (collect($this->getAllPlaylists($api, $company))->contains('id', $playlistId)) {
+                if ($this->getAllPlaylists($api, $company)->contains('id', $playlistId)) {
                     $this->handlePlaylistSynchronisation($api, $company, $playlistId);
                 } else {
                     $company->update([
@@ -62,14 +62,17 @@ class SyncPlaylist extends Command
                     ]);
                 }
             } catch (Throwable $t) {
-                Log::error('Problem with user_id in spotify_playlist_data. spotify_playlist_data is corrupted', ['company' => $company]);
+                Log::error(
+                    'Problem with user_id in spotify_playlist_data. spotify_playlist_data is corrupted',
+                    ['company' => $company]
+                );
 
                 continue;
             }
         }
     }
 
-    protected function areSnapshotIdsIdentical($api, $company, $playlistId)
+    protected function handlePlaylistSynchronisation($api, $company, $playlistId)
     {
         $snapshotIdDB = Arr::get($company->spotify_playlist_data, 'playlist.snapshot_id');
 
@@ -84,8 +87,10 @@ class SyncPlaylist extends Command
     protected function updatePlaylistSnapshot($api, $company, $playlistId)
     {
         $company->update([
-            'spotify_playlist_data' => array_merge($company->spotify_playlist_data, ['playlist' => PlaylistDataDTO::fromObjectToArray($api->getPlaylist($playlistId)),
-            ]),
+            'spotify_playlist_data' => array_merge(
+                $company->spotify_playlist_data,
+                ['playlist' => PlaylistDataDTO::fromObjectToArray($api->getPlaylist($playlistId))]
+            ),
         ]);
     }
 
@@ -106,10 +111,7 @@ class SyncPlaylist extends Command
                 return ! in_array($songSpotify['spotify_id'], $songsSpotifyIdsDB);
             })
             ->each(function ($songAdded) use ($company) {
-                $song = Song::where(['spotify_id' => $songAdded['spotify_id']])
-                    ->firstOr(function () use ($songAdded) {
-                        return Song::create($songAdded);
-                    });
+                $song = Song::firstOrCreate(['spotify_id' => $songAdded['spotify_id']], $songAdded);
                 $company->songs()->attach($song->id);
             });
 
@@ -126,19 +128,24 @@ class SyncPlaylist extends Command
                 return ! in_array($companySong->spotify_id, $songsSpotifyIds);
             });
 
-        $this->getSongsToAddToSpotify($company)
+        $songsToAddToSpotify = $this->getSongsToAddToSpotify($company)
             ->filter(function ($songToAdd) use ($songsSpotifyIds) {
                 return ! in_array($songToAdd->song->spotify_id, $songsSpotifyIds);
             })
             ->filter(function ($songToAdd) use ($songsDeletedFromSpotify) {
-                return ! in_array($songToAdd->song->spotify_id, $songsDeletedFromSpotify->pluck('spotify_id')->toArray());
-            })
-            ->each(function ($songToAdd) use ($api, $playlistId, $company) {
-                $api->addPlaylistTracks($playlistId, [
-                    $songToAdd->song->spotify_id,
-                ]);
+                return ! in_array(
+                    $songToAdd->song->spotify_id, $songsDeletedFromSpotify->pluck('spotify_id')->toArray()
+                );
+            });
+
+        $songsToAddToSpotify->chunk(20)->each(function ($songsToAdd) use ($api, $playlistId, $company) {
+            $spotifyIds = $songsToAdd->pluck('song.spotify_id')->all();
+            $api->addPlaylistTracks($playlistId, $spotifyIds);
+            $songsToAdd->each(function ($songToAdd) use ($company) {
                 $company->songs()->attach($songToAdd->song->id);
             });
+            sleep(30);
+        });
 
         $songsDeletedFromSpotify
             ->each(function ($companySong) use ($company) {
@@ -146,7 +153,7 @@ class SyncPlaylist extends Command
             });
     }
 
-    protected function getAllPlaylists($api, $company): array
+    protected function getAllPlaylists($api, $company): Collection
     {
         $userId = Arr::get($company->spotify_playlist_data, 'user_id');
 
@@ -167,7 +174,7 @@ class SyncPlaylist extends Command
             }
         }
 
-        return $items;
+        return collect($items);
     }
 
     protected function getSongsToAddToSpotify($company): Collection
