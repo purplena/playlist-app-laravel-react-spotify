@@ -25,9 +25,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group([], function () {
         Route::get('/manager/blacklist', [BlackListController::class, 'index']);
-        Route::post('/manager/blacklist/delete/{blacklistedSongId}', [BlackListController::class, 'destroy']);
+        Route::post('/manager/blacklist/destroy/{blacklistedSongId}', [BlackListController::class, 'destroy']);
+        Route::post('/manager/blacklist/destroy', [BlackListController::class, 'destroyAll']);
         Route::post('/manager/songs/store/{requestedSong}', [BlackListController::class, 'store']);
+        Route::post('/manager/songs/store', [BlackListController::class, 'storeAll']);
         Route::post('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
+        Route::post('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
     });
 });
 

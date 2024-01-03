@@ -1,19 +1,40 @@
 import React from 'react';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { apiUrl } from '../../js/App';
-import axios from 'axios';
+import LinkButton from '../Button/LinkButton';
+import { useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 
-const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
+const ManagerBlacklistCard = ({
+  index,
+  blacklistedSong,
+  onClick,
+  setOpen,
+  setModalHeader,
+  setModalMessage,
+  setSongClicked,
+  setAction,
+  setActionHandler,
+}) => {
+  const handleSongDeleteClick = () => {
+    setOpen(true);
+    setModalHeader('Attention!');
+    setModalMessage(
+      "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist."
+    );
+    setSongClicked(blacklistedSong.song_data.song_name);
+    setAction('supprimer de blacklist');
+    setActionHandler(() => handleDelete);
+  };
+
   const handleDelete = () => {
-    axios
-      .post(`${apiUrl}/manager/blacklist/delete/${id}`)
-      .then((response) => {
-        onDelete(id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
+      `${apiUrl}/manager/blacklist/destroy/${blacklistedSong.id}`,
+      setOpen,
+      onClick,
+      blacklistedSong
+    );
+
+    deleteOrBlacklist();
   };
 
   return (
@@ -51,7 +72,7 @@ const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
               >
                 {'Titre: '}
                 <Box component="span" fontWeight="700">
-                  {title}
+                  {blacklistedSong.song_data.song_name}
                 </Box>
               </Typography>
               <Typography
@@ -63,7 +84,7 @@ const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
               >
                 {'Artiste: '}
                 <Box component="span" fontWeight="700">
-                  {artist}
+                  {blacklistedSong.song_data.artist_name}
                 </Box>
               </Typography>
             </Grid>
@@ -75,7 +96,14 @@ const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
               alignItems="center"
               justifyContent="end"
             >
-              <DeleteIcon onClick={handleDelete} />
+              <LinkButton
+                onClick={handleSongDeleteClick}
+                sx={{ fontSize: '10px' }}
+                variant="text"
+                size="small"
+              >
+                Supprimer
+              </LinkButton>
             </Stack>
           </Grid>
         </Grid>
@@ -83,4 +111,4 @@ const ManagerSongCard = ({ index, title, artist, id, onDelete }) => {
     </Paper>
   );
 };
-export default ManagerSongCard;
+export default ManagerBlacklistCard;

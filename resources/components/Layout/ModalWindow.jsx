@@ -26,10 +26,11 @@ export default function ModalWindow({
   open,
   setOpen,
   modalHeader,
+  user,
+  action = '',
+  actionHandler = '',
+  songClicked = '',
 }) {
-  // I leave it here, because I want to ask a question about rendering
-  // console.log("ok");
-
   return (
     <Modal
       open={open}
@@ -52,16 +53,40 @@ export default function ModalWindow({
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {modalHeader}
         </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
+        <Typography
+          id="modal-modal-description"
+          sx={{ mt: 2, mb: 2, textAlign: 'justify' }}
+        >
           {modalMessage}
         </Typography>
-        <LinkButton
-          to={generatePath('/:id/songs', {
-            id: 1,
-          })}
-        >
-          {"Chansons d'aujourd'hui"}
-        </LinkButton>
+        {user.company ? (
+          <>
+            {songClicked ? (
+              <>
+                <Typography
+                  id="modal-modal-description"
+                  sx={{ mb: 2, fontSize: '12px' }}
+                >
+                  Titre:{' '}
+                  <Box component="span" fontWeight="700">
+                    {songClicked}
+                  </Box>
+                </Typography>
+              </>
+            ) : (
+              ''
+            )}
+            <LinkButton onClick={actionHandler}>{action}</LinkButton>
+          </>
+        ) : (
+          <LinkButton
+            to={generatePath('/:id/songs', {
+              id: 1,
+            })}
+          >
+            {"Chansons d'aujourd'hui"}
+          </LinkButton>
+        )}
       </Box>
     </Modal>
   );

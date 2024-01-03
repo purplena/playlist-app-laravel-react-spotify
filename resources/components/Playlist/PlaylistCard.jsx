@@ -5,38 +5,65 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useUserStore } from '../../js/useUserStore';
 import LinkButton from '../Button/LinkButton';
-import axios from 'axios';
 import { apiUrl } from '../../js/App';
+import { useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 
-const PlaylistCard = ({ requestedSong, index, onClick }) => {
+const PlaylistCard = ({
+  requestedSong,
+  index,
+  onClick,
+  setOpen,
+  setModalMessage,
+  setModalHeader,
+  setAction,
+  setActionHandler,
+  setSongClicked,
+}) => {
   const { user } = useUserStore();
   const { upvote, isUpvoted, likes } = useUpvote(requestedSong, user);
+
   const handleUpvote = () => {
     upvote();
   };
 
+  const handleSongDeleteClick = () => {
+    setOpen(true);
+    setModalHeader('Attention!');
+    setModalMessage('Voulez-vous supprimer cette chanson?');
+    setSongClicked(requestedSong.song.song_data.song_name);
+    setAction('supprimer');
+    setActionHandler(() => handleSongDelete);
+  };
+
   const handleSongDelete = () => {
-    console.log(requestedSong.id);
-    axios
-      .post(`${apiUrl}/manager/songs/destroy/${requestedSong.id}`)
-      .then(() => {
-        onClick(requestedSong.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
+      `${apiUrl}/manager/songs/destroy/${requestedSong.id}`,
+      setOpen,
+      onClick,
+      requestedSong
+    );
+
+    deleteOrBlacklist();
+  };
+
+  const handleSongBlacklistingClick = () => {
+    setOpen(true);
+    setModalHeader('Attention!');
+    setModalMessage('Voulez-vous blacklister cette chanson?');
+    setSongClicked(requestedSong.song.song_data.song_name);
+    setAction('blacklister');
+    setActionHandler(() => handleSongBlacklisting);
   };
 
   const handleSongBlacklisting = () => {
-    axios
-      .post(`${apiUrl}/manager/songs/store/${requestedSong.id}`)
-      .then((response) => {
-        console.log(response);
-        onClick(requestedSong.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
+      `${apiUrl}/manager/songs/store/${requestedSong.id}`,
+      setOpen,
+      onClick,
+      requestedSong
+    );
+
+    deleteOrBlacklist();
   };
 
   return (
@@ -66,7 +93,7 @@ const PlaylistCard = ({ requestedSong, index, onClick }) => {
               </Typography>
               <Typography
                 sx={{
-                  width: 186,
+                  width: user.company ? 260 : 186,
                 }}
                 variant="body2"
                 gutterBottom
@@ -80,7 +107,7 @@ const PlaylistCard = ({ requestedSong, index, onClick }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  width: 186,
+                  width: user.company ? 260 : 186,
                 }}
                 noWrap
               >
@@ -99,22 +126,22 @@ const PlaylistCard = ({ requestedSong, index, onClick }) => {
             >
               {user.company ? (
                 <>
-                  <Typography variant="body2">
+                  <Typography variant="body2" sx={{ fontSize: '10px' }}>
                     {likes} {likes === 1 ? ' like' : ' likes'}
                   </Typography>
                   <LinkButton
-                    onClick={handleSongDelete}
-                    sx={{ fontSize: '12px' }}
+                    onClick={handleSongDeleteClick}
+                    sx={{ fontSize: '10px' }}
                     variant="text"
                     size="small"
                   >
                     Supprimer
                   </LinkButton>
                   <LinkButton
-                    sx={{ fontSize: '12px' }}
+                    sx={{ fontSize: '10px' }}
                     variant="text"
                     size="small"
-                    onClick={handleSongBlacklisting}
+                    onClick={handleSongBlacklistingClick}
                   >
                     Blacklister
                   </LinkButton>

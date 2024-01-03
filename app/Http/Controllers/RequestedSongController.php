@@ -114,14 +114,19 @@ class RequestedSongController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RequestedSong $requestedSong): JsonResponse
+    public function destroy(RequestedSong $requestedSong): void
     {
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
+    }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cette chanson a été supprimée',
-        ]);
+    public function destroyAll(): void
+    {
+        $company = auth()->user()->company;
+        $requestedSongs = $company->requestedSongs;
+        $requestedSongs->each(function ($requestedSong) {
+            $requestedSong->upvotes()->whereDate('created_at', today())->delete();
+        });
+        $company->requestedSongs()->whereDate('created_at', today())->delete();
     }
 }
