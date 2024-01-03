@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\DTO\PlaylistDataDTO;
 use App\Services\SpotifyApi;
 use Illuminate\Support\Arr;
 use SpotifyWebAPI\Session;
@@ -55,7 +56,7 @@ class SpotifyController extends Controller
         $playlist = $api->createPlaylist($userId, ['name' => 'Test_Playlist']);
 
         $playlistData = [
-            'playlist' => $playlist,
+            'playlist' => PlaylistDataDTO::fromObjectToArray($playlist),
             'user_id' => $userId,
             'refresh_token' => $refreshToken,
         ];
