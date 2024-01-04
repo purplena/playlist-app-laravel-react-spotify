@@ -5,11 +5,17 @@ import PlaylistCard from '../components/Playlist/PlaylistCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import LinkButton from '../components/Button/LinkButton';
+import ModalWindow from '../components/Layout/ModalWindow';
+import { useUserStore } from '../js/useUserStore';
 
 const RequestedSongs = () => {
+  const { user } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const { getSongs, requestedSongs, serverErrorMessage } =
     useGetRequestedSongs(setIsLoading);
+  const [open, setOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalHeader, setModalHeader] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -67,6 +73,9 @@ const RequestedSongs = () => {
                 key={requestedSong.id}
                 requestedSong={requestedSong}
                 index={index}
+                setOpen={setOpen}
+                setModalMessage={setModalMessage}
+                setModalHeader={setModalHeader}
               />
             );
           })
@@ -76,6 +85,17 @@ const RequestedSongs = () => {
           </Typography>
         )}
       </Grid>
+      {user ? (
+        <ModalWindow
+          open={open}
+          setOpen={setOpen}
+          modalMessage={modalMessage}
+          modalHeader={modalHeader}
+          user={user}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 };

@@ -4,7 +4,13 @@ import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
-export const useUpvote = (requestedSong, user) => {
+export const useUpvote = (
+  requestedSong,
+  user,
+  setOpen,
+  setModalMessage,
+  setModalHeader
+) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [likes, setLikes] = useState(requestedSong.upvotes_count);
@@ -24,7 +30,12 @@ export const useUpvote = (requestedSong, user) => {
     setIsLoading(true);
     axios
       .post(`${apiUrl}/${id}/songs/${requestedSongId}/upvote`)
-      .catch(() => {
+      .catch((error) => {
+        if (error.response.data.error === 'upvote_limit') {
+          setModalHeader('Oooooups!');
+          setModalMessage(error.response.data.message);
+          setOpen(true);
+        }
         setIsUpvoted(intialStateUpvote);
         setLikes(intialStateLikes);
       })

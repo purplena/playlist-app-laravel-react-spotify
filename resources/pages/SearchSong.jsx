@@ -5,9 +5,11 @@ import { Grid, Stack } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SongSearchCard from '../components/Playlist/SongSearchCard';
 import ModalWindow from '../components/Layout/ModalWindow';
+import { useUserStore } from '../js/useUserStore';
 
 function Search() {
   const { isLoading, searchResults, handleInput } = useSearchSong();
+  const { user } = useUserStore();
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
@@ -40,12 +42,17 @@ function Search() {
           </Grid>
         )}
       </Stack>
-      <ModalWindow
-        open={open}
-        setOpen={setOpen}
-        modalMessage={modalMessage}
-        modalHeader={modalHeader}
-      />
+      {user ? (
+        <ModalWindow
+          open={open}
+          setOpen={setOpen}
+          modalMessage={modalMessage}
+          modalHeader={modalHeader}
+          user={user}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 }

@@ -86,7 +86,10 @@ class SyncPlaylist extends Command
     protected function updatePlaylistSnapshot($company, $playlistId)
     {
         $company->update([
-            'spotify_playlist_data' => array_merge($company->spotify_playlist_data, ['playlist' => PlaylistDataDTO::fromObjectToArray($this->instance->getPlaylist($playlistId)),
+            'spotify_playlist_data' => array_merge($company->spotify_playlist_data, [
+                'playlist' => PlaylistDataDTO::fromObjectToArray(
+                    $this->instance->getPlaylist($playlistId)
+                ),
             ]),
         ]);
     }
@@ -102,10 +105,15 @@ class SyncPlaylist extends Command
     {
         $songsSpotifyIdsDB = $company->songs()->pluck('spotify_id')->toArray();
         $songsSpotify = $this->getSongsSpotify($playlistId);
+        $blacklistedSongs = $company->blacklistedSongs;
 
+        //Here is an updated version with filering through blacklist
         $songsAddedToSpotify = $songsSpotify
             ->filter(function ($songSpotify) use ($songsSpotifyIdsDB) {
                 return ! in_array($songSpotify['spotify_id'], $songsSpotifyIdsDB);
+            })
+            ->filter(function ($songSpotify) use ($blacklistedSongs) {
+                return ! in_array($songSpotify['spotify_id'], $blacklistedSongs->pluck('spotify_id')->toArray());
             })
             ->each(function ($songAdded) use ($company) {
                 $song = Song::where(['spotify_id' => $songAdded['spotify_id']])
@@ -115,8 +123,24 @@ class SyncPlaylist extends Command
                 $company->songs()->attach($song->id);
             });
 
+        $this->deleteBlacklistedSongsFromSpotify($playlistId, $blacklistedSongs);
         $this->addTracksToPlaylist($company, $playlistId);
         $this->updatePlaylistSnapshot($company, $playlistId);
+    }
+
+    protected function deleteBlacklistedSongsFromSpotify($playlistId, $blacklistedSongs)
+    {
+        $tracks = [
+            'tracks' => $blacklistedSongs->pluck('spotify_id')->map(function ($blacklistedSong) {
+                return ['uri' => $blacklistedSong];
+            })->toArray(),
+        ];
+
+        $this->instance->deletePlaylistTracks(
+            $playlistId,
+            $tracks,
+            $this->instance->getPlaylist($playlistId)->snapshot_id
+        );
     }
 
     protected function addTracksToPlaylist($company, $playlistId): void

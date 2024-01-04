@@ -51,6 +51,16 @@ export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
           setModalHeader('Oooooups!');
           setModalMessage(error.response.data.message);
           setOpen(true);
+        } else if (error.response.data.error === 'blacklisted') {
+          setIsAdded(isAdded);
+          setModalHeader('Oooooups!');
+          setModalMessage(error.response.data.message);
+          setOpen(true);
+        } else {
+          setIsAdded(isAdded);
+          setModalHeader('Oooooups!');
+          setModalMessage(error.response.data.message);
+          setOpen(true);
         }
         setIsAdded(intialStateIsAdded);
       })

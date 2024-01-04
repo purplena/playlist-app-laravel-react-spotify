@@ -51,20 +51,32 @@ class RequestedSongController extends Controller
         return response()->json($response);
     }
 
-    public function upvote(Company $company, RequestedSong $requestedSong)
+    public function upvote(Company $company, RequestedSong $requestedSong): ?JsonResponse
     {
         $userUpvote = $requestedSong->upvotes()->where('user_id', auth()->id())->first();
 
         if ($userUpvote) {
             $userUpvote->delete();
         } else {
+            $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
+            if ($upvotes->get()->count() >= 20) {
+                $oldestRequestedSong = $upvotes->oldest('created_at')->first()->created_at;
+                $differenceInMinutes = 60 - (now()->diffInMinutes($oldestRequestedSong));
+
+                return response()->json([
+                    'message' => 'Vous avez déjà liké 20 chansons. 
+                        Vous pouvez liker plus de chansons en '.$differenceInMinutes.' minutes.',
+                    'error' => 'upvote_limit',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
             Upvote::create([
                 'requested_song_id' => $requestedSong->id,
                 'user_id' => auth()->id(),
             ]);
         }
 
-        return response()->json(['success' => true]);
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
     /**
@@ -81,26 +93,53 @@ class RequestedSongController extends Controller
         if ($requestedSong) {
             if ($requestedSong->upvotes()->whereDate('created_at', today())->exists()) {
                 return response()->json([
-                    'message' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes"',
+                    'message' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes".',
                     'error' => 'forbidden',
                 ], Response::HTTP_BAD_REQUEST);
             }
             $requestedSong->delete();
             $requestedSong->song()->delete();
 
-            return response()->json(['message' => 'Cette chanson a été supprimée!', 'status' => 'deleted']);
+            return response()->json([
+                'message' => 'Cette chanson a été supprimée!',
+                'status' => 'deleted',
+            ], Response::HTTP_OK);
         } else {
-            $song = Song::where(['spotify_id' => $request->spotifyId])
-                ->firstOr(function () use ($request) {
-                    return Song::create($this->getTrackInfo($request->spotifyId));
-                });
-            RequestedSong::create([
-                'song_id' => $song->id,
-                'user_id' => auth()->id(),
-                'company_id' => $company->id,
-            ]);
+            $requestedSongs = auth()->user()->requestedSongs()->where('created_at', '>=', now()->subMinutes(60));
+            if ($requestedSongs->get()->count() >= 10) {
+                $oldestRequestedSong = $requestedSongs->oldest('created_at')->first()->created_at;
+                $differenceInMinutes = 60 - (now()->diffInMinutes($oldestRequestedSong));
 
-            return response()->json(['message' => 'Bravo! Vous avez suggéré une chanson!', 'status' => 'added'], 201);
+                return response()->json([
+                    'message' => 'Vous avez déjà ajouté 10 chansons. 
+                        Vous pouvez ajouter plus de chansons en '.$differenceInMinutes.' minutes.',
+                    'error' => 'song_limit',
+                ], Response::HTTP_BAD_REQUEST);
+
+            } else {
+                if (in_array($spotifyId, $company->blacklistedSongs()->pluck('spotify_id')->toArray())) {
+                    return response()->json([
+                        'message' => 'Cette chanson a été blacklistée par l\'établissement. 
+                        Vous ne pouvez pas l`\'ajouter dans le playlist.',
+                        'error' => 'blacklisted',
+                    ], Response::HTTP_BAD_REQUEST);
+                }
+
+                $song = Song::where(['spotify_id' => $request->spotifyId])
+                    ->firstOr(function () use ($request) {
+                        return Song::create($this->getTrackInfo($request->spotifyId));
+                    });
+                RequestedSong::create([
+                    'song_id' => $song->id,
+                    'user_id' => auth()->id(),
+                    'company_id' => $company->id,
+                ]);
+
+                return response()->json([
+                    'message' => 'Bravo! Vous avez suggéré une chanson!',
+                    'status' => 'added',
+                ], Response::HTTP_CREATED);
+            }
         }
     }
 

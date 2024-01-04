@@ -16,7 +16,6 @@ export const useLogin = () => {
             password,
           })
           .then((response) => {
-            console.log(response.data.user);
             if (response.data.user) {
               setUser(response.data.user);
             }

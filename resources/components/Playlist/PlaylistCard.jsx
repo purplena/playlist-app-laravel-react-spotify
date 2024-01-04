@@ -20,7 +20,13 @@ const PlaylistCard = ({
   setSongClicked,
 }) => {
   const { user } = useUserStore();
-  const { upvote, isUpvoted, likes } = useUpvote(requestedSong, user);
+  const { upvote, isUpvoted, likes } = useUpvote(
+    requestedSong,
+    user,
+    setOpen,
+    setModalMessage,
+    setModalHeader
+  );
 
   const handleUpvote = () => {
     upvote();

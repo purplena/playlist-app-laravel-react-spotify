@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { generatePath } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import LinkButton from '../Button/LinkButton';
 
 const style = {
@@ -39,20 +39,27 @@ export default function ModalWindow({
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Button
-          onClick={() => setOpen(false)}
-          sx={{
-            justifyContent: 'flex-end',
-            ':hover': {
-              backgroundColor: 'transparent',
-            },
-          }}
+        <Stack
+          direction={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
         >
-          <CloseIcon />
-        </Button>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {modalHeader}
-        </Typography>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {modalHeader}
+          </Typography>
+          <Button
+            onClick={() => setOpen(false)}
+            sx={{
+              justifyContent: 'flex-end',
+              ':hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
+            <CloseIcon />
+          </Button>
+        </Stack>
+
         <Typography
           id="modal-modal-description"
           sx={{ mt: 2, mb: 2, textAlign: 'justify' }}
