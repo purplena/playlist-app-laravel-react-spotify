@@ -59,12 +59,12 @@ class RequestedSongController extends Controller
             $userUpvote->delete();
         } else {
             $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
-            if ($upvotes->get()->count() >= 20) {
+            if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
                 $oldestRequestedSong = $upvotes->oldest('created_at')->first()->created_at;
-                $differenceInMinutes = 60 - (now()->diffInMinutes($oldestRequestedSong));
+                $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
 
                 return response()->json([
-                    'message' => 'Vous avez déjà liké 20 chansons. 
+                    'message' => 'Vous avez déjà liké '.RequestedSong::MAX_SONGS_UPVOTED.' chansons. 
                         Vous pouvez liker plus de chansons en '.$differenceInMinutes.' minutes.',
                     'error' => 'upvote_limit',
                 ], Response::HTTP_BAD_REQUEST);
@@ -106,12 +106,12 @@ class RequestedSongController extends Controller
             ], Response::HTTP_OK);
         } else {
             $requestedSongs = auth()->user()->requestedSongs()->where('created_at', '>=', now()->subMinutes(60));
-            if ($requestedSongs->get()->count() >= 10) {
+            if ($requestedSongs->get()->count() >= RequestedSong::MAX_SONGS_ADDED) {
                 $oldestRequestedSong = $requestedSongs->oldest('created_at')->first()->created_at;
-                $differenceInMinutes = 60 - (now()->diffInMinutes($oldestRequestedSong));
+                $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
 
                 return response()->json([
-                    'message' => 'Vous avez déjà ajouté 10 chansons. 
+                    'message' => 'Vous avez déjà ajouté '.RequestedSong::MAX_SONGS_ADDED.' chansons. 
                         Vous pouvez ajouter plus de chansons en '.$differenceInMinutes.' minutes.',
                     'error' => 'song_limit',
                 ], Response::HTTP_BAD_REQUEST);

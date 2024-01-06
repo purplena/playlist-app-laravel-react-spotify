@@ -14,13 +14,12 @@ class StoreRegisterRequest extends FormRequest
     public function rules(): array
     {
         return
-          [
-              'email' => 'required|string|email|max:255|unique:users',
-              'password' => 'required|string|min:6|',
-              'username' => 'nullable|string',
-              'img_path' => 'nullable|string',
-              'company_id' => 'nullable|int',
-              'role' => 'int',
-          ];
+            [
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6',
+                'username' => 'nullable|string',
+                'company_id' => 'nullable|int',
+                'role' => 'int',
+            ];
     }
 }

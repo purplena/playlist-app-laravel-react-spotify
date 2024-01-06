@@ -53,7 +53,7 @@ class SpotifyController extends Controller
         $api->setAccessToken($accessToken);
 
         $userId = $api->me()->id;
-        $playlist = $api->createPlaylist($userId, ['name' => 'Test_Playlist']);
+        $playlist = $api->createPlaylist($userId, ['name' => $company->name.' Playlist']);
 
         $playlistData = [
             'playlist' => PlaylistDataDTO::fromObjectToArray($playlist),

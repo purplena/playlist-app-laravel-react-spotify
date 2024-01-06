@@ -43,3 +43,4 @@ Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']
 Route::post('/user/login', [LoginController::class, 'authenticate']);
 Route::post('/user/register', [RegisterController::class, 'store']);
 Route::post('/user/logout', [LoginController::class, 'logout']);
+Route::post('/manager/register', [RegisterController::class, 'storeCompany']);

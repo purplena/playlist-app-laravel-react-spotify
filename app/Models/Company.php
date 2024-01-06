@@ -12,7 +12,16 @@ class Company extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
+        'slug',
+        'tel',
+        'zip',
+        'country',
+        'city',
+        'address',
         'spotify_playlist_data',
+        'qr_code',
+        'logo',
     ];
 
     protected $casts = [

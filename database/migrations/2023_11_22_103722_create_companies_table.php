@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('city');
             $table->string('address');
             $table->json('spotify_playlist_data')->nullable();
-            $table->string('qr_code');
-            $table->string('logo');
+            $table->string('qr_code')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }
