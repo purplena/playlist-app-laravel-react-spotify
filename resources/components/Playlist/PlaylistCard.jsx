@@ -63,7 +63,7 @@ const PlaylistCard = ({
 
   const handleSongBlacklisting = () => {
     const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
-      `${apiUrl}/manager/songs/store/${requestedSong.id}`,
+      `${apiUrl}/manager/blacklist/store/${requestedSong.id}`,
       setOpen,
       onClick,
       requestedSong

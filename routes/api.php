@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RequestedSongController;
+use App\Http\Middleware\IsManager;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,12 +24,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/{company}/songs/{requestedSong}/upvote', [RequestedSongController::class, 'upvote']);
     Route::post('/{company}/songs/{spotifyId}/store', [RequestedSongController::class, 'store']);
 
-    Route::group([], function () {
+    Route::group(['middleware' => IsManager::class], function () {
         Route::get('/manager/blacklist', [BlackListController::class, 'index']);
         Route::post('/manager/blacklist/destroy/{blacklistedSongId}', [BlackListController::class, 'destroy']);
         Route::post('/manager/blacklist/destroy', [BlackListController::class, 'destroyAll']);
-        Route::post('/manager/songs/store/{requestedSong}', [BlackListController::class, 'store']);
-        Route::post('/manager/songs/store', [BlackListController::class, 'storeAll']);
+        Route::post('/manager/blacklist/store/{requestedSong}', [BlackListController::class, 'store']);
+        Route::post('/manager/blacklist/store', [BlackListController::class, 'storeAll']);
         Route::post('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
         Route::post('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
     });
