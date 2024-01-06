@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { apiUrl } from '../js/App';
 import { Grid, Stack, Typography } from '@mui/material';
 import ManagerBlacklistCard from '../components/Playlist/ManagerBlacklistCard';
-import axios from 'axios';
 import { useUserStore } from '../js/useUserStore';
 import ModalWindow from '../components/Layout/ModalWindow';
 import LinkButton from '../components/Button/LinkButton';
-import { useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
+import {
+  actions,
+  useDeleteOrBlacklistAll,
+} from '../hooks/userDeleteOrBlacklistAll';
 
 const CompanyBlacklist = () => {
   const { user } = useUserStore();
@@ -51,11 +54,11 @@ const CompanyBlacklist = () => {
   };
 
   const handleAllSongsDelete = () => {
-    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll(
-      `${apiUrl}/manager/blacklist/destroy`,
+    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
+      action: actions.destroyAllBlacklist,
       setOpen,
-      setBlacklistedSongs
-    );
+      setSongs: setBlacklistedSongs,
+    });
 
     deleteOrBlacklistAll();
   };
