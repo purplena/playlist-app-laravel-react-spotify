@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Blacklist extends Model
 {
+    protected $table = 'company_song_blacklisted';
+
     use HasFactory;
 }

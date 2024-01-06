@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SongResource;
+use App\Models\Blacklist;
 use App\Models\RequestedSong;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BlackListController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Blacklist::class, 'blacklist');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -50,19 +56,17 @@ class BlackListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): void
+    public function destroy(Blacklist $blacklist): JsonResponse
     {
-        $company = auth()->user()->company;
-        $company->blacklistedSongs()->detach($request->blacklistedSongId);
+        $blacklist->delete();
+
+        return response()->json();
     }
 
-    public function destroyAll(): void
+    public function destroyAll(): JsonResponse
     {
-        $company = auth()->user()->company;
-        $blacklistedSongs = $company->blacklistedSongs;
+        auth()->user()->company->blacklistedSongs()->detach();
 
-        $blacklistedSongs->each(function ($blacklistedSong) use ($company) {
-            $company->blacklistedSongs()->detach($blacklistedSong->song_id);
-        });
+        return response()->json();
     }
 }

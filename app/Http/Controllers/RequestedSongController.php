@@ -19,6 +19,7 @@ class RequestedSongController extends Controller
 {
     public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository)
     {
+        $this->authorizeResource(RequestedSong::class, 'requestedSong');
     }
 
     /**
@@ -153,13 +154,15 @@ class RequestedSongController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RequestedSong $requestedSong): void
+    public function destroy(RequestedSong $requestedSong): JsonResponse
     {
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
+
+        return response()->json();
     }
 
-    public function destroyAll(): void
+    public function destroyAll(): JsonResponse
     {
         $company = auth()->user()->company;
         $requestedSongs = $company->requestedSongs;
@@ -167,5 +170,7 @@ class RequestedSongController extends Controller
             $requestedSong->upvotes()->whereDate('created_at', today())->delete();
         });
         $company->requestedSongs()->whereDate('created_at', today())->delete();
+
+        return response()->json();
     }
 }
