@@ -46,7 +46,7 @@ const CompanyRequestedSongs = () => {
 
   const handleAllSongsBlacklist = () => {
     const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll(
-      `${apiUrl}/manager/songs/store`,
+      `${apiUrl}/manager/blacklist/store`,
       setOpen,
       setRequestedSongs
     );
