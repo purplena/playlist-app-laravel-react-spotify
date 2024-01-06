@@ -5,8 +5,10 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useUserStore } from '../../js/useUserStore';
 import LinkButton from '../Button/LinkButton';
-import { apiUrl } from '../../js/App';
-import { useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
+import {
+  actions,
+  useDeleteOrBlacklistOne,
+} from '../../hooks/useDeleteOrBlacklistOne';
 
 const PlaylistCard = ({
   requestedSong,
@@ -42,12 +44,12 @@ const PlaylistCard = ({
   };
 
   const handleSongDelete = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
-      `${apiUrl}/manager/songs/destroy/${requestedSong.id}`,
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.destroyRequestedSong,
       setOpen,
       onClick,
-      requestedSong
-    );
+      itemId: requestedSong.id,
+    });
 
     deleteOrBlacklist();
   };
@@ -62,12 +64,12 @@ const PlaylistCard = ({
   };
 
   const handleSongBlacklisting = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
-      `${apiUrl}/manager/blacklist/store/${requestedSong.id}`,
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.storeBlacklist,
       setOpen,
       onClick,
-      requestedSong
-    );
+      itemId: requestedSong.id,
+    });
 
     deleteOrBlacklist();
   };

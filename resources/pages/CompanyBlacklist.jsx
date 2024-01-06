@@ -35,7 +35,7 @@ const CompanyBlacklist = () => {
 
   const handleDelete = (id) => {
     setBlacklistedSongs((prevSongs) =>
-      prevSongs.filter((song) => song.id !== id)
+      prevSongs.filter((song) => song.blacklist_id !== id)
     );
   };
 

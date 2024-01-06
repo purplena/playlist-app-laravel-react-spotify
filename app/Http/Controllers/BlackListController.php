@@ -29,15 +29,17 @@ class BlackListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RequestedSong $requestedSong): void
+    public function store(RequestedSong $requestedSong): JsonResponse
     {
         $company = auth()->user()->company;
         $company->blacklistedSongs()->attach($requestedSong->song_id);
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
+
+        return response()->json();
     }
 
-    public function storeAll(): void
+    public function storeAll(): JsonResponse
     {
         $company = auth()->user()->company;
         $requestedSongs = $company->requestedSongs;
@@ -51,6 +53,8 @@ class BlackListController extends Controller
             });
 
         $company->requestedSongs()->whereDate('created_at', today())->delete();
+
+        return response()->json();
     }
 
     /**

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
-import { apiUrl } from '../../js/App';
 import LinkButton from '../Button/LinkButton';
-import { useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
+import {
+  actions,
+  useDeleteOrBlacklistOne,
+} from '../../hooks/useDeleteOrBlacklistOne';
 
 const ManagerBlacklistCard = ({
   index,
@@ -27,12 +29,12 @@ const ManagerBlacklistCard = ({
   };
 
   const handleDelete = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
-      `${apiUrl}/manager/blacklist/destroy/${blacklistedSong.id}`,
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.destroyBlacklist,
       setOpen,
       onClick,
-      blacklistedSong
-    );
+      itemId: blacklistedSong.blacklist_id,
+    });
 
     deleteOrBlacklist();
   };

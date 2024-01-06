@@ -40,7 +40,10 @@ class Company extends Model
 
     public function blacklistedSongs(): BelongsToMany
     {
-        return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id')->withTimestamps();
+        return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id')
+            ->withTimestamps()
+            ->withPivot('id')
+            ->using(Blacklist::class);
     }
 
     public function songs(): BelongsToMany
