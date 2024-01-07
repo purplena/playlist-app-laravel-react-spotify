@@ -5,7 +5,9 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 
 use App\Models\Blacklist;
+use App\Models\RequestedSong;
 use App\Policies\BlacklistPolicy;
+use App\Policies\RequestedSongPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Blacklist::class => BlacklistPolicy::class,
+        RequestedSong::class => RequestedSongPolicy::class,
     ];
 
     /**

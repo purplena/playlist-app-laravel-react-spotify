@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Stack } from '@mui/material';
 import LinkButton from '../Button/LinkButton';
@@ -31,6 +31,8 @@ export default function ModalWindow({
   actionHandler = '',
   songClicked = '',
 }) {
+  const { id } = useParams();
+
   return (
     <Modal
       open={open}
@@ -86,11 +88,7 @@ export default function ModalWindow({
             <LinkButton onClick={actionHandler}>{action}</LinkButton>
           </>
         ) : (
-          <LinkButton
-            to={generatePath('/:id/songs', {
-              id: 1,
-            })}
-          >
+          <LinkButton to={generatePath('/:id/songs', { id })}>
             {"Chansons d'aujourd'hui"}
           </LinkButton>
         )}

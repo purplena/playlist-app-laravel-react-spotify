@@ -101,7 +101,7 @@ const PlaylistCard = ({
               </Typography>
               <Typography
                 sx={{
-                  width: user.company ? 260 : 186,
+                  width: user?.company ? 260 : 186,
                 }}
                 variant="body2"
                 gutterBottom
@@ -115,7 +115,7 @@ const PlaylistCard = ({
               <Typography
                 variant="body2"
                 sx={{
-                  width: user.company ? 260 : 186,
+                  width: user?.company ? 260 : 186,
                 }}
                 noWrap
               >
@@ -132,7 +132,7 @@ const PlaylistCard = ({
               spacing={2}
               alignItems="center"
             >
-              {user.company ? (
+              {user?.company ? (
                 <>
                   <Typography variant="body2" sx={{ fontSize: '10px' }}>
                     {likes} {likes === 1 ? ' like' : ' likes'}
