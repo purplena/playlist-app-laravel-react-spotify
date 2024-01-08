@@ -3,6 +3,9 @@ import { Button, Stack, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router';
 import { useSignUpCompany } from '../hooks/useSignUpCompany';
+import { SliderPicker } from 'react-color';
+import LinkButton from '../components/Button/LinkButton';
+import { Box } from '@mui/system';
 
 const CompanySignUp = ({ redirect = '/manager' }) => {
   const [email, setEmail] = useState('');
@@ -17,20 +20,20 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const { signup, errors } = useSignUpCompany();
   const navigate = useNavigate();
-
-  // image
   const [previewImage, setPreviewImage] = useState(undefined);
-  const [message, setMessage] = useState('');
   const [logo, setLogo] = useState(null);
-  // const [isError, setIsError] = useState(false);
+  const [fontColor, setFontColor] = useState({ color: '#fff' });
+  const [backgroundColor, setBackgroundColor] = useState({
+    background: 'rgb(1,1,1)',
+    color: '',
+  });
+
+  console.log(backgroundColor);
 
   const selectFile = (e) => {
     setLogo(e.target.files[0]);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
-    setMessage('');
   };
-
-  // image
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,12 +50,26 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
       zip,
       address,
       logo,
+      background_color: backgroundColor.background,
+      font_color: fontColor.color,
     });
-    console.log(response);
     if (response?.data?.status) {
       navigate(redirect);
     }
   };
+
+  const changeBackgroungHandler = (colors) => {
+    const col =
+      'rgb(' + colors.rgb.r + ',' + colors.rgb.g + ',' + colors.rgb.b + ')';
+    setBackgroundColor({ background: col, color: colors.rgb });
+  };
+
+  const hexBackgroundColor = rgbToHex(
+    backgroundColor?.color?.r,
+    backgroundColor?.color?.g,
+    backgroundColor?.color?.b
+  );
+  console.log(hexBackgroundColor);
 
   return (
     <>
@@ -150,6 +167,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
               helperText={errors?.tel}
               onChange={(e) => setTel(e.target.value)}
             />
+
             <TextField
               error={!!errors?.country}
               style={{ width: '250px' }}
@@ -158,8 +176,11 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
               variant="standard"
               value={country}
               helperText={errors?.country}
-              onChange={(e) => setCountry(e.target.value)}
+              onChange={(e) => {
+                setCountry(e.target.value);
+              }}
             />
+
             <TextField
               error={!!errors?.city}
               style={{ width: '250px' }}
@@ -170,6 +191,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
               helperText={errors?.city}
               onChange={(e) => setCity(e.target.value)}
             />
+
             <TextField
               error={!!errors?.zip}
               style={{ width: '250px' }}
@@ -197,7 +219,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
               {'Personnalisez votre application!'}
             </Typography>
 
-            <Stack mb={3}>
+            <Stack mb={3} justifyContent={'center'} alignItems={'center'}>
               <Stack direction={'row'} spacing={2} mt={2} alignItems={'center'}>
                 <Typography variant="body2" component="p">
                   {'Ajouter votre logo'}
@@ -239,14 +261,94 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
                   />
                 </Stack>
               )}
-              {message && (
-                <Typography
-                  variant="subtitle2"
-                  // className={`upload-message ${isError ? 'error' : ''}`}
-                >
-                  {message}
-                </Typography>
-              )}
+              <Stack mt={2}>
+                {errors?.logo &&
+                  errors?.logo.map((error) => {
+                    return (
+                      <Typography
+                        key={error}
+                        variant="body1"
+                        sx={{ fontSize: '12px', color: '#D32F2F' }}
+                      >
+                        {error}
+                      </Typography>
+                    );
+                  })}
+              </Stack>
+              <Stack spacing={2}>
+                <Stack>
+                  <Typography variant="body2" component="p">
+                    Ajouter vos couleur principales
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    component="p"
+                    sx={{ color: '#979797', fontSize: '11px' }}
+                  >
+                    optionel
+                  </Typography>
+                </Stack>
+
+                <Stack>
+                  <Typography variant="body2" component="p">
+                    {'Couleur de navigation, bas de page et boutons'}
+                  </Typography>
+                  <SliderPicker
+                    className="picker"
+                    color={backgroundColor.color}
+                    onChange={changeBackgroungHandler}
+                  />
+                </Stack>
+
+                <Stack>
+                  <Typography variant="body2" component="p">
+                    {'Couleur de police'}
+                  </Typography>
+                  <Stack
+                    direction={'row'}
+                    spacing={3}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                  >
+                    <Box
+                      onClick={() => setFontColor({ color: '#000' })}
+                      sx={{
+                        width: '50px',
+                        height: '50px',
+                        background: '#000',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                      }}
+                    ></Box>
+                    <Box
+                      onClick={() => setFontColor({ color: '#fff' })}
+                      sx={{
+                        width: '50px',
+                        height: '50px',
+                        background: '#fff',
+                        border: '1px solid #000',
+                        borderRadius: '5px',
+                      }}
+                    ></Box>
+                  </Stack>
+                </Stack>
+                <Stack justifyContent={'center'} alignItems={'center'} mt={3}>
+                  <Typography variant="body2" component="p">
+                    Prévisualisation
+                  </Typography>
+
+                  <LinkButton
+                    style={{
+                      backgroundColor: backgroundColor.background,
+                      color: fontColor.color,
+                      width: '90px',
+                    }}
+                    mt={2}
+                  >
+                    {'Button'}
+                  </LinkButton>
+                </Stack>
+              </Stack>
             </Stack>
             <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
               {"S'inscrire"}
@@ -258,3 +360,12 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
   );
 };
 export default CompanySignUp;
+
+function rgbToHex(r, g, b) {
+  const toHex = (c) => {
+    const hex = c?.toString(16);
+    return hex?.length === 1 ? '0' + hex : hex;
+  };
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}

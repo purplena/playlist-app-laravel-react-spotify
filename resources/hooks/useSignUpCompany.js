@@ -10,8 +10,6 @@ export const useSignUpCompany = () => {
   const signup = (data) => {
     return new Promise((resolve, reject) => {
       axios.get('/sanctum/csrf-cookie').then(() => {
-        // génération du formdata
-
         const formData = new FormData();
         Object.keys(data).forEach((key) => {
           formData.append(key, data[key]);

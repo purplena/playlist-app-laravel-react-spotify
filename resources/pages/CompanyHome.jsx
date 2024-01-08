@@ -1,31 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
-import { useUserStore } from '../js/useUserStore';
-import { HuePicker } from 'react-color';
+import { useMe } from '../hooks/useMe';
 
 const CompanyHome = () => {
-  const { user } = useUserStore();
+  const { user, isLoading } = useMe();
   const hasRefreshToken =
     user.company?.spotify_playlist_data?.has_refresh_token;
-  const [state, setState] = useState({
-    background: 'rgb(25,118,210,1)',
-    color: '',
-  });
-
-  const changeHandler = (colors) => {
-    const col =
-      'rgb(' +
-      colors.rgb.r +
-      ',' +
-      colors.rgb.g +
-      ',' +
-      colors.rgb.b +
-      ',' +
-      colors.rgb.a +
-      ')';
-    setState({ background: col, color: colors.rgb });
-    console.log(col);
-  };
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (user && user.company) {
+      setLoading(false);
+    }
+  }, [user]);
 
   return (
     <>
@@ -43,17 +29,22 @@ const CompanyHome = () => {
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
           ></iframe> */}
-          <HuePicker
-            className="picker"
-            color={state.color}
-            onChange={changeHandler}
-          />
-          <div style={{ backgroundColor: state.background }}>
-            <h1>React-Color Library</h1>
-          </div>
         </>
       ) : (
-        <Link href="/spotify/redirect">Connecter à Spotify</Link>
+        <>
+          <Link href="/spotify/redirect">Connecter à Spotify</Link>
+          {isLoading || loading ? (
+            'image is loading'
+          ) : (
+            <>
+              <img src={user?.company?.logo} />
+
+              <a href={`/api/manager/qr-code`} download>
+                Download QR Code
+              </a>
+            </>
+          )}
+        </>
       )}
     </>
   );
