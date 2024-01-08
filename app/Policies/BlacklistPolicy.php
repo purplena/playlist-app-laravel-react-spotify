@@ -23,7 +23,7 @@ class BlacklistPolicy
 
     public function create(User $user)
     {
-        return request()->route('requestedSong') === $user->company_id
+        return request()->route('requestedSong')->company_id === $user->company_id
             ? Response::allow()
             : Response::deny('You do not own this post.');
     }

@@ -1,6 +1,6 @@
 import { Alert, Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
@@ -16,6 +16,7 @@ const RequestedSongs = () => {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
+  const { id } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
@@ -44,7 +45,7 @@ const RequestedSongs = () => {
         <LinkButton
           disableElevation
           size="small"
-          to={generatePath('/:id/songs/search', { id: 1 })}
+          to={generatePath('/:id/songs/search', { id })}
         >
           suggérer
         </LinkButton>

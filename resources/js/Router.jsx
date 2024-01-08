@@ -16,12 +16,23 @@ import ProtectedCompanyRoot from './ProtectedCompanyRoot';
 import CompanyRequestedSongs from '../pages/CompanyRequestedSongs';
 import CompanyPlaylist from '../pages/CompanyPlaylist';
 import CompanyBlacklist from '../pages/CompanyBlacklist';
+import ErrorPage from './ErrorPage';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
+      {
+        path: '/',
+        children: [
+          {
+            path: '/',
+            element: <LandingPage />,
+          },
+        ],
+      },
       {
         path: '/',
         element: <ClientRoot />,

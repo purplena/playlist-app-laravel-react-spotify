@@ -5,8 +5,10 @@ import LinkButton from '../components/Button/LinkButton';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
 import ModalWindow from '../components/Layout/ModalWindow';
 import { useUserStore } from '../js/useUserStore';
-import { apiUrl } from '../js/App';
-import { useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
+import {
+  actions,
+  useDeleteOrBlacklistAll,
+} from '../hooks/userDeleteOrBlacklistAll';
 
 const CompanyRequestedSongs = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,21 +47,21 @@ const CompanyRequestedSongs = () => {
   };
 
   const handleAllSongsBlacklist = () => {
-    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll(
-      `${apiUrl}/manager/blacklist/store`,
+    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
+      action: actions.storeAllInBlacklist,
       setOpen,
-      setRequestedSongs
-    );
+      setSongs: setRequestedSongs,
+    });
 
     deleteOrBlacklistAll();
   };
 
   const handleAllSongsDelete = () => {
-    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll(
-      `${apiUrl}/manager/songs/destroy`,
+    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
+      action: actions.destroyAllRequestedSongs,
       setOpen,
-      setRequestedSongs
-    );
+      setSongs: setRequestedSongs,
+    });
 
     deleteOrBlacklistAll();
   };

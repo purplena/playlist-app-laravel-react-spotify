@@ -1,11 +1,29 @@
 import axios from 'axios';
+import { apiUrl as baseUrl } from '../js/App';
 
-export const useDeleteOrBlacklistAll = (uri, setOpen, setRequestedSongs) => {
+export const actions = {
+  storeAllInBlacklist: 1,
+  destroyAllRequestedSongs: 2,
+  destroyAllBlacklist: 3,
+};
+
+export const useDeleteOrBlacklistAll = ({ action, setOpen, setSongs }) => {
   const deleteOrBlacklistAll = () => {
+    const endpoint = (function () {
+      switch (action) {
+        case actions.storeAllInBlacklist:
+          return 'manager/blacklist/store';
+        case actions.destroyAllRequestedSongs:
+          return 'manager/songs/destroy';
+        case actions.destroyAllBlacklist:
+          return 'manager/blacklist/destroy';
+      }
+    })();
+
     axios
-      .post(uri)
+      .post(`${baseUrl}/${endpoint}`)
       .then(() => {
-        setRequestedSongs([]);
+        setSongs([]);
         setOpen(false);
       })
       .catch(() => {});

@@ -5,8 +5,10 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useUserStore } from '../../js/useUserStore';
 import LinkButton from '../Button/LinkButton';
-import { apiUrl } from '../../js/App';
-import { useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
+import {
+  actions,
+  useDeleteOrBlacklistOne,
+} from '../../hooks/useDeleteOrBlacklistOne';
 
 const PlaylistCard = ({
   requestedSong,
@@ -42,12 +44,12 @@ const PlaylistCard = ({
   };
 
   const handleSongDelete = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
-      `${apiUrl}/manager/songs/destroy/${requestedSong.id}`,
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.destroyRequestedSong,
       setOpen,
       onClick,
-      requestedSong
-    );
+      itemId: requestedSong.id,
+    });
 
     deleteOrBlacklist();
   };
@@ -62,12 +64,12 @@ const PlaylistCard = ({
   };
 
   const handleSongBlacklisting = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne(
-      `${apiUrl}/manager/blacklist/store/${requestedSong.id}`,
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.storeBlacklist,
       setOpen,
       onClick,
-      requestedSong
-    );
+      itemId: requestedSong.id,
+    });
 
     deleteOrBlacklist();
   };
@@ -99,7 +101,7 @@ const PlaylistCard = ({
               </Typography>
               <Typography
                 sx={{
-                  width: user.company ? 260 : 186,
+                  width: user?.company ? 260 : 186,
                 }}
                 variant="body2"
                 gutterBottom
@@ -113,7 +115,7 @@ const PlaylistCard = ({
               <Typography
                 variant="body2"
                 sx={{
-                  width: user.company ? 260 : 186,
+                  width: user?.company ? 260 : 186,
                 }}
                 noWrap
               >
@@ -130,7 +132,7 @@ const PlaylistCard = ({
               spacing={2}
               alignItems="center"
             >
-              {user.company ? (
+              {user?.company ? (
                 <>
                   <Typography variant="body2" sx={{ fontSize: '10px' }}>
                     {likes} {likes === 1 ? ' like' : ' likes'}
