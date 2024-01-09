@@ -34,17 +34,22 @@ function CompanyNavbar() {
       page: 'Accueil',
       path: generatePath('/manager'),
     },
+
+    {
+      page: 'Entreprise',
+      path: generatePath('/manager/entreprise'),
+    },
     {
       page: "Chansons d'aujourd'hui",
       path: generatePath('/manager/songs'),
     },
     {
-      page: 'Playlist',
-      path: generatePath('/manager/playlist'),
-    },
-    {
       page: 'Blacklist',
       path: generatePath('/manager/blacklist'),
+    },
+    {
+      page: 'Carte',
+      path: generatePath('/manager/carte'),
     },
   ];
 

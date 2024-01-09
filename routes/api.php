@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
         Route::post('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
         Route::get('/manager/qr-code', [CompanyController::class, 'downloadQrCode']);
+        Route::post('/manager/update', [CompanyController::class, 'update']);
     });
 });
 
