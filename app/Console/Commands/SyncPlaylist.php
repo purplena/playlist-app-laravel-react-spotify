@@ -64,7 +64,10 @@ class SyncPlaylist extends Command
                     ]);
                 }
             } catch (Throwable $t) {
-                Log::error('Problem with user_id in spotify_playlist_data. spotify_playlist_data is corrupted', ['company' => $company]);
+                Log::error(
+                    'Problem with user_id in spotify_playlist_data. spotify_playlist_data is corrupted',
+                    ['company' => $company]
+                );
 
                 continue;
             }
@@ -152,19 +155,24 @@ class SyncPlaylist extends Command
                 return ! in_array($companySong->spotify_id, $songsSpotifyIds);
             });
 
-        $this->getSongsToAddToSpotify($company)
+        $songsToAddToSpotify = $this->getSongsToAddToSpotify($company)
             ->filter(function ($songToAdd) use ($songsSpotifyIds) {
                 return ! in_array($songToAdd->song->spotify_id, $songsSpotifyIds);
             })
             ->filter(function ($songToAdd) use ($songsDeletedFromSpotify) {
-                return ! in_array($songToAdd->song->spotify_id, $songsDeletedFromSpotify->pluck('spotify_id')->toArray());
-            })
-            ->each(function ($songToAdd) use ($playlistId, $company) {
-                $this->instance->addPlaylistTracks($playlistId, [
-                    $songToAdd->song->spotify_id,
-                ]);
+                return ! in_array(
+                    $songToAdd->song->spotify_id, $songsDeletedFromSpotify->pluck('spotify_id')->toArray()
+                );
+            });
+
+        $songsToAddToSpotify->chunk(20)->each(function ($songsToAdd) use ($playlistId, $company) {
+            $spotifyIds = $songsToAdd->pluck('song.spotify_id')->all();
+            $this->instance->addPlaylistTracks($playlistId, $spotifyIds);
+            $songsToAdd->each(function ($songToAdd) use ($company) {
                 $company->songs()->attach($songToAdd->song->id);
             });
+            sleep(30);
+        });
 
         $songsDeletedFromSpotify
             ->each(function ($companySong) use ($company) {
@@ -172,7 +180,7 @@ class SyncPlaylist extends Command
             });
     }
 
-    protected function getAllPlaylists($company): array
+    protected function getAllPlaylists($company): Collection
     {
         $userId = Arr::get($company->spotify_playlist_data, 'user_id');
 
@@ -193,7 +201,7 @@ class SyncPlaylist extends Command
             }
         }
 
-        return $items;
+        return collect($items);
     }
 
     protected function getSongsToAddToSpotify($company): Collection
