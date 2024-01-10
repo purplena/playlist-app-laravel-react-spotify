@@ -2,9 +2,9 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import LinkButton from '../Button/LinkButton';
 
 const style = {
@@ -26,9 +26,12 @@ export default function ModalWindow({
   open,
   setOpen,
   modalHeader,
+  user,
+  action = '',
+  actionHandler = '',
+  songClicked = '',
 }) {
-  // I leave it here, because I want to ask a question about rendering
-  // console.log("ok");
+  const { id } = useParams();
 
   return (
     <Modal
@@ -38,30 +41,57 @@ export default function ModalWindow({
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Button
-          onClick={() => setOpen(false)}
-          sx={{
-            justifyContent: 'flex-end',
-            ':hover': {
-              backgroundColor: 'transparent',
-            },
-          }}
+        <Stack
+          direction={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
         >
-          <CloseIcon />
-        </Button>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {modalHeader}
-        </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {modalHeader}
+          </Typography>
+          <Button
+            onClick={() => setOpen(false)}
+            sx={{
+              justifyContent: 'flex-end',
+              ':hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
+            <CloseIcon />
+          </Button>
+        </Stack>
+
+        <Typography
+          id="modal-modal-description"
+          sx={{ mt: 2, mb: 2, textAlign: 'justify' }}
+        >
           {modalMessage}
         </Typography>
-        <LinkButton
-          to={generatePath('/:id/songs', {
-            id: 1,
-          })}
-        >
-          {"Chansons d'aujourd'hui"}
-        </LinkButton>
+        {user.company ? (
+          <>
+            {songClicked ? (
+              <>
+                <Typography
+                  id="modal-modal-description"
+                  sx={{ mb: 2, fontSize: '12px' }}
+                >
+                  Titre:{' '}
+                  <Box component="span" fontWeight="700">
+                    {songClicked}
+                  </Box>
+                </Typography>
+              </>
+            ) : (
+              ''
+            )}
+            <LinkButton onClick={actionHandler}>{action}</LinkButton>
+          </>
+        ) : (
+          <LinkButton to={generatePath('/:id/songs', { id })}>
+            {"Chansons d'aujourd'hui"}
+          </LinkButton>
+        )}
       </Box>
     </Modal>
   );

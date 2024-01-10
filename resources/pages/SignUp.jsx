@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { Stack, TextField, Typography } from '@mui/material';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSignUp } from '../hooks/useSignUp';
 import { useNavigate } from 'react-router';
-import LinkButton from '../components/Button/LinkButton';
-import { generatePath } from 'react-router-dom';
 
-const SignUp = () => {
+const SignUp = ({ redirect = '/' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -16,9 +14,8 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await signup(email, password, username);
-    console.log(response);
     if (response?.data?.status) {
-      navigate('/');
+      navigate(redirect);
     }
   };
 
@@ -79,9 +76,9 @@ const SignUp = () => {
             onChange={(e) => setUsername(e.target.value)}
           />
 
-          <LinkButton to={generatePath('/signup')} endIcon={<SendIcon />}>
-            S’inscrire
-          </LinkButton>
+          <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
+            {"S'inscrire"}
+          </Button>
         </Stack>
       </Stack>
     </>

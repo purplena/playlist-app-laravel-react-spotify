@@ -3,18 +3,37 @@ import axios from 'axios';
 import { useUserStore } from '../js/useUserStore';
 import { useState } from 'react';
 
-export const useSignUp = () => {
+export const actionController = {
+  storeCompany: 1,
+  editCompany: 2,
+};
+
+export const useSignUpCompany = ({ action }) => {
   const { setUser } = useUserStore();
   const [errors, setErrors] = useState(null);
 
-  const signup = (email, password, username) => {
+  const signup = (data) => {
     return new Promise((resolve, reject) => {
       axios.get('/sanctum/csrf-cookie').then(() => {
+        const formData = new FormData();
+        Object.keys(data).forEach((key) => {
+          if (data[key]) formData.append(key, data[key]);
+        });
+
+        const endpoint = (function () {
+          switch (action) {
+            case actionController.storeCompany:
+              return `manager/register`;
+            case actionController.editCompany:
+              return `manager/update`;
+          }
+        })();
+
         return axios
-          .post(`${apiUrl}/user/register`, {
-            email,
-            password,
-            username,
+          .post(`${apiUrl}/${endpoint}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           })
           .then((response) => {
             if (response.data.user) {

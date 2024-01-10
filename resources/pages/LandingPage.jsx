@@ -29,7 +29,7 @@ const LandingPage = () => {
         disableElevation
         size="small"
         to={generatePath('/:id/home', {
-          id: 1,
+          id: import.meta.env.VITE_DEFAULT_COMPANY_SLUG,
         })}
       >
         Continuer

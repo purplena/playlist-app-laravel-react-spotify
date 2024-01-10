@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Menu } from '@mui/material';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import { useLogout } from '../../hooks/useLogout';
 import { useNavigate } from 'react-router';
 import MenuItemCustom from '../Menu/MenuItemCustom';
@@ -25,6 +25,9 @@ const ButtonAppBar = () => {
     }
   };
 
+  const { id } = useParams();
+  const defaultSlug = import.meta.env.VITE_DEFAULT_COMPANY_SLUG;
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -36,17 +39,15 @@ const ButtonAppBar = () => {
   const menuItems = [
     {
       page: 'Accueil',
-      path: generatePath('/:id/home', {
-        id: 1,
-      }),
+      path: generatePath('/:id/home', { id: id || defaultSlug }),
     },
     {
       page: "Chansons d'aujourd'hui",
-      path: generatePath('/:id/songs', { id: 1 }),
+      path: generatePath('/:id/songs', { id: id || defaultSlug }),
     },
     {
       page: 'Suggérer une chanson',
-      path: generatePath('/:id/songs/search', { id: 1 }),
+      path: generatePath('/:id/songs/search', { id: id || defaultSlug }),
     },
   ];
 

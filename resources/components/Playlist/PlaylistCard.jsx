@@ -4,12 +4,74 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useUserStore } from '../../js/useUserStore';
+import LinkButton from '../Button/LinkButton';
+import {
+  actions,
+  useDeleteOrBlacklistOne,
+} from '../../hooks/useDeleteOrBlacklistOne';
 
-const PlaylistCard = ({ requestedSong, index }) => {
+const PlaylistCard = ({
+  requestedSong,
+  index,
+  onClick,
+  setOpen,
+  setModalMessage,
+  setModalHeader,
+  setAction,
+  setActionHandler,
+  setSongClicked,
+}) => {
   const { user } = useUserStore();
-  const { upvote, isUpvoted, likes } = useUpvote(requestedSong, user);
+  const { upvote, isUpvoted, likes } = useUpvote(
+    requestedSong,
+    user,
+    setOpen,
+    setModalMessage,
+    setModalHeader
+  );
+
   const handleUpvote = () => {
     upvote();
+  };
+
+  const handleSongDeleteClick = () => {
+    setOpen(true);
+    setModalHeader('Attention!');
+    setModalMessage('Voulez-vous supprimer cette chanson?');
+    setSongClicked(requestedSong.song.song_data.song_name);
+    setAction('supprimer');
+    setActionHandler(() => handleSongDelete);
+  };
+
+  const handleSongDelete = () => {
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.destroyRequestedSong,
+      setOpen,
+      onClick,
+      itemId: requestedSong.id,
+    });
+
+    deleteOrBlacklist();
+  };
+
+  const handleSongBlacklistingClick = () => {
+    setOpen(true);
+    setModalHeader('Attention!');
+    setModalMessage('Voulez-vous blacklister cette chanson?');
+    setSongClicked(requestedSong.song.song_data.song_name);
+    setAction('blacklister');
+    setActionHandler(() => handleSongBlacklisting);
+  };
+
+  const handleSongBlacklisting = () => {
+    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
+      action: actions.storeBlacklist,
+      setOpen,
+      onClick,
+      itemId: requestedSong.id,
+    });
+
+    deleteOrBlacklist();
   };
 
   return (
@@ -39,7 +101,7 @@ const PlaylistCard = ({ requestedSong, index }) => {
               </Typography>
               <Typography
                 sx={{
-                  width: 186,
+                  width: user?.company ? 260 : 186,
                 }}
                 variant="body2"
                 gutterBottom
@@ -53,7 +115,7 @@ const PlaylistCard = ({ requestedSong, index }) => {
               <Typography
                 variant="body2"
                 sx={{
-                  width: 186,
+                  width: user?.company ? 260 : 186,
                 }}
                 noWrap
               >
@@ -67,20 +129,45 @@ const PlaylistCard = ({ requestedSong, index }) => {
               direction="row"
               pl={2}
               mt={2}
-              spacing={4}
+              spacing={2}
               alignItems="center"
             >
-              <Typography variant="body2">
-                {likes} {likes === 1 ? ' like' : ' likes'}
-              </Typography>
-
-              <Typography
-                sx={{ cursor: 'pointer' }}
-                variant="body2"
-                onClick={handleUpvote}
-              >
-                {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
-              </Typography>
+              {user?.company ? (
+                <>
+                  <Typography variant="body2" sx={{ fontSize: '10px' }}>
+                    {likes} {likes === 1 ? ' like' : ' likes'}
+                  </Typography>
+                  <LinkButton
+                    onClick={handleSongDeleteClick}
+                    sx={{ fontSize: '10px' }}
+                    variant="text"
+                    size="small"
+                  >
+                    Supprimer
+                  </LinkButton>
+                  <LinkButton
+                    sx={{ fontSize: '10px' }}
+                    variant="text"
+                    size="small"
+                    onClick={handleSongBlacklistingClick}
+                  >
+                    Blacklister
+                  </LinkButton>
+                </>
+              ) : (
+                <>
+                  <Typography variant="body2">
+                    {likes} {likes === 1 ? ' like' : ' likes'}
+                  </Typography>
+                  <Typography
+                    sx={{ cursor: 'pointer' }}
+                    variant="body2"
+                    onClick={handleUpvote}
+                  >
+                    {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
+                  </Typography>
+                </>
+              )}
             </Stack>
           </Grid>
         </Grid>

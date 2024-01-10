@@ -6,42 +6,48 @@ import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
 import { SliderPicker } from 'react-color';
 import LinkButton from '../components/Button/LinkButton';
 import { Box } from '@mui/system';
+import { useUserStore } from '../js/useUserStore';
 
-const CompanySignUp = ({ redirect = '/manager' }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
-  const [tel, setTel] = useState('');
-  const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
-  const [zip, setZip] = useState('');
-  const [address, setAddress] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
+  const { user } = useUserStore();
+  const [username, setUsername] = useState(user?.username);
+  const [name, setName] = useState(user?.company?.name);
+  const [tel, setTel] = useState(user?.company?.tel);
+  const [country, setCountry] = useState(user?.company?.country);
+  const [city, setCity] = useState(user?.company?.city);
+  const [zip, setZip] = useState(user?.company?.zip);
+  const [address, setAddress] = useState(user?.company?.address);
   const { signup, errors } = useSignUpCompany({
-    action: actionController.storeCompany,
+    action: actionController.editCompany,
   });
   const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState(undefined);
   const [logo, setLogo] = useState(null);
-  const [fontColor, setFontColor] = useState({ color: '#fff' });
+  const [logoDB, setLogoDB] = useState(true);
+  const [fontColor, setFontColor] = useState({
+    color: user?.company?.font_color,
+  });
   const [backgroundColor, setBackgroundColor] = useState({
-    background: 'rgb(1,1,1)',
-    color: '',
+    background: hexToRgb(user?.company?.background_color),
+    color: hexToRgb(user?.company?.background_color),
   });
 
   const selectFile = (e) => {
+    setLogoDB(false);
     setLogo(e.target.files[0]);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
   };
+
+  const hexBackgroundColor = rgbToHex(
+    backgroundColor?.color?.r,
+    backgroundColor?.color?.g,
+    backgroundColor?.color?.b
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const response = await signup({
-      email,
-      password,
-      password_confirmation: confirmPassword,
       username,
       name,
       tel,
@@ -63,12 +69,6 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
       'rgb(' + colors.rgb.r + ',' + colors.rgb.g + ',' + colors.rgb.b + ')';
     setBackgroundColor({ background: col, color: colors.rgb });
   };
-
-  const hexBackgroundColor = rgbToHex(
-    backgroundColor?.color?.r,
-    backgroundColor?.color?.g,
-    backgroundColor?.color?.b
-  );
 
   return (
     <>
@@ -107,40 +107,6 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information générale'}
               </Typography>
-
-              <TextField
-                error={!!errors?.email}
-                style={{ width: '250px' }}
-                id="email"
-                label={'Email'}
-                type="email"
-                variant="standard"
-                value={email}
-                helperText={errors?.email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                error={!!errors?.password}
-                style={{ width: '250px' }}
-                id="password"
-                label={'Mot de passe'}
-                type="password"
-                variant="standard"
-                value={password}
-                helperText={errors?.password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <TextField
-                error={!!errors?.password_confirmation}
-                style={{ width: '250px' }}
-                id="password_confirmation"
-                label={'Confirmez votre mot de passe'}
-                type="password"
-                variant="standard"
-                value={confirmPassword}
-                helperText={errors?.password_confirmation}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
               <TextField
                 error={!!errors?.name}
                 style={{ width: '250px' }}
@@ -237,7 +203,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
                   alignItems={'center'}
                 >
                   <Typography variant="body2" component="p">
-                    {'Ajouter votre logo'}
+                    {'Modifier votre logo'}
                   </Typography>
                   <Typography variant="body2">{!!errors?.logo}</Typography>
                   <input
@@ -258,6 +224,17 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
                     </Button>
                   </label>
                 </Stack>
+                {logoDB && (
+                  <Box
+                    component="img"
+                    sx={{
+                      width: 100,
+                      maxWidth: { xs: 70, md: 100 },
+                    }}
+                    alt="Company Logo"
+                    src={'/storage/' + user?.company?.logo}
+                  />
+                )}
                 {previewImage && (
                   <Stack
                     mt={3}
@@ -293,7 +270,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
                 <Stack spacing={2}>
                   <Stack>
                     <Typography variant="body2" component="p">
-                      Ajouter vos couleur principales
+                      Modifier vos couleur principales
                     </Typography>
                     <Typography
                       variant="body2"
@@ -377,7 +354,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
     </>
   );
 };
-export default CompanySignUp;
+export default CompanyEdit;
 
 function rgbToHex(r, g, b) {
   const toHex = (c) => {
@@ -386,4 +363,12 @@ function rgbToHex(r, g, b) {
   };
 
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return { r, g, b };
 }

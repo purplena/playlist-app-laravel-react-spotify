@@ -24,7 +24,12 @@ const Login = ({ redirect = '/' }) => {
   return (
     <>
       <Stack direction="column" spacing={8}>
-        <SocialMediaIconsColumn />
+        {window.location.pathname === '/manager/login' ? (
+          ''
+        ) : (
+          <SocialMediaIconsColumn />
+        )}
+
         <Stack
           direction="column"
           spacing={2}
@@ -84,9 +89,18 @@ const Login = ({ redirect = '/' }) => {
           <Typography variant="body1" component="h1" textAlign="center">
             {"Pas de compte? Inscrivez-vous s'il vous plaît"}
           </Typography>
-          <LinkButton to={generatePath('/signup')} endIcon={<SendIcon />}>
-            S’inscrire
-          </LinkButton>
+          {window.location.pathname === '/manager/login' ? (
+            <LinkButton
+              to={generatePath('/manager/registration')}
+              endIcon={<SendIcon />}
+            >
+              {"S'inscrire"}
+            </LinkButton>
+          ) : (
+            <LinkButton to={generatePath('/signup')} endIcon={<SendIcon />}>
+              {"S'inscrire"}
+            </LinkButton>
+          )}
         </Stack>
       </Stack>
     </>

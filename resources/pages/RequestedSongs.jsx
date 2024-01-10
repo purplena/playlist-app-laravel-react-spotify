@@ -1,15 +1,22 @@
 import { Alert, Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import LinkButton from '../components/Button/LinkButton';
+import ModalWindow from '../components/Layout/ModalWindow';
+import { useUserStore } from '../js/useUserStore';
 
 const RequestedSongs = () => {
+  const { user } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const { getSongs, requestedSongs, serverErrorMessage } =
     useGetRequestedSongs(setIsLoading);
+  const [open, setOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalHeader, setModalHeader] = useState('');
+  const { id } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,7 +45,7 @@ const RequestedSongs = () => {
         <LinkButton
           disableElevation
           size="small"
-          to={generatePath('/:id/songs/search', { id: 1 })}
+          to={generatePath('/:id/songs/search', { id })}
         >
           suggérer
         </LinkButton>
@@ -67,6 +74,9 @@ const RequestedSongs = () => {
                 key={requestedSong.id}
                 requestedSong={requestedSong}
                 index={index}
+                setOpen={setOpen}
+                setModalMessage={setModalMessage}
+                setModalHeader={setModalHeader}
               />
             );
           })
@@ -76,6 +86,17 @@ const RequestedSongs = () => {
           </Typography>
         )}
       </Grid>
+      {user ? (
+        <ModalWindow
+          open={open}
+          setOpen={setOpen}
+          modalMessage={modalMessage}
+          modalHeader={modalHeader}
+          user={user}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 };

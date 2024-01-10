@@ -33,6 +33,8 @@ class CompanyResource extends JsonResource
             'address' => $this->address,
             'qr_code' => $this->qr_code,
             'logo' => $this->logo,
+            'background_color' => $this->background_color,
+            'font_color' => $this->font_color,
         ];
     }
 }

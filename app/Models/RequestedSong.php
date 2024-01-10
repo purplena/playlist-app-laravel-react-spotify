@@ -11,6 +11,12 @@ class RequestedSong extends Model
 {
     use HasFactory;
 
+    const MAX_SONGS_ADDED = 10;
+
+    const MAX_SONGS_UPVOTED = 20;
+
+    const LIMIT_IN_MINS = 60;
+
     protected $fillable = ['song_id', 'user_id', 'company_id'];
 
     public function upvotes(): HasMany

@@ -1,18 +1,20 @@
 import React from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { generatePath } from 'react-router-dom';
+import { generatePath, useParams } from 'react-router-dom';
 import Link from '../components/Layout/Link';
 import LinkButton from '../components/Button/LinkButton';
 
 const Home = () => {
+  const { id } = useParams();
+
   const menuItems = [
     {
       title: 'Sugérrez une chanson',
-      href: generatePath('/:id/songs/search', { id: 1 }),
+      href: generatePath('/:id/songs/search', { id }),
     },
     {
       title: "Chansons d'aujourd'hui",
-      href: generatePath('/:id/songs', { id: 1 }),
+      href: generatePath('/:id/songs', { id }),
     },
     { title: 'Voir la carte', href: '#' },
   ];

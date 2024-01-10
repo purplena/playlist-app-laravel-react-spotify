@@ -12,7 +12,18 @@ class Company extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
+        'slug',
+        'tel',
+        'zip',
+        'country',
+        'city',
+        'address',
         'spotify_playlist_data',
+        'qr_code',
+        'logo',
+        'background_color',
+        'font_color',
     ];
 
     protected $casts = [
@@ -31,7 +42,10 @@ class Company extends Model
 
     public function blacklistedSongs(): BelongsToMany
     {
-        return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id')->withTimestamps();
+        return $this->belongsToMany(Song::class, 'company_song_blacklisted', 'company_id', 'song_id')
+            ->withTimestamps()
+            ->withPivot('id')
+            ->using(Blacklist::class);
     }
 
     public function songs(): BelongsToMany

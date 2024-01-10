@@ -14,14 +14,27 @@ import CompanyLogin from '../pages/CompanyLogin';
 import CompanyHome from '../pages/CompanyHome';
 import ProtectedCompanyRoot from './ProtectedCompanyRoot';
 import CompanyRequestedSongs from '../pages/CompanyRequestedSongs';
-import CompanyPlaylist from '../pages/CompanyPlaylist';
 import CompanyBlacklist from '../pages/CompanyBlacklist';
+import ErrorPage from './ErrorPage';
+import CompanyEdit from '../pages/CompanyEdit';
+import CompanyInfo from '../pages/CompanyInfo';
+import CompanyMenu from '../pages/CompanyMenu';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
     children: [
+      {
+        path: '/',
+        children: [
+          {
+            path: '/',
+            element: <LandingPage />,
+          },
+        ],
+      },
       {
         path: '/',
         element: <ClientRoot />,
@@ -65,16 +78,24 @@ export const router = createBrowserRouter([
                 element: <CompanyHome />,
               },
               {
+                path: 'entreprise',
+                element: <CompanyInfo />,
+              },
+              {
+                path: 'entreprise/modifier',
+                element: <CompanyEdit />,
+              },
+              {
                 path: 'songs',
                 element: <CompanyRequestedSongs />,
               },
               {
-                path: 'playlist',
-                element: <CompanyPlaylist />,
-              },
-              {
                 path: 'blacklist',
                 element: <CompanyBlacklist />,
+              },
+              {
+                path: 'carte',
+                element: <CompanyMenu />,
               },
             ],
           },

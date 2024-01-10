@@ -8,10 +8,8 @@ export default function ProtectedCompanyRoot() {
 
   useEffect(() => {
     if (!user) {
-      console.log('No user found');
       navigate(generatePath('/manager/login'));
     } else if (user.role !== 1) {
-      console.log('User does not have required role');
       navigate(generatePath('/'));
     }
   }, [user]);

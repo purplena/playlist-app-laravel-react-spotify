@@ -27,7 +27,7 @@ return [
     ],
     'boolean' => 'Le champ :attribute doit être vrai ou faux.',
     'can' => 'Le champ :attribute contient une valeur non autorisée.',
-    'confirmed' => 'La confirmation du champ :attribute ne correspond pas.',
+    'confirmed' => 'Le champ :attribute et le champ :attribute de confirmation ne correspondent pas.',
     'current_password' => 'Le mot de passe est incorrect.',
     'date' => 'Le champ :attribute doit être une date valide.',
     'date_equals' => 'Le champ :attribute doit être une date égale à :date.',
@@ -152,5 +152,12 @@ return [
 
     'attributes' => [
         'password' => 'mot de passe',
+        'username' => 'nom d\'utilisateur',
+        'name' => 'nom d\'entreprise',
+        'tel' => 'téléphone',
+        'zip' => 'code postale',
+        'country' => 'pays',
+        'city' => 'ville',
+        'address' => 'adresse',
     ],
 ];
