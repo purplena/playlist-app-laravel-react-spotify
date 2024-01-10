@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Stack, TextField, Typography, Button, Alert } from '@mui/material';
 import { generatePath } from 'react-router-dom';
 import SocialMediaIconsColumn from '../components/Layout/SocialMediaIconsColumn';
 import { useLogin } from '../hooks/useLogin';
 import SendIcon from '@mui/icons-material/Send';
 import LinkButton from '../components/Button/LinkButton';
+import { useAuthRedirect } from '../hooks/useAuthRedirect';
 
-const Login = ({ redirect = '/' }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { errors, login } = useLogin();
-  const navigate = useNavigate();
+  const redirectAfterLogin = useAuthRedirect();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const response = await login(email, password);
     if (response?.data?.status) {
-      navigate(redirect);
+      redirectAfterLogin();
     }
   };
 

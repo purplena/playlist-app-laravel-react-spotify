@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 import { apiUrl } from '../js/App';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
 import axios from 'axios';
 
 export const useUpvote = (
@@ -16,13 +16,14 @@ export const useUpvote = (
   const [likes, setLikes] = useState(requestedSong.upvotes_count);
   const [isUpvoted, setIsUpvoted] = useState(requestedSong.is_upvoted_by);
   const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
 
   const upvote = () => {
     const requestedSongId = requestedSong.id;
     const intialStateUpvote = isUpvoted;
     const intialStateLikes = likes;
     if (!user) {
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
     }
 
     if (isLoading) return;
