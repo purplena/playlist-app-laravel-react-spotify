@@ -3,7 +3,7 @@ import LinkButton from './LinkButton';
 
 const LoginSocialMediaButton = ({ icon, mediaName }) => {
   return (
-    <LinkButton variant="outlined" startIcon={icon}>
+    <LinkButton disableElevation startIcon={icon}>
       Continue avec {mediaName}
     </LinkButton>
   );

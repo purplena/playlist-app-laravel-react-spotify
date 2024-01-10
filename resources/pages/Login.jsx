@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Stack, TextField, Typography, Button, Alert } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { generatePath } from 'react-router-dom';
 import SocialMediaIconsColumn from '../components/Layout/SocialMediaIconsColumn';
 import { useLogin } from '../hooks/useLogin';
 import SendIcon from '@mui/icons-material/Send';
 import LinkButton from '../components/Button/LinkButton';
 import { useAuthRedirect } from '../hooks/useAuthRedirect';
+import LoginInputs from '../components/Layout/LoginInputs';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,56 +31,14 @@ const Login = () => {
           <SocialMediaIconsColumn />
         )}
 
-        <Stack
-          direction="column"
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography variant="h6" component="h1" textAlign="center">
-            Vous avez un mot de passe? Continuez avec votre email
-          </Typography>
-          <Stack
-            onSubmit={handleLogin}
-            component="form"
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            spacing={2}
-            noValidate
-            autoComplete="off"
-            textAlign="center"
-          >
-            {errors?.loginError && (
-              <Alert severity="error">{errors.loginError}</Alert>
-            )}
-
-            <TextField
-              error={!!errors}
-              style={{ width: '250px' }}
-              id="email"
-              label={errors ? 'Error' : 'Email'}
-              variant="standard"
-              value={email}
-              helperText={errors?.email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              error={!!errors}
-              style={{ width: '250px' }}
-              id="password"
-              label={errors ? 'Error' : 'Mot de passe'}
-              type="password"
-              variant="standard"
-              value={password}
-              helperText={errors?.password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button type="submit" variant="outlined">
-              Se connecter
-            </Button>
-          </Stack>
-        </Stack>
+        <LoginInputs
+          handleLogin={handleLogin}
+          errors={errors}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+        />
         <Stack
           direction="column"
           spacing={2}

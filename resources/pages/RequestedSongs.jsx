@@ -1,4 +1,4 @@
-import { Alert, Grid, Stack, Typography } from '@mui/material';
+import { Alert, Grid, Link, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
@@ -7,6 +7,9 @@ import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import LinkButton from '../components/Button/LinkButton';
 import ModalWindow from '../components/Layout/ModalWindow';
 import { useUserStore } from '../js/useUserStore';
+import LineComponent from '../components/Layout/LineComponent';
+import { useGetCompany } from '../hooks/useGetCompany';
+import { Box } from '@mui/system';
 
 const RequestedSongs = () => {
   const { user } = useUserStore();
@@ -17,6 +20,9 @@ const RequestedSongs = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
   const { id } = useParams();
+  const { company } = useGetCompany();
+
+  console.log(company);
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,21 +31,72 @@ const RequestedSongs = () => {
 
   return (
     <>
-      <Typography variant="h4" component="h1" textAlign="center">
-        Créer de l’ambiance musicale
-      </Typography>
-      <Typography variant="body1" textAlign="center" mt={2}>
-        Chaque jour, nous sélectionnons les 10 chansons les plus votées pour les
-        ajouter à notre playlist
-      </Typography>
+      <Stack mb={2}>
+        <Typography variant="h1" component="h1" textAlign="center" mb={2}>
+          {"Créer de l'ambiance musicale"}
+        </Typography>
+        <Stack spacing={2} justifyContent={'center'} alignItems={'center'}>
+          <Typography variant="body1" component="p">
+            Chaque jour, nous sélectionnons les chansons les plus votées pour
+            les ajouter à notre playlist
+          </Typography>
+          <Typography variant="body1" component="p">
+            Découvrez notre playlist directement sur Spotify
+          </Typography>
+          <Link
+            underline="none"
+            href={`https://open.spotify.com/playlist/${company?.spotify_playlist_data?.id}`}
+            sx={{
+              color: '#000000',
+              width: '120px',
+              '&:hover': {
+                backgroundColor: (theme) => theme.palette.primary.main,
+              },
+            }}
+          >
+            <Stack
+              sx={{
+                padding: '10px 15px',
+                border: '1px solid #000000',
+                borderRadius: '5px',
+              }}
+              direction={'row'}
+              spacing={2}
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: '24px',
+                }}
+                src="../images/spotify-logo.png"
+                alt="Photo of vinyle disk/pexels-miguel-á-padriñán-167092"
+              />
+              <Typography
+                variant="body1"
+                component="p"
+                textAlign="center"
+                mt={2}
+              >
+                Playlist
+              </Typography>
+            </Stack>
+          </Link>
+        </Stack>
+      </Stack>
+
+      <LineComponent />
+
       <Stack
         direction="row"
         spacing={2}
         justifyContent="center"
         alignItems="center"
         mt={4}
+        mb={4}
       >
-        <Typography variant="subtitle2" textAlign={'center'} mt={21}>
+        <Typography variant="subtitle2" textAlign={'center'}>
           Voulez-vous suggérer une chanson?
         </Typography>
         <LinkButton
@@ -50,6 +107,7 @@ const RequestedSongs = () => {
           suggérer
         </LinkButton>
       </Stack>
+      <LineComponent />
       {isLoading && (
         <Stack justifyContent="center" alignItems="center" mt={4}>
           <CircularProgress />
@@ -58,7 +116,7 @@ const RequestedSongs = () => {
       <Grid
         container
         gap={3}
-        mt={6}
+        mt={4}
         justifyContent="center"
         flexBasis="flex-start"
       >
@@ -81,7 +139,7 @@ const RequestedSongs = () => {
             );
           })
         ) : (
-          <Typography variant="subtitle2" textAlign={'center'} mt={21}>
+          <Typography variant="subtitle2" textAlign={'center'}>
             {"Oups! Il n'y a pas de chansons suggérées..."}
           </Typography>
         )}

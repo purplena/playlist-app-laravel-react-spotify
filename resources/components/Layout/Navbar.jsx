@@ -52,8 +52,8 @@ const ButtonAppBar = () => {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box>
+      <AppBar position="static" sx={{ boxShadow: 'none' }}>
         <Toolbar sx={{ justifyContent: 'center' }}>
           <Box
             sx={{
