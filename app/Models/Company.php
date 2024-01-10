@@ -22,6 +22,8 @@ class Company extends Model
         'spotify_playlist_data',
         'qr_code',
         'logo',
+        'background_color',
+        'font_color',
     ];
 
     protected $casts = [

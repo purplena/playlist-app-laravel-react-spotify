@@ -32,11 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/manager/blacklist/store', [BlackListController::class, 'storeAll']);
         Route::post('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
         Route::post('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
+        Route::get('/manager/qr-code', [CompanyController::class, 'downloadQrCode']);
+        Route::post('/manager/update', [CompanyController::class, 'update']);
     });
 });
-
-// Route::get('/companies', [CompanyController::class, 'index']);
-// Route::get('/companies/{company}', [CompanyController::class, 'show']);
 
 Route::get('/{company}/songs', [RequestedSongController::class, 'index'])
     ->name('company.songs');

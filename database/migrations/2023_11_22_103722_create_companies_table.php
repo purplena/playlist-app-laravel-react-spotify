@@ -23,6 +23,8 @@ return new class extends Migration
             $table->json('spotify_playlist_data')->nullable();
             $table->string('qr_code')->nullable();
             $table->string('logo')->nullable();
+            $table->string('background_color')->nullable();
+            $table->string('font_color')->nullable();
             $table->timestamps();
         });
     }

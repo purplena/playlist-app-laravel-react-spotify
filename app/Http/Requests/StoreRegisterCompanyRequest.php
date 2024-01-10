@@ -39,6 +39,8 @@ class StoreRegisterCompanyRequest extends FormRequest
                 'logo' => ['nullable',
                     'image', 'mimes:jpg,jpeg,png', File::image()->max('2mb'),
                 ],
+                'background_color' => 'nullable|string',
+                'font_color' => 'nullable|string',
             ];
     }
 }
