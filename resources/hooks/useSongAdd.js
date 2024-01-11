@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { apiUrl } from '../js/App';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
@@ -13,10 +13,11 @@ export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
   const { id } = useParams();
   const spotifyId = song.spotify_id;
   const { user } = useUserStore();
+  const location = useLocation();
 
   const addSong = () => {
     if (!user) {
-      navigate('/login');
+      navigate('/login', { state: { from: location } });
     }
 
     if (song.is_requested) {
