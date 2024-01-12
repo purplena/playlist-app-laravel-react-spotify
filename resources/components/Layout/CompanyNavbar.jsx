@@ -54,7 +54,7 @@ function CompanyNavbar() {
   ];
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ boxShadow: 'none' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -86,8 +86,14 @@ function CompanyNavbar() {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
+              PaperProps={{
+                style: {
+                  width: '100%',
+                },
+              }}
               sx={{
                 display: { xs: 'block', md: 'none' },
+                top: '4px',
               }}
             >
               {menuItems.map((menuItem) => (
@@ -112,7 +118,6 @@ function CompanyNavbar() {
                 key={menuItem.page}
                 path={menuItem.path}
                 menuItem={menuItem.page}
-                menuItemColor={'white'}
               />
             ))}
           </Box>
@@ -123,14 +128,12 @@ function CompanyNavbar() {
             {user ? (
               <MenuItemCustom
                 menuItem={'Se deconnecter'}
-                menuItemColor={'white'}
                 onClickHandler={handleLogout}
               />
             ) : (
               <MenuItemCustom
                 path={generatePath('/manager/login')}
                 menuItem={'Se connecter'}
-                menuItemColor={'white'}
               />
             )}
           </Box>

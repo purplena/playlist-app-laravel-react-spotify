@@ -1,5 +1,5 @@
-import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
+import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 
 const LoginInputs = ({
   handleLogin,
@@ -17,8 +17,11 @@ const LoginInputs = ({
         justifyContent="center"
         alignItems="center"
       >
-        <Typography variant="h6" component="h1" textAlign="center">
-          Vous avez un mot de passe? Continuez avec votre email
+        <Typography variant="h1" component="h1" textAlign="center">
+          Vous avez un mot de passe?
+        </Typography>
+        <Typography variant="body1" component="p" textAlign="center">
+          Continuez avec votre email
         </Typography>
         <Stack
           onSubmit={handleLogin}
@@ -56,7 +59,18 @@ const LoginInputs = ({
             helperText={errors?.password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button type="submit" variant="outlined">
+          <Button
+            type="submit"
+            variant="outlined"
+            sx={{
+              backgroundColor: 'transparent',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                color: (theme) => theme.palette.text.primary,
+                fontWeight: 600,
+              },
+            }}
+          >
             Se connecter
           </Button>
         </Stack>

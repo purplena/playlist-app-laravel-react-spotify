@@ -15,7 +15,7 @@ export const useGetRequestedSongs = (setIsLoading) => {
     endpoint = `${apiUrl}/${id}/songs`;
   } else {
     if (user.company) {
-      endpoint = `${apiUrl}/${user.company.id}/songs`;
+      endpoint = `${apiUrl}/${user.company.slug}/songs`;
     } else {
       endpoint = `${apiUrl}/${id}/songs`;
     }

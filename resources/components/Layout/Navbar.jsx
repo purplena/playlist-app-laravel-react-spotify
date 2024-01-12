@@ -75,17 +75,39 @@ const ButtonAppBar = () => {
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
             >
-              <MenuIcon />
+              <MenuIcon
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                }}
+              />
             </IconButton>
             {user ? (
-              <Button onClick={handleLogout} color="inherit">
+              <Button
+                onClick={handleLogout}
+                color="inherit"
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: (theme) => theme.palette.text.secondary,
+                    fontWeight: 800,
+                  },
+                }}
+              >
                 Se deconnecter
               </Button>
             ) : (
               <LinkButton
                 variant="text"
                 to={generatePath('/login')}
-                color="inherit"
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: (theme) => theme.palette.text.secondary,
+                    fontWeight: 800,
+                  },
+                }}
               >
                 Se connecter
               </LinkButton>

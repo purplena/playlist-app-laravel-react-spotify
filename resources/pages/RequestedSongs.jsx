@@ -22,8 +22,6 @@ const RequestedSongs = () => {
   const { id } = useParams();
   const { company } = useGetCompany();
 
-  console.log(company);
-
   useEffect(() => {
     setIsLoading(true);
     getSongs();
@@ -36,11 +34,11 @@ const RequestedSongs = () => {
           {"Créer de l'ambiance musicale"}
         </Typography>
         <Stack spacing={2} justifyContent={'center'} alignItems={'center'}>
-          <Typography variant="body1" component="p">
+          <Typography variant="body1" component="p" textAlign="center">
             Chaque jour, nous sélectionnons les chansons les plus votées pour
             les ajouter à notre playlist
           </Typography>
-          <Typography variant="body1" component="p">
+          <Typography variant="body1" component="p" textAlign="center">
             Découvrez notre playlist directement sur Spotify
           </Typography>
           <Link
@@ -49,9 +47,6 @@ const RequestedSongs = () => {
             sx={{
               color: '#000000',
               width: '120px',
-              '&:hover': {
-                backgroundColor: (theme) => theme.palette.primary.main,
-              },
             }}
           >
             <Stack
@@ -59,6 +54,9 @@ const RequestedSongs = () => {
                 padding: '10px 15px',
                 border: '1px solid #000000',
                 borderRadius: '5px',
+                '&:hover': {
+                  borderColor: (theme) => theme.palette.primary.main,
+                },
               }}
               direction={'row'}
               spacing={2}
@@ -115,10 +113,11 @@ const RequestedSongs = () => {
       )}
       <Grid
         container
-        gap={3}
         mt={4}
         justifyContent="center"
-        flexBasis="flex-start"
+        alignItems="center"
+        columnSpacing={{ xs: 1, sm: 2 }}
+        rowSpacing={1}
       >
         {serverErrorMessage && (
           <Alert variant="outlined" severity="error">

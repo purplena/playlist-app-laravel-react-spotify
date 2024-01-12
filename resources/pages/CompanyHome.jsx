@@ -123,26 +123,42 @@ const CompanyHome = () => {
                 MUSIQUE
               </Typography>
               <StackComponentForGrid>
-                <Stack spacing={2}>
-                  <Typography variant="body1" component="p">
-                    {
-                      "La musique joue un rôle crucial dans la définition de l'identité du lieu."
-                    }
-                  </Typography>
-                  <Typography variant="body1" component="p">
-                    {
-                      'Dès maintenant, vos clients peuvent participer à la création de la playlist de votre établissement.'
-                    }
-                  </Typography>
-                  <Typography variant="body1" component="p">
-                    {
-                      'Pour commencer cette aventure inoubliable connectez-vous à Spotify!'
-                    }
-                  </Typography>
-                </Stack>
-                <LinkButton to="/spotify/redirect">
-                  Connecter à Spotify
-                </LinkButton>
+                {hasRefreshToken ? (
+                  <>
+                    <Typography variant="body1" component="p">
+                      {'Vous êtes connecté(e) à Spotify'}
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <Stack spacing={2}>
+                      <Typography variant="body1" component="p">
+                        {
+                          "La musique joue un rôle crucial dans la définition de l'identité du lieu."
+                        }
+                      </Typography>
+                      <Typography variant="body1" component="p">
+                        {
+                          'Dès maintenant, vos clients peuvent participer à la création de la playlist de votre établissement.'
+                        }
+                      </Typography>
+
+                      <Typography variant="body1" component="p">
+                        {'Vous êtes connecté(e) à Spotify'}
+                      </Typography>
+
+                      <Typography variant="body1" component="p">
+                        {
+                          'Pour commencer cette aventure inoubliable connectez-vous à Spotify!'
+                        }
+                      </Typography>
+                    </Stack>
+
+                    <LinkButton to="/spotify/redirect">
+                      Connecter à Spotify
+                    </LinkButton>
+                  </>
+                )}
               </StackComponentForGrid>
             </Grid>
             <Grid item xs={12} sm={8} md={4}>

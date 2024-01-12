@@ -17,6 +17,17 @@ export const useCustomTheme = () => {
         secondary: contrastingFontColor,
       },
     },
+
+    breakpoints: {
+      values: {
+        xxs: 0,
+        xs: 350,
+        sm: 600,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
     typography: {
       fontFamily: 'Open Sans, sans-serif',
       h1: {
@@ -44,10 +55,11 @@ export const useCustomTheme = () => {
       MuiButton: {
         styleOverrides: {
           root: {
+            backgroundColor: primaryColor,
+            color: contrastingFontColor,
             '&:hover': {
-              backgroundColor: primaryColor,
-              // color: '#fff',
-              textDecoration: 'underline',
+              backgroundColor: primaryColor.dark,
+              color: '#ffffff',
             },
           },
           outlined: {

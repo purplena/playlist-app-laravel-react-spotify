@@ -17,6 +17,7 @@ class CompanyResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'slug' => $this->slug,
             'name' => $this->name,
             'spotify_playlist_data' => $this->when($this->spotify_playlist_data !== null, function () {
                 return [

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-const LineComponent = () => {
+const LineComponent = ({ ...props }) => {
   return (
     <Box
+      {...props}
       sx={{
         height: '2px',
         width: '100%',

@@ -75,63 +75,50 @@ const PlaylistCard = ({
   };
 
   return (
-    <Paper
-      sx={{
-        width: 300,
-        p: 2,
-      }}
-    >
-      <Grid container spacing={2}>
-        <Grid item>
-          <Paper
-            elevation={0}
-            sx={{
-              borderRadius: '50%',
-              width: '50px',
-              height: '50px',
-              background: '#1769aa',
-            }}
-          />
-        </Grid>
-        <Grid item xs container>
-          <Grid item xs container direction="column" spacing={2}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subtitle1" component="div">
-                #{index + 1}
-              </Typography>
-              <Typography
-                sx={{
-                  width: user?.company ? 260 : 186,
-                }}
-                variant="body2"
-                gutterBottom
-                noWrap
-              >
-                Titre:{' '}
-                <Box component="span" fontWeight="700">
-                  {requestedSong.song.song_data.song_name}
-                </Box>
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  width: user?.company ? 260 : 186,
-                }}
-                noWrap
-              >
-                Artiste:{' '}
-                <Box component="span" fontWeight="700">
-                  {requestedSong.song.song_data.artist_name}
-                </Box>
-              </Typography>
-            </Grid>
-            <Stack
-              direction="row"
-              pl={2}
-              mt={2}
-              spacing={2}
-              alignItems="center"
+    <Grid item xxs={12} xs={10} sm={8}>
+      <Paper>
+        <Stack padding={3} spacing={2}>
+          <Stack spacing={1} direction={'row'} pt={'3px'}>
+            <Box
+              component="img"
+              sx={{
+                borderRadius: '50%',
+                width: '60px',
+                height: '60px',
+              }}
+              src={requestedSong?.song.song_data?.album_cover_img}
+            />
+
+            <Stack>
+              <SongTrancatedComponent
+                song={requestedSong.song.song_data.song_name}
+                label={'Titre'}
+                fontSize={'14px'}
+              />
+              <SongTrancatedComponent
+                song={requestedSong.song.song_data.artist_name}
+                label={'Artiste'}
+                fontSize={'14px'}
+              />
+            </Stack>
+          </Stack>
+
+          <Stack
+            direction={'row'}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+          >
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="p"
+              mb={0}
+              fontWeight={800}
             >
+              #{index + 1}
+            </Typography>
+
+            <Stack direction="row" spacing={2} alignItems="center">
               {user?.company ? (
                 <>
                   <Typography variant="body2" sx={{ fontSize: '10px' }}>
@@ -164,15 +151,43 @@ const PlaylistCard = ({
                     variant="body2"
                     onClick={handleUpvote}
                   >
-                    {isUpvoted ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
+                    {isUpvoted ? (
+                      <ThumbUpIcon
+                        sx={{ color: (theme) => theme.palette.primary.dark }}
+                      />
+                    ) : (
+                      <ThumbUpOutlinedIcon
+                        sx={{ color: (theme) => theme.palette.primary.dark }}
+                      />
+                    )}
                   </Typography>
                 </>
               )}
             </Stack>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
+          </Stack>
+        </Stack>
+      </Paper>
+    </Grid>
   );
 };
 export default PlaylistCard;
+
+function SongTrancatedComponent({ song, label, ...props }) {
+  const MAX_SONG_NAME_LENGTH = 16;
+  const truncatedSongName =
+    song.length <= MAX_SONG_NAME_LENGTH
+      ? song
+      : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
+
+  return (
+    <div>
+      <Typography {...props} gutterBottom variant="body1" component="h2">
+        {' '}
+        {label} {': '}
+        <Box component="span" fontWeight="700">
+          {truncatedSongName}
+        </Box>
+      </Typography>
+    </div>
+  );
+}

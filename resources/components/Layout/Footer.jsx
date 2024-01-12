@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LineComponent from './LineComponent';
@@ -7,20 +7,13 @@ import LineComponent from './LineComponent';
 const Footer = ({ company }) => {
   return (
     <Stack mt={5} alignItems={'center'} justifyContent={'center'}>
-      <Stack
-        maxWidth={500}
-        width={'100%'}
-        spacing={2}
-        sx={{
-          padding: '2rem',
-        }}
-      >
+      <Stack maxWidth={500} width={'100%'} spacing={2} padding={2}>
         <LineComponent />
         <Typography variant="h6" component="h3">
           {"N'hésitez pas à nous contacter"}
         </Typography>
-        <Stack direction={'row'} justifyContent={'space-between'}>
-          <Stack>
+        <Grid container>
+          <Grid item xs={12} sm={6}>
             <Typography variant="subtitle" component="p" fontWeight={'800'}>
               Adresse:
             </Typography>
@@ -30,8 +23,8 @@ const Footer = ({ company }) => {
             <Typography variant="subtitle" component="p">
               {company.address}
             </Typography>
-          </Stack>
-          <Stack>
+          </Grid>
+          <Grid item xs={12} sm={6}>
             <Typography variant="subtitle" component="p" fontWeight={'800'}>
               Contact:
             </Typography>
@@ -45,8 +38,8 @@ const Footer = ({ company }) => {
             >
               example@wallacepub.fr
             </Typography>
-          </Stack>
-        </Stack>
+          </Grid>
+        </Grid>
         <Stack
           direction={'row'}
           spacing={3}
