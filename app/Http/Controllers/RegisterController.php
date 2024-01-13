@@ -29,7 +29,10 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return response()->json(['status' => true, 'user' => new UserResource($user)]);
+        return response()->json([
+            'status' => true,
+            'user' => new UserResource($user),
+        ]);
     }
 
     public function storeCompany(StoreRegisterCompanyRequest $request): JsonResponse
@@ -42,8 +45,10 @@ class RegisterController extends Controller
             'role' => User::ROLE_OWNER,
         ]);
 
-        $logoName = 'logo_'.time().'.'.$request->logo->extension();
-        Storage::disk('public')->put($logoName, file_get_contents($request->logo));
+        if ($request->logo) {
+            $logoName = 'logo_'.time().'.'.$request->logo->extension();
+            Storage::disk('public')->put($logoName, file_get_contents($request->logo));
+        }
 
         $company = Company::create([
             'name' => $request->name,
@@ -53,7 +58,7 @@ class RegisterController extends Controller
             'country' => $request->country,
             'city' => $request->city,
             'address' => $request->address,
-            'logo' => $logoName,
+            'logo' => $logoName ?? null,
             'background_color' => $request->background_color,
             'font_color' => $request->font_color,
         ]);
@@ -69,7 +74,10 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return response()->json(['status' => true, 'user' => new UserResource($user)]);
+        return response()->json([
+            'status' => true,
+            'user' => new UserResource($user),
+        ]);
     }
 
     protected function generateSlug($str): string

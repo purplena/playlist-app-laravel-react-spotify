@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
-import { useMe } from '../hooks/useMe';
 import { Box, CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
 import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
+import { useUserStore } from '../js/useUserStore';
 
 const CompanyHome = () => {
-  const { user, isLoading } = useMe();
+  const { user } = useUserStore();
   const spotifyPlaylistIdd = user.company?.spotify_playlist_data?.id;
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -46,7 +46,7 @@ const CompanyHome = () => {
             <Typography variant="h3" component="h1" textAlign="center">
               Bienvenue dans votre espace personnel
             </Typography>
-            {isLoading || loading ? (
+            {loading ? (
               <CircularProgress />
             ) : (
               <Box
@@ -96,7 +96,7 @@ const CompanyHome = () => {
                       contenus en temps réel
                     </Typography>
                   </Stack>
-                  {isLoading || loading ? (
+                  {loading ? (
                     <CircularProgress />
                   ) : (
                     <Box
@@ -165,7 +165,13 @@ const CompanyHome = () => {
                       <Typography variant="body1" component="p">
                         {'Gerez votre blacklist'}
                       </Typography>
-                      <LinkButton to={generatePath('/manager/blacklist')}>
+                      <LinkButton
+                        to={generatePath('/manager/blacklist')}
+                        sx={{
+                          backgroundColor: (theme) =>
+                            theme.palette.primary.main,
+                        }}
+                      >
                         {'Blacklist'}
                       </LinkButton>
                     </Stack>
@@ -234,7 +240,9 @@ const CompanyHome = () => {
                     la carte de votre établissement !
                   </Typography>
                 </Stack>
-                <LinkButton>Gerer la carte</LinkButton>
+                <LinkButton to={generatePath('/manager/carte')}>
+                  Gerer la carte
+                </LinkButton>
               </StackComponentForGrid>
             </Grid>
           </Grid>

@@ -11,10 +11,10 @@ const MenuItemCustom = ({ path = '', menuItem, onClickHandler }) => {
         to={path}
         onClick={onClickHandler}
         sx={{
-          color: (theme) => theme.palette.text.secondary,
+          color: (theme) => theme.palette.text.primary,
           '&:hover': {
             backgroundColor: 'transparent',
-            color: (theme) => theme.palette.text.secondary,
+            color: (theme) => theme.palette.text.primary,
             fontWeight: 800,
           },
         }}

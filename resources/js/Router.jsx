@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
             element: <LandingPage />,
           },
           {
-            path: '/:id/home',
+            path: '/:id',
             element: <Home />,
           },
           {

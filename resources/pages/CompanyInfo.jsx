@@ -3,10 +3,10 @@ import React from 'react';
 import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
 import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
-import { useMe } from '../hooks/useMe';
+import { useUserStore } from '../js/useUserStore';
 
 const CompanyInfo = () => {
-  const { user } = useMe();
+  const { user } = useUserStore();
 
   return (
     <Stack

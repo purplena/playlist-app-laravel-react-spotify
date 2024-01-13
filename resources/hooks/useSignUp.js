@@ -18,7 +18,6 @@ export const useSignUp = () => {
           })
           .then((response) => {
             if (response.data.user) {
-              alert('New user is registered');
               setUser(response.data.user);
               resolve(response);
             }
