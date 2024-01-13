@@ -4,7 +4,7 @@ import { Stack } from '@mui/material';
 const StackComponentForGrid = ({ children }) => {
   return (
     <Stack
-      spacing={5}
+      spacing={2}
       sx={(theme) => ({
         border: `1px solid ${theme.palette.primary.main}`,
         height: '100%',
