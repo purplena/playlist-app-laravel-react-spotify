@@ -26,7 +26,6 @@ const ButtonAppBar = () => {
   };
 
   const { id } = useParams();
-  const defaultSlug = import.meta.env.VITE_DEFAULT_COMPANY_SLUG;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,15 +47,15 @@ const ButtonAppBar = () => {
   const menuItems = [
     {
       page: 'Accueil',
-      path: generatePath('/:id/home', { id: id || defaultSlug }),
+      path: generatePath('/:id/home', { id }),
     },
     {
       page: "Chansons d'aujourd'hui",
-      path: generatePath('/:id/songs', { id: id || defaultSlug }),
+      path: generatePath('/:id/songs', { id }),
     },
     {
       page: 'Suggérer une chanson',
-      path: generatePath('/:id/songs/search', { id: id || defaultSlug }),
+      path: generatePath('/:id/songs/search', { id }),
     },
   ];
 
