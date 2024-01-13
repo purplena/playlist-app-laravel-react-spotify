@@ -8,8 +8,7 @@ import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
 
 const CompanyHome = () => {
   const { user, isLoading } = useMe();
-  const hasRefreshToken =
-    user.company?.spotify_playlist_data?.has_refresh_token;
+  const spotifyPlaylistIdd = user.company?.spotify_playlist_data?.id;
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (user && user.company) {
@@ -123,26 +122,100 @@ const CompanyHome = () => {
                 MUSIQUE
               </Typography>
               <StackComponentForGrid>
-                <Stack spacing={2}>
-                  <Typography variant="body1" component="p">
-                    {
-                      "La musique joue un rôle crucial dans la définition de l'identité du lieu."
-                    }
-                  </Typography>
-                  <Typography variant="body1" component="p">
-                    {
-                      'Dès maintenant, vos clients peuvent participer à la création de la playlist de votre établissement.'
-                    }
-                  </Typography>
-                  <Typography variant="body1" component="p">
-                    {
-                      'Pour commencer cette aventure inoubliable connectez-vous à Spotify!'
-                    }
-                  </Typography>
-                </Stack>
-                <LinkButton to="/spotify/redirect">
-                  Connecter à Spotify
-                </LinkButton>
+                {spotifyPlaylistIdd ? (
+                  <>
+                    <Stack spacing={1}>
+                      <Typography
+                        variant="body1"
+                        component="p"
+                        fontWeight={600}
+                      >
+                        {'Vous êtes connecté(e) à Spotify'}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        component="p"
+                        fontSize={'0.75rem'}
+                        fontStyle={'italic'}
+                      >
+                        {
+                          'La synchronisation de votre playlist est automatique. Tous les jours à 00:00:00 les chansons les plus votées sont ajoutées à votre playlist Spotify. Cependant vous pouvez toujours ajouter des chansons directement sur Spotify.'
+                        }
+                      </Typography>
+                      <iframe
+                        src={`https://open.spotify.com/embed/playlist/${spotifyPlaylistIdd}?utm_source=generator`}
+                        width="100%"
+                        height="152"
+                        frameBorder="0"
+                        allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
+                      ></iframe>
+                    </Stack>
+
+                    <Stack>
+                      <Typography variant="body1" component="p">
+                        {"Gerez vos chansons d'aujourd'hui"}
+                      </Typography>
+                      <LinkButton to={generatePath('/manager/songs')}>
+                        {'Chansons'}
+                      </LinkButton>
+                    </Stack>
+                    <Stack>
+                      <Typography variant="body1" component="p">
+                        {'Gerez votre blacklist'}
+                      </Typography>
+                      <LinkButton to={generatePath('/manager/blacklist')}>
+                        {'Blacklist'}
+                      </LinkButton>
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Stack spacing={2}>
+                      <Typography variant="body1" component="p">
+                        {
+                          "La musique joue un rôle crucial dans la définition de l'identité du lieu."
+                        }
+                      </Typography>
+                      <Typography variant="body1" component="p">
+                        {
+                          'Dès maintenant, vos clients peuvent participer à la création de la playlist de votre établissement.'
+                        }
+                      </Typography>
+                      <Typography variant="body1" component="p">
+                        {
+                          'Pour commencer cette aventure inoubliable connectez-vous à Spotify!'
+                        }
+                      </Typography>
+                    </Stack>
+
+                    <Link
+                      href="/spotify/redirect"
+                      sx={{
+                        backgroundColor: (theme) => theme.palette.primary.main,
+                        color: (theme) => theme.palette.text.secondary,
+                        textDecoration: 'none',
+                        fontWeight: '500',
+                        fontSize: '0.875rem',
+                        lineHeight: '1.75',
+                        textTransform: 'uppercase',
+                        minWidth: '64px',
+                        padding: '6px 16px',
+                        borderRadius: '4px',
+                        textAlign: 'center',
+                        '&:hover': {
+                          backgroundColor: (theme) =>
+                            theme.palette.primary.dark,
+                          color: '#ffffff',
+                          textDecoration: 'none',
+                        },
+                      }}
+                    >
+                      Connecter à Spotify
+                    </Link>
+                  </>
+                )}
               </StackComponentForGrid>
             </Grid>
             <Grid item xs={12} sm={8} md={4}>
@@ -167,26 +240,6 @@ const CompanyHome = () => {
           </Grid>
         </Stack>
       </Stack>
-
-      {hasRefreshToken ? (
-        <>
-          <div>Vous êtes déjà connecté(e) à Spotify</div>
-          {/* <iframe
-            // sx={{borderRadius="12px"}}
-            src="https://open.spotify.com/embed/playlist/0aOhQdv6lINuFcppcDL736?utm_source=generator"
-            width="100%"
-            height="152"
-            frameBorder="0"
-            allowfullscreen=""
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          ></iframe> */}
-        </>
-      ) : (
-        <>
-          <Link href="/spotify/redirect">Connecter à Spotify</Link>
-        </>
-      )}
     </>
   );
 };

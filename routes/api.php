@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/{company}/songs', [RequestedSongController::class, 'index'])
     ->name('company.songs');
+Route::get('/{company}/show', [CompanyController::class, 'show']);
 Route::get('/{company}/songs/search', [RequestedSongController::class, 'search']);
 Route::post('/user/login', [LoginController::class, 'authenticate']);
 Route::post('/user/register', [RegisterController::class, 'store']);

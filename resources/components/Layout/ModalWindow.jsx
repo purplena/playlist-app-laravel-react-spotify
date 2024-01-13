@@ -53,8 +53,10 @@ export default function ModalWindow({
             onClick={() => setOpen(false)}
             sx={{
               justifyContent: 'flex-end',
+              backgroundColor: 'transparent',
               ':hover': {
                 backgroundColor: 'transparent',
+                color: (theme) => theme.palette.primary.dark,
               },
             }}
           >
@@ -88,7 +90,7 @@ export default function ModalWindow({
             <LinkButton onClick={actionHandler}>{action}</LinkButton>
           </>
         ) : (
-          <LinkButton to={generatePath('/:id/songs', { id })}>
+          <LinkButton disableElevation to={generatePath('/:id/songs', { id })}>
             {"Chansons d'aujourd'hui"}
           </LinkButton>
         )}

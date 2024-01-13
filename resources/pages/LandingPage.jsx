@@ -1,39 +1,104 @@
 import React from 'react';
-import { Stack, Typography } from '@mui/material';
-import { generatePath } from 'react-router';
-import LinkButton from '../components/Button/LinkButton';
+import { Box, Stack, Typography } from '@mui/material';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import LineComponent from '../components/Layout/LineComponent';
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
+import EastIcon from '@mui/icons-material/East';
+import LanguageIcon from '@mui/icons-material/Language';
 
 const LandingPage = () => {
   const texts = [
-    'proposer votre musique préférée?',
-    'liker vos chansons préférées?',
-    'consulter la carte?',
+    'proposer votre musique préférée ?',
+    'liker vos chansons préférées ?',
+    'consulter la carte ?',
   ];
 
   return (
-    <Stack direction="column" spacing={5}>
-      <Typography variant="h4" component="h1">
-        Êtes-vous prêt à
-      </Typography>
-      <Stack direction="column" spacing={1} textAlign={'right'}>
-        {texts.map((text) => {
-          return (
-            <Typography key={text} variant="h5" component="h2">
-              {text}
-            </Typography>
-          );
-        })}
-      </Stack>
-
-      <LinkButton
-        disableElevation
-        size="small"
-        to={generatePath('/:id/home', {
-          id: import.meta.env.VITE_DEFAULT_COMPANY_SLUG,
-        })}
+    <Stack alignItems={'center'} justifyContent={'center'}>
+      <Stack
+        sx={{
+          maxWidth: 500,
+          width: '100%',
+        }}
       >
-        Continuer
-      </LinkButton>
+        <Box
+          component="img"
+          sx={{
+            height: '30vh',
+            objectFit: 'cover',
+          }}
+          src="./images/pexels-miguel-á-padriñán-167092.jpg"
+          alt="Photo of vinyle disk/pexels-miguel-á-padriñán-167092"
+        />
+        <Stack paddingLeft={2} paddingRight={2}>
+          <LineComponent />
+          <Stack spacing={5} mt={5}>
+            <Typography variant="h2" component="h1">
+              Êtes-vous prêt à
+            </Typography>
+            <Stack direction="column" spacing={1} textAlign={'right'}>
+              {texts.map((text) => {
+                return (
+                  <Typography key={text} variant="body1" component="p">
+                    {text}
+                  </Typography>
+                );
+              })}
+            </Stack>
+
+            <LineComponent />
+
+            <Stack
+              spacing={4}
+              mt={5}
+              paddingLeft={2}
+              paddingRight={2}
+              justifyContent={'center'}
+              alignItems={'center'}
+            >
+              <Typography variant="h5" component="h2">
+                Scannez un QR-code !
+              </Typography>
+              <Stack
+                direction={'row'}
+                spacing={1}
+                justifyContent={'center'}
+                alignItems={'center'}
+              >
+                <SmartphoneIcon sx={{ fontSize: '48px' }} />
+                <EastIcon sx={{ fontSize: '48px' }} />
+                <QrCode2Icon sx={{ fontSize: '48px' }} />
+              </Stack>
+              <Typography variant="h5" component="h2">
+                {"And let's the party started !"}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+        <Stack
+          spacing={2}
+          sx={{
+            padding: '2rem',
+            backgroundColor: (theme) => theme.palette.primary.main,
+            marginTop: '3rem',
+          }}
+        >
+          <Typography variant="h6" component="h3">
+            {"Integrez l'application chez vous !"}
+          </Typography>
+          <Typography variant="body1" component="p">
+            {'Contactez notre equipe'}
+          </Typography>
+          <Stack direction={'row'} spacing={1} alignItems={'center'}>
+            <LanguageIcon
+              sx={{ color: (theme) => theme.palette.text.primary }}
+            />
+            <Typography variant="body1" component="p" color="textPrimary">
+              https://here.actual.site.web.fr
+            </Typography>
+          </Stack>
+        </Stack>
+      </Stack>
     </Stack>
   );
 };

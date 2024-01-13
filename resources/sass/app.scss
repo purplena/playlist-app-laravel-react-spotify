@@ -1,21 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Russo+One&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Prata&display=swap');
 
 $white: #fefefe;
 $black: #171717;
 $yellow: #f5f378;
-$green-acid: #cfff5e;
+$green-acid: #cff86e;
 $purple-dark: #b87eee;
 $purple-light: #dcc1ff;
-$open-sans: "Open Sans", sans-serif;
-$russo: "Russo One", sans-serif;
+$open-sans: 'Open Sans', sans-serif;
+$russo: 'Russo One', sans-serif;
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    color: $black;
-    background: $white;
+  color: $black;
+  background: $white;
 }

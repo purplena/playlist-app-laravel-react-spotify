@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Http\Resources\CompanyShortResource;
 use App\Http\Resources\UserResource;
 use App\Models\Company;
 use App\Models\User;
@@ -13,6 +14,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CompanyController extends Controller
 {
+    public function show(Company $company)
+    {
+        return response()->json(['company' => new CompanyShortResource($company)]);
+    }
+
     public function downloadQrCode(): JsonResponse|StreamedResponse
     {
         $company = auth()->user()->company;

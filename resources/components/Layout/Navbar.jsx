@@ -8,15 +8,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Menu } from '@mui/material';
 import { generatePath, useParams } from 'react-router-dom';
 import { useLogout } from '../../hooks/useLogout';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import MenuItemCustom from '../Menu/MenuItemCustom';
-import LinkButton from '../Button/LinkButton';
 
 const ButtonAppBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const { user, logout } = useLogout();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     const response = await logout();
@@ -26,7 +26,6 @@ const ButtonAppBar = () => {
   };
 
   const { id } = useParams();
-  const defaultSlug = import.meta.env.VITE_DEFAULT_COMPANY_SLUG;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -36,24 +35,33 @@ const ButtonAppBar = () => {
     setAnchorEl(null);
   };
 
+  const handleRedirection = () => {
+    navigate('/login', { state: { from: location } });
+  };
+
+  const handleCloseAndRedirection = () => {
+    navigate('/login', { state: { from: location } });
+    setAnchorEl(null);
+  };
+
   const menuItems = [
     {
       page: 'Accueil',
-      path: generatePath('/:id/home', { id: id || defaultSlug }),
+      path: generatePath('/:id/home', { id }),
     },
     {
       page: "Chansons d'aujourd'hui",
-      path: generatePath('/:id/songs', { id: id || defaultSlug }),
+      path: generatePath('/:id/songs', { id }),
     },
     {
       page: 'Suggérer une chanson',
-      path: generatePath('/:id/songs/search', { id: id || defaultSlug }),
+      path: generatePath('/:id/songs/search', { id }),
     },
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box>
+      <AppBar position="static" sx={{ boxShadow: 'none' }}>
         <Toolbar sx={{ justifyContent: 'center' }}>
           <Box
             sx={{
@@ -75,20 +83,42 @@ const ButtonAppBar = () => {
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
             >
-              <MenuIcon />
+              <MenuIcon
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                }}
+              />
             </IconButton>
             {user ? (
-              <Button onClick={handleLogout} color="inherit">
+              <Button
+                onClick={handleLogout}
+                color="inherit"
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: (theme) => theme.palette.text.secondary,
+                    fontWeight: 800,
+                  },
+                }}
+              >
                 Se deconnecter
               </Button>
             ) : (
-              <LinkButton
+              <Button
                 variant="text"
-                to={generatePath('/login')}
-                color="inherit"
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: (theme) => theme.palette.text.secondary,
+                    fontWeight: 800,
+                  },
+                }}
+                onClick={handleRedirection}
               >
                 Se connecter
-              </LinkButton>
+              </Button>
             )}
           </Box>
         </Toolbar>
@@ -118,11 +148,23 @@ const ButtonAppBar = () => {
               onClickHandler={handleLogout}
             />
           ) : (
-            <MenuItemCustom
-              path={generatePath('/login')}
-              menuItem={'Se connecter'}
-              onClickHandler={handleClose}
-            />
+            <Button
+              onClick={handleCloseAndRedirection}
+              sx={{
+                color: (theme) => theme.palette.text.primary,
+                backgroundColor: 'transparent',
+                textTransform: 'capitalize',
+                fontSize: '1rem',
+                paddingLeft: '16px',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                  color: (theme) => theme.palette.text.primary,
+                  fontWeight: 800,
+                },
+              }}
+            >
+              Se connecter
+            </Button>
           )}
         </Box>
       </Menu>

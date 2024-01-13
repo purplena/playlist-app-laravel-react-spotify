@@ -4,7 +4,13 @@ import { Link as LinkRouterDom } from 'react-router-dom';
 
 const LinkButton = ({ variant = 'contained', to = '', children, ...props }) => {
   return (
-    <Button component={LinkRouterDom} to={to} variant={variant} {...props}>
+    <Button
+      disableElevation
+      component={LinkRouterDom}
+      to={to}
+      variant={variant}
+      {...props}
+    >
       {children}
     </Button>
   );

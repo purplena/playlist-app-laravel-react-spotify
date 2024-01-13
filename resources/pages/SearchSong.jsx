@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useSearchSong } from '../hooks/useSearchSong';
 import SearchBar from '../components/Form/SearchBar';
-import { Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SongSearchCard from '../components/Playlist/SongSearchCard';
 import ModalWindow from '../components/Layout/ModalWindow';
 import { useUserStore } from '../js/useUserStore';
+import LineComponent from '../components/Layout/LineComponent';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 
 function Search() {
   const { isLoading, searchResults, handleInput } = useSearchSong();
@@ -17,29 +19,67 @@ function Search() {
   return (
     <>
       <Stack
+        mb={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={2}
       >
-        <SearchBar isLoading={isLoading} handleInput={handleInput} />
+        <Typography variant="h1" component="h1" textAlign="center">
+          {'Ajoutez vos chansons préférées'}
+        </Typography>
+        <Box
+          component="img"
+          sx={{
+            transform: 'rotate(180deg)',
+            height: '80px',
+            objectFit: 'contain',
+          }}
+          src="/images/pexels-miguel-á-padriñán-167092.jpg"
+          alt="Photo of vinyle disk/pexels-miguel-á-padriñán-167092"
+        />
+        <LineComponent />
+        <Stack mt={2} mb={2} spacing={2}>
+          <SearchBar handleInput={handleInput} />
+          <Stack
+            direction="row"
+            spacing={1}
+            justifyContent={'center'}
+            alignItems={'center'}
+          >
+            <Typography variant="body1" component="p" fontSize={'12px'}>
+              cliquez sur
+            </Typography>
+            <PlaylistAddIcon />
+            <Typography variant="body1" component="p" fontSize={'12px'}>
+              pour ajouter une chanson
+            </Typography>
+          </Stack>
+        </Stack>
+        <LineComponent mb={2} />
 
         {isLoading && <CircularProgress />}
-        {searchResults && (
-          <Grid container spacing={3}>
+        {searchResults.length > 0 ? (
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            columnSpacing={{ xs: 1, sm: 2 }}
+            rowSpacing={1}
+          >
             {searchResults.map((song) => {
               return (
-                <Grid item xs={6} key={song.spotify_id}>
-                  <SongSearchCard
-                    song={song}
-                    setOpen={setOpen}
-                    setModalMessage={setModalMessage}
-                    setModalHeader={setModalHeader}
-                  />
-                </Grid>
+                <SongSearchCard
+                  song={song}
+                  setOpen={setOpen}
+                  setModalMessage={setModalMessage}
+                  setModalHeader={setModalHeader}
+                  key={song.spotify_id}
+                />
               );
             })}
           </Grid>
+        ) : (
+          <Stack height={'50vh'} />
         )}
       </Stack>
       {user ? (
