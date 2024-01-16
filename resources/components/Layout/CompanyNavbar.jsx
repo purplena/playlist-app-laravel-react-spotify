@@ -111,6 +111,9 @@ function CompanyNavbar() {
                   path={menuItem.path}
                   menuItem={menuItem.page}
                   onClickHandler={handleCloseNavMenu}
+                  sx={{
+                    fontWeight: location.pathname === menuItem.path ? 800 : '',
+                  }}
                 />
               ))}
             </Menu>
@@ -127,6 +130,7 @@ function CompanyNavbar() {
                 key={menuItem.page}
                 to={menuItem.path}
                 sx={{
+                  fontWeight: location.pathname === menuItem.path ? 800 : '',
                   '&:hover': {
                     backgroundColor: 'transparent',
                     color: (theme) => theme.palette.text.secondary,

@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem } from '@mui/material';
 import Link from '../Layout/Link';
 
-const MenuItemCustom = ({ path = '', menuItem, onClickHandler }) => {
+const MenuItemCustom = ({ path = '', menuItem, onClickHandler, ...props }) => {
   return (
     <>
       <MenuItem
@@ -15,9 +15,9 @@ const MenuItemCustom = ({ path = '', menuItem, onClickHandler }) => {
           '&:hover': {
             backgroundColor: 'transparent',
             color: (theme) => theme.palette.text.primary,
-            fontWeight: 800,
           },
         }}
+        {...props}
       >
         {menuItem}
       </MenuItem>

@@ -24,11 +24,11 @@ const LandingPage = () => {
         <Box
           component="img"
           sx={{
-            height: '30vh',
+            height: '40vh',
             objectFit: 'cover',
           }}
-          src="./images/pexels-miguel-á-padriñán-167092.jpg"
-          alt="Photo of vinyle disk/pexels-miguel-á-padriñán-167092"
+          src="./images/hero-disk-image.jpg"
+          alt="Photo of vinyle disk"
         />
         <Stack paddingLeft={2} paddingRight={2}>
           <LineComponent />

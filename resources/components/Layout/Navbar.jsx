@@ -17,6 +17,7 @@ const ButtonAppBar = () => {
   const { user, logout } = useLogout();
   const navigate = useNavigate();
   const location = useLocation();
+  console.log(location);
 
   const handleLogout = async () => {
     const response = await logout();
@@ -141,6 +142,9 @@ const ButtonAppBar = () => {
                   path={menuItem.path}
                   menuItem={menuItem.page}
                   onClickHandler={handleClose}
+                  sx={{
+                    fontWeight: location.pathname === menuItem.path ? 800 : '',
+                  }}
                 />
               ))
             : ''}

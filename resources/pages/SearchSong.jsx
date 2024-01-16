@@ -34,8 +34,8 @@ function Search() {
             height: '80px',
             objectFit: 'contain',
           }}
-          src="/images/pexels-miguel-á-padriñán-167092.jpg"
-          alt="Photo of vinyle disk/pexels-miguel-á-padriñán-167092"
+          src="/images/hero-disk-image.jpg"
+          alt="Photo of vinyle disk"
         />
         <LineComponent />
         <Stack mt={2} mb={2} spacing={2}>
