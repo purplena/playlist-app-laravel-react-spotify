@@ -16,6 +16,9 @@ export const useCustomTheme = () => {
         primary: '#000000',
         secondary: contrastingFontColor,
       },
+      background: {
+        default: '#fefefe',
+      },
     },
 
     breakpoints: {

@@ -82,7 +82,7 @@ const PlaylistCard = ({
             <Box
               component="img"
               sx={{
-                borderRadius: '50%',
+                borderRadius: '5px',
                 width: '60px',
                 height: '60px',
               }}

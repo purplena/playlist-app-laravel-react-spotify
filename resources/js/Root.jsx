@@ -1,7 +1,8 @@
 import React from 'react';
-import { CircularProgress, Stack } from '@mui/material';
+import { CircularProgress, Stack, CssBaseline } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { useMe } from '../hooks/useMe';
+import { CustomThemeProvider } from '../helpers/CustomThemeProvider';
 
 export default function Root() {
   const { isLoading } = useMe();
@@ -11,6 +12,9 @@ export default function Root() {
       <CircularProgress />
     </Stack>
   ) : (
-    <Outlet />
+    <CustomThemeProvider>
+      <CssBaseline />
+      <Outlet />
+    </CustomThemeProvider>
   );
 }

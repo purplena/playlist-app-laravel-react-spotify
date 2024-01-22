@@ -9,9 +9,10 @@ export const useGetCompany = () => {
   const [company, setCompany] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUserStore();
-  const { id: slug } = useParams();
+  const { id } = useParams();
+  // console.log(slug);
 
-  const companySlug = slug ?? user?.company?.slug;
+  const companySlug = id || user?.company?.slug;
 
   useEffect(() => {
     if (companySlug) {

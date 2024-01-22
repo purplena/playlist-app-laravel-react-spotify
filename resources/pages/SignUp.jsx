@@ -31,7 +31,7 @@ const SignUp = ({ redirect = '/' }) => {
           Vous êtes presque là!
         </Typography>
         <Typography variant="body1" component="h2" textAlign="center">
-          Nous vous invitons de créer votre compte
+          Nous vous invitons à créer votre compte
         </Typography>
         <Stack
           component="form"

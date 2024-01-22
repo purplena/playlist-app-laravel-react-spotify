@@ -17,7 +17,6 @@ const ButtonAppBar = () => {
   const { user, logout } = useLogout();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
 
   const handleLogout = async () => {
     const response = await logout();

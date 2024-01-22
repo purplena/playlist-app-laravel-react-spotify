@@ -26,14 +26,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::group(['middleware' => IsManager::class], function () {
         Route::get('/manager/blacklist', [BlackListController::class, 'index']);
-        Route::post('/manager/blacklist/destroy/{blacklist}', [BlackListController::class, 'destroy']);
-        Route::post('/manager/blacklist/destroy', [BlackListController::class, 'destroyAll']);
+        Route::delete('/manager/blacklist/destroy/{blacklist}', [BlackListController::class, 'destroy']);
+        Route::delete('/manager/blacklist/destroy', [BlackListController::class, 'destroyAll']);
         Route::post('/manager/blacklist/store/{requestedSong}', [BlackListController::class, 'store']);
         Route::post('/manager/blacklist/store', [BlackListController::class, 'storeAll']);
-        Route::post('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
-        Route::post('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
+        Route::delete('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
+        Route::delete('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
         Route::get('/manager/qr-code', [CompanyController::class, 'downloadQrCode']);
-        Route::post('/manager/update', [CompanyController::class, 'update']);
+        Route::put('/manager/update', [CompanyController::class, 'update']);
     });
 });
 

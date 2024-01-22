@@ -29,11 +29,11 @@ const PlaylistCard = ({
     <Grid item xxs={12} xs={10} sm={8}>
       <Paper>
         <Stack padding={3} spacing={2}>
-          <Stack spacing={1} direction={'row'} pt={'3px'}>
+          <Stack spacing={3} direction={'row'} pt={'3px'}>
             <Box
               component="img"
               sx={{
-                borderRadius: '50%',
+                borderRadius: '5px',
                 width: '60px',
                 height: '60px',
               }}

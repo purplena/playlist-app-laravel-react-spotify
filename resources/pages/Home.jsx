@@ -12,7 +12,7 @@ const Home = () => {
 
   const menuItems = [
     {
-      title: 'Sugérrez une chanson',
+      title: 'Suggérez une chanson',
       href: generatePath('/:id/songs/search', { id }),
     },
     {
@@ -49,7 +49,7 @@ const Home = () => {
               </Stack>
               <Typography variant="body1" component="p">
                 {
-                  "L'authentique pub irlandais où déguster une bière avec ses amis autour d'un burger au bacon irlandais, devant un match de rugby ou un live musical."
+                  "Un authentique pub irlandais où déguster une bière avec ses amis autour d'un burger au bacon irlandais, devant un match de rugby ou un live musical."
                 }
               </Typography>
               <Box
