@@ -2,7 +2,7 @@ import React from 'react';
 import { MenuItem } from '@mui/material';
 import Link from '../Layout/Link';
 
-const MenuItemCustom = ({ path = '', menuItem, onClickHandler }) => {
+const MenuItemCustom = ({ path = '', menuItem, onClickHandler, ...props }) => {
   return (
     <>
       <MenuItem
@@ -11,13 +11,13 @@ const MenuItemCustom = ({ path = '', menuItem, onClickHandler }) => {
         to={path}
         onClick={onClickHandler}
         sx={{
-          color: (theme) => theme.palette.text.secondary,
+          color: (theme) => theme.palette.text.primary,
           '&:hover': {
             backgroundColor: 'transparent',
-            color: (theme) => theme.palette.text.secondary,
-            fontWeight: 800,
+            color: (theme) => theme.palette.text.primary,
           },
         }}
+        {...props}
       >
         {menuItem}
       </MenuItem>

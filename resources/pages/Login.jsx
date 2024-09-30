@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { generatePath } from 'react-router-dom';
-import SocialMediaIconsColumn from '../components/Layout/SocialMediaIconsColumn';
 import { useLogin } from '../hooks/useLogin';
 import SendIcon from '@mui/icons-material/Send';
 import LinkButton from '../components/Button/LinkButton';
@@ -25,12 +24,6 @@ const Login = () => {
   return (
     <>
       <Stack direction="column" spacing={8}>
-        {window.location.pathname === '/manager/login' ? (
-          ''
-        ) : (
-          <SocialMediaIconsColumn />
-        )}
-
         <LoginInputs
           handleLogin={handleLogin}
           errors={errors}

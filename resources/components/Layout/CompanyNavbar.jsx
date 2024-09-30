@@ -9,11 +9,14 @@ import Container from '@mui/material/Container';
 import { useLogout } from '../../hooks/useLogout';
 import { generatePath, useNavigate } from 'react-router-dom';
 import MenuItemCustom from '../Menu/MenuItemCustom';
+import { Button } from '@mui/material';
+import LinkButton from '../Button/LinkButton';
 
 function CompanyNavbar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const { user, logout } = useLogout();
+
   const handleLogout = async () => {
     const response = await logout();
     if (response?.data?.status) {
@@ -68,9 +71,15 @@ function CompanyNavbar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
             >
-              <MenuIcon />
+              <MenuIcon
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    color: (theme) => theme.palette.text.secondary,
+                  },
+                }}
+              />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -102,6 +111,9 @@ function CompanyNavbar() {
                   path={menuItem.path}
                   menuItem={menuItem.page}
                   onClickHandler={handleCloseNavMenu}
+                  sx={{
+                    fontWeight: location.pathname === menuItem.path ? 800 : '',
+                  }}
                 />
               ))}
             </Menu>
@@ -114,11 +126,26 @@ function CompanyNavbar() {
             }}
           >
             {menuItems.map((menuItem) => (
-              <MenuItemCustom
+              <LinkButton
                 key={menuItem.page}
-                path={menuItem.path}
-                menuItem={menuItem.page}
-              />
+                to={menuItem.path}
+                sx={{
+                  fontWeight: location.pathname === menuItem.path ? 800 : '',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: (theme) => theme.palette.text.secondary,
+                    fontWeight: 800,
+                  },
+                }}
+              >
+                {menuItem.page}
+              </LinkButton>
+
+              // <MenuItemCustom
+              //   key={menuItem.page}
+              //   path={menuItem.path}
+              //   menuItem={menuItem.page}
+              // />
             ))}
           </Box>
           {/* Desktop */}
@@ -126,14 +153,30 @@ function CompanyNavbar() {
           {/* Login/Logout toggle  */}
           <Box sx={{ flexGrow: 0 }}>
             {user ? (
-              <MenuItemCustom
-                menuItem={'Se deconnecter'}
-                onClickHandler={handleLogout}
-              />
+              <Button
+                onClick={handleLogout}
+                color="inherit"
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: (theme) => theme.palette.text.secondary,
+                    fontWeight: 800,
+                  },
+                }}
+              >
+                Se deconnecter
+              </Button>
             ) : (
               <MenuItemCustom
                 path={generatePath('/manager/login')}
                 menuItem={'Se connecter'}
+                sx={{
+                  color: (theme) => theme.palette.text.secondary,
+                  '&:hover': {
+                    color: (theme) => theme.palette.text.secondary,
+                  },
+                }}
               />
             )}
           </Box>

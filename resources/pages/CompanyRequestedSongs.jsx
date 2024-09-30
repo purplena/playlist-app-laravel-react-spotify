@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
-import PlaylistCard from '../components/Playlist/PlaylistCard';
+import CompanyPlaylistCard from '../components/Playlist/CompanyPlaylistCard';
 import ModalWindow from '../components/Layout/ModalWindow';
 import { useUserStore } from '../js/useUserStore';
 import {
@@ -106,15 +106,15 @@ const CompanyRequestedSongs = () => {
 
       <Grid
         container
-        gap={3}
         mt={6}
         justifyContent="center"
-        flexBasis="flex-start"
+        columnSpacing={{ xs: 1, sm: 2 }}
+        rowSpacing={1}
       >
         {requestedSongs.length > 0 ? (
           requestedSongs.map((requestedSong, index) => {
             return (
-              <PlaylistCard
+              <CompanyPlaylistCard
                 key={requestedSong.id}
                 requestedSong={requestedSong}
                 index={index}

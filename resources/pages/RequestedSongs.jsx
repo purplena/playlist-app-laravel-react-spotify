@@ -69,7 +69,7 @@ const RequestedSongs = () => {
                   width: '24px',
                 }}
                 src="../images/spotify-logo.png"
-                alt="Photo of vinyle disk/pexels-miguel-á-padriñán-167092"
+                alt="Logo Spotify"
               />
               <Typography
                 variant="body1"

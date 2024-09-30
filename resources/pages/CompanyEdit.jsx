@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router';
 import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
 import { SliderPicker } from 'react-color';
@@ -79,7 +78,7 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
         spacing={4}
       >
         <Typography variant="h3" component="h1" textAlign="center">
-          Inscription de votre entreprise
+          {"Modification de l'information"}
         </Typography>
 
         <Stack
@@ -103,7 +102,7 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
               xl: 'flex-start',
             }}
           >
-            <Stack>
+            <Stack spacing={2}>
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information générale'}
               </Typography>
@@ -116,6 +115,9 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 value={name}
                 helperText={errors?.name}
                 onChange={(e) => setName(e.target.value)}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
               <TextField
                 error={!!errors?.username}
@@ -126,10 +128,13 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 value={username}
                 helperText={errors?.username ? errors?.username : 'optionel'}
                 onChange={(e) => setUsername(e.target.value)}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
             </Stack>
 
-            <Stack>
+            <Stack spacing={2}>
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information de contact'}
               </Typography>
@@ -142,6 +147,9 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 value={tel}
                 helperText={errors?.tel}
                 onChange={(e) => setTel(e.target.value)}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
 
               <TextField
@@ -155,6 +163,9 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 onChange={(e) => {
                   setCountry(e.target.value);
                 }}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
 
               <TextField
@@ -166,6 +177,9 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 value={city}
                 helperText={errors?.city}
                 onChange={(e) => setCity(e.target.value)}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
 
               <TextField
@@ -177,6 +191,9 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 value={zip}
                 helperText={errors?.zip}
                 onChange={(e) => setZip(e.target.value)}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
               <TextField
                 error={!!errors?.address}
@@ -187,6 +204,9 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 value={address}
                 helperText={errors?.address}
                 onChange={(e) => setAddress(e.target.value)}
+                sx={{
+                  label: { color: (theme) => theme.palette.text.primary },
+                }}
               />
             </Stack>
 
@@ -218,7 +238,15 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                     <Button
                       variant="outlined"
                       component="span"
-                      style={{ fontSize: '12px' }}
+                      sx={{
+                        fontSize: '12px',
+                        color: (theme) => theme.palette.text.secondary,
+                        '&:hover': {
+                          backgroundColor: (theme) =>
+                            theme.palette.primary.dark,
+                          color: (theme) => theme.palette.text.secondary,
+                        },
+                      }}
                     >
                       Choisir
                     </Button>
@@ -226,6 +254,7 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
                 </Stack>
                 {logoDB && (
                   <Box
+                    mt={2}
                     component="img"
                     sx={{
                       width: 100,
@@ -345,8 +374,19 @@ const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
             </Stack>
           </Stack>
           <Stack>
-            <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
-              {"S'inscrire"}
+            <Button
+              type="submit"
+              variant="outlined"
+              sx={{
+                color: (theme) => theme.palette.text.primary,
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: (theme) => theme.palette.text.secondary,
+                },
+              }}
+            >
+              {'Modifier'}
             </Button>
           </Stack>
         </Stack>

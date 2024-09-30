@@ -2,12 +2,10 @@ import React from 'react';
 import { Box, Stack } from '@mui/material';
 import NavbarClient from '../components/Layout/Navbar';
 import { Outlet } from 'react-router-dom';
-import { useMe } from '../hooks/useMe';
 import Footer from '../components/Layout/Footer';
 import { useGetCompany } from '../hooks/useGetCompany';
 
 export default function Root() {
-  useMe();
   const { company } = useGetCompany();
 
   return (

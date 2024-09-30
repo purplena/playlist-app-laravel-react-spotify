@@ -61,6 +61,14 @@ const Footer = ({ company }) => {
             }}
           />
         </Stack>
+        <Stack direction={'row'} spacing={2} justifyContent={'center'}>
+          <Typography sx={{ color: '#AAA7A7', textDecoration: 'underline' }}>
+            Spotify Developer Terms
+          </Typography>
+          <Typography sx={{ color: '#AAA7A7', textDecoration: 'underline' }}>
+            Mentions legales
+          </Typography>
+        </Stack>
       </Stack>
     </Stack>
   );

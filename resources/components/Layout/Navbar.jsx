@@ -47,15 +47,15 @@ const ButtonAppBar = () => {
   const menuItems = [
     {
       page: 'Accueil',
-      path: generatePath('/:id/home', { id }),
+      path: generatePath(`/${id}`),
     },
     {
       page: "Chansons d'aujourd'hui",
-      path: generatePath('/:id/songs', { id }),
+      path: generatePath(`/${id}/songs`),
     },
     {
       page: 'Suggérer une chanson',
-      path: generatePath('/:id/songs/search', { id }),
+      path: generatePath(`/${id}/songs/search`),
     },
   ];
 
@@ -134,14 +134,20 @@ const ButtonAppBar = () => {
         }}
       >
         <Box sx={{ width: '100vw', paddingRight: '1rem' }}>
-          {menuItems.map((menuItem) => (
-            <MenuItemCustom
-              key={menuItem.page}
-              path={menuItem.path}
-              menuItem={menuItem.page}
-              onClickHandler={handleClose}
-            />
-          ))}
+          {user
+            ? menuItems.map((menuItem) => (
+                <MenuItemCustom
+                  key={menuItem.page}
+                  path={menuItem.path}
+                  menuItem={menuItem.page}
+                  onClickHandler={handleClose}
+                  sx={{
+                    fontWeight: location.pathname === menuItem.path ? 800 : '',
+                  }}
+                />
+              ))
+            : ''}
+
           {user ? (
             <MenuItemCustom
               menuItem={'Se deconnecter'}
