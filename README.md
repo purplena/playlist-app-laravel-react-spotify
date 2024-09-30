@@ -1,66 +1,16 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<p>This project was a big milestone in my “becoming a web developer” adventure. It was a real-life case from a client, where I had to come up with a solution. Necessary to mention that it was my final graduation project of a 9 months training program in l'IDEM. My work received a very positive feedback from the members of the jury and <strong>was considered the best final project amongst all the students of our class</strong>.</p>
+<h3>Main Idea</h3>
+<p>To offer a comprehensive solution to establishment (company) owners to not only manage their menus online (that became a common practice especially in the post-COVID era) but also to create a unique musical atmosphere for their establishments that reflects the tastes and character of their customers using the Spotify Web API.</p>
+<p>Under Spotify Developer Policy my application is considered as <strong>non-streaming SDA</strong>. In other words, it is an application that does not provide any streaming functionality. Spotify Web API is used exclusively for data research and playlist management.</p>
+<h3>Project  Stack and Configuration</h3>
+<p>My project is full-stack. <strong>Laravel</strong> is used for backend development and <strong>React.js/Material UI</strong> for the front-end.</p>
+<p>For the local development of my application, I used a docker stack: a classic <strong>LAMP environment</strong> (linux, apache, mysql and php) easy to set up thanks to a docker-compose file and which is based on an initial package similar to this <a href="https://github.com/sprintcube/docker-compose-lamp">one</a> found on Github.</p>
+<p>To enable the use of the Spotify Web API, I configured <strong>client_id</strong> and <strong>client_secret</strong> in <strong>Spotify Dashboard</strong>. Finally I found a <a href="https://github.com/jwilsson/spotify-web-api-php">Spotify Web API Package for PHP (SDK)</a> that helped me to manage HTTP requests without manual API integration into a PHP/Laravel environment.</p>
+<h3>What did I learn?</h3>
+<p>The project helped me to discover a few fundamental concepts in web development and enrich my technical skills. In the list down-below I mention the main subjects that I personally find the most interesting in this project. Do not hesitate to visit my github repository to check out the code implementation.</p>
+<ul>
+<li>Concept of “stateless” and “stateful” authentication using the Spotify OAuth 2.0. I use <strong>Client Credentials Flow</strong> (stateless authentication) to search for songs in the Spotify catalog and <strong>Authorization Code Flow</strong> (stateful authentication) to connect a company manager to the Spotify API server, create company's playlist, synchronize the “local” playlist with his Spotify playlist. </li>
+<li>Study <strong>powerful Laravel features and concepts</strong> like API Resources, Form Request Validation, Middleware and Policies, Application Localization, Laravel Collections, Model Binding and Dependency Injections, etc.</li>
+<li>In front-end development I used an efficient state management solution <strong>Zustand</strong>, implemented the <strong>concept of “optimistic updates”</strong> to provide an immediate feedback to the end-user and <strong>“debounce” hook</strong> for the song search to improve a user experience. I created <strong>a personalized theme with MUI</strong> and I also integrated an option to change programatically the main theme color of the whole application. In several clicks it is possible to change the character of the whole application. Isn't that awesome?</li>
+<li>Create <strong>Laravel Command</strong> to synchronize the playlists using Spotify snapshot ID and to <strong>configure a cron job</strong> to run this command every midnight. Snapshot ID is an instrument of the version control within the Spotify API framework. To synchronize a local playlist and company's playlist available directly on the Spotify server is a complexe operation that consists of comparing the snapshot ID of local and public playlists and depending on the result, the workflow of the Laravel Command changes. </li>
+</ul>
