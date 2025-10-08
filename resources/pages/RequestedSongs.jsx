@@ -19,7 +19,7 @@ const RequestedSongs = () => {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
-  const { id } = useParams();
+  const { companySlug } = useParams();
   const { company } = useGetCompany();
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const RequestedSongs = () => {
         <LinkButton
           disableElevation
           size="small"
-          to={generatePath('/:id/songs/search', { id })}
+          to={generatePath('/:companySlug/songs/search', { companySlug })}
         >
           suggérer
         </LinkButton>

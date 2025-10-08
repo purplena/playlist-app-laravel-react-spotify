@@ -44,15 +44,15 @@ export const router = createBrowserRouter([
             element: <LandingPage />,
           },
           {
-            path: '/:id',
+            path: '/:companySlug',
             element: <Home />,
           },
           {
-            path: '/:id/songs',
+            path: '/:companySlug/songs',
             element: <RequestedSongs />,
           },
           {
-            path: '/:id/songs/search',
+            path: '/:companySlug/songs/search',
             element: <SearchSong />,
           },
           {

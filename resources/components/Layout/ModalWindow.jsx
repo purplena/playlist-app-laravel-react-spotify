@@ -31,7 +31,7 @@ export default function ModalWindow({
   actionHandler = '',
   songClicked = '',
 }) {
-  const { id } = useParams();
+  const { companySlug } = useParams();
 
   return (
     <Modal
@@ -90,7 +90,7 @@ export default function ModalWindow({
             <LinkButton onClick={actionHandler}>{action}</LinkButton>
           </>
         ) : (
-          <LinkButton disableElevation to={generatePath('/:id/songs', { id })}>
+          <LinkButton disableElevation to={generatePath('/:companySlug/songs', { companySlug })}>
             {"Chansons d'aujourd'hui"}
           </LinkButton>
         )}

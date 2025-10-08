@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
@@ -28,8 +29,13 @@ class CompanyFactory extends Factory
                 'id' => fake()->bothify('?????-#####'),
                 'snapshot_id' => fake()->uuid(),
             ],
-            'qr_code' => fake()->image(null, 360, 360, 'animals', true),
-            'logo' => fake()->image(null, 360, 360, 'animals', true),
+            'logo' =>function () {
+                $sourcePath = public_path('images/seeders/fake-logo.png');
+                $fileName = 'fake-logo.png';
+                Storage::disk('public')->put($fileName, file_get_contents($sourcePath));
+
+                return $fileName;
+            },
         ];
     }
 }

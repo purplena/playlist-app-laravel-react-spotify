@@ -7,17 +7,17 @@ import { useGetCompany } from '../hooks/useGetCompany';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const Home = () => {
-  const { id } = useParams();
+  const { companySlug } = useParams();
   const { company, isLoading } = useGetCompany();
 
   const menuItems = [
     {
       title: 'Suggérez une chanson',
-      href: generatePath('/:id/songs/search', { id }),
+      href: generatePath('/:companySlug/songs/search', { companySlug }),
     },
     {
       title: "Chansons d'aujourd'hui",
-      href: generatePath('/:id/songs', { id }),
+      href: generatePath('/:companySlug/songs', { companySlug }),
     },
     { title: 'Voir la carte', href: '#' },
   ];

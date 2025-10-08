@@ -27,6 +27,7 @@ module.exports = {
   },
   rules: {
     'react/prop-types': 0,
+    'no-unused-vars': 'warn',
   },
   settings: {
     react: {

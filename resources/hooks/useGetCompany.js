@@ -1,18 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { apiUrl } from '../js/App';
-
 import { useParams } from 'react-router-dom';
-import { useUserStore } from '../js/useUserStore';
 
 export const useGetCompany = () => {
   const [company, setCompany] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useUserStore();
-  const { id } = useParams();
-  // console.log(slug);
+  const [errorStatus, setErrorStatus] = useState(null);
+  const { companySlug } = useParams();
 
-  const companySlug = id || user?.company?.slug;
 
   useEffect(() => {
     if (companySlug) {
@@ -22,6 +18,9 @@ export const useGetCompany = () => {
         .then((response) => {
           setCompany(response.data.company);
         })
+        .catch((error) => {
+          setErrorStatus(error.response.status);
+        })
         .finally(() => setIsLoading(false));
     }
   }, [companySlug]);
@@ -29,5 +28,6 @@ export const useGetCompany = () => {
   return {
     company,
     isLoading,
+    errorStatus
   };
 };
