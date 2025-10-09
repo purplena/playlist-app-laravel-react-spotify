@@ -1,15 +1,16 @@
 import axios from 'axios';
 import { apiUrl } from '../js/App';
-import { useUserStore } from '../js/useUserStore';
+import { useStore } from '../js/useStore';
 
 export const useLogout = () => {
-  const { user, setUser } = useUserStore();
+  const { user, setUser } = useStore();
 
   const handleLogout = async () => {
     return axios
       .post(`${apiUrl}/user/logout`)
       .then((response) => {
         setUser(null);
+
         return response;
       })
       .catch((err) => {

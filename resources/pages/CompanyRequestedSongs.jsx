@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
 import CompanyPlaylistCard from '../components/Playlist/CompanyPlaylistCard';
 import ModalWindow from '../components/Layout/ModalWindow';
-import { useUserStore } from '../js/useUserStore';
 import {
   actions,
   useDeleteOrBlacklistAll,
 } from '../hooks/userDeleteOrBlacklistAll';
+import { useStore } from '../js/useStore';
 
 const CompanyRequestedSongs = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ const CompanyRequestedSongs = () => {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
-  const { user } = useUserStore();
+  const { user } = useStore();
   const [action, setAction] = useState('');
   const [actionHandler, setActionHandler] = useState('');
   const [songClicked, setSongClicked] = useState('');

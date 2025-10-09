@@ -1,14 +1,13 @@
-import React from 'react';
 import { Box, Paper, Stack, Typography, Grid } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
-import { useUserStore } from '../../js/useUserStore';
 import LinkButton from '../Button/LinkButton';
 import {
   actions,
   useDeleteOrBlacklistOne,
 } from '../../hooks/useDeleteOrBlacklistOne';
+import { useStore } from '../../js/useStore';
 
 const PlaylistCard = ({
   requestedSong,
@@ -21,7 +20,7 @@ const PlaylistCard = ({
   setActionHandler,
   setSongClicked,
 }) => {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const { upvote, isUpvoted, likes } = useUpvote(
     requestedSong,
     user,

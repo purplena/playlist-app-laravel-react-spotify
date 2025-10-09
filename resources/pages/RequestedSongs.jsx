@@ -1,18 +1,18 @@
 import { Alert, Grid, Link, Stack, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import LinkButton from '../components/Button/LinkButton';
 import ModalWindow from '../components/Layout/ModalWindow';
-import { useUserStore } from '../js/useUserStore';
 import LineComponent from '../components/Layout/LineComponent';
 import { useGetCompany } from '../hooks/useGetCompany';
 import { Box } from '@mui/system';
+import { useStore } from '../js/useStore';
 
 const RequestedSongs = () => {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const [isLoading, setIsLoading] = useState(false);
   const { getSongs, requestedSongs, serverErrorMessage } =
     useGetRequestedSongs(setIsLoading);

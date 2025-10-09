@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import eslint from 'vite-plugin-eslint';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [
@@ -9,5 +10,8 @@ export default defineConfig({
       refresh: true,
     }),
     eslint(),
+    react({
+      jsxRuntime: 'automatic',
+    })
   ],
 });
