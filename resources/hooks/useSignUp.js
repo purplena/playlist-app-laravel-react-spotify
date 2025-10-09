@@ -1,10 +1,11 @@
 import { apiUrl } from '../js/App';
 import axios from 'axios';
-import { useUserStore } from '../js/useUserStore';
+
 import { useState } from 'react';
+import { useStore } from '../js/useStore';
 
 export const useSignUp = () => {
-  const { setUser } = useUserStore();
+  const { setUser } = useStore();
   const [errors, setErrors] = useState(null);
 
   const signup = (email, password, username) => {

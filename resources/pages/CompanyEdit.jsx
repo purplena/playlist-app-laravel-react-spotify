@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
 import { SliderPicker } from 'react-color';
 import LinkButton from '../components/Button/LinkButton';
 import { Box } from '@mui/system';
-import { useUserStore } from '../js/useUserStore';
+import { useStore } from '../js/useStore';
+
 
 const CompanyEdit = ({ redirect = '/manager/entreprise' }) => {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const [username, setUsername] = useState(user?.username);
   const [name, setName] = useState(user?.company?.name);
   const [tel, setTel] = useState(user?.company?.tel);

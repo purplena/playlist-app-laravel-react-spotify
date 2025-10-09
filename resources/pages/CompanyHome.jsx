@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
 import { Box, CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
 import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
-import { useUserStore } from '../js/useUserStore';
+import { useStore } from '../js/useStore';
+
 
 const CompanyHome = () => {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const spotifyPlaylistIdd = user.company?.spotify_playlist_data?.id;
   const [loading, setLoading] = useState(true);
   useEffect(() => {

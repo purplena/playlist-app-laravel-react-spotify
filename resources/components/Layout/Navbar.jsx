@@ -25,7 +25,7 @@ const ButtonAppBar = () => {
     }
   };
 
-  const { id } = useParams();
+  const { companySlug } = useParams();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,15 +47,15 @@ const ButtonAppBar = () => {
   const menuItems = [
     {
       page: 'Accueil',
-      path: generatePath(`/${id}`),
+      path: generatePath(`/${companySlug}`),
     },
     {
       page: "Chansons d'aujourd'hui",
-      path: generatePath(`/${id}/songs`),
+      path: generatePath(`/${companySlug}/songs`),
     },
     {
       page: 'Suggérer une chanson',
-      path: generatePath(`/${id}/songs/search`),
+      path: generatePath(`/${companySlug}/songs/search`),
     },
   ];
 
@@ -136,16 +136,16 @@ const ButtonAppBar = () => {
         <Box sx={{ width: '100vw', paddingRight: '1rem' }}>
           {user
             ? menuItems.map((menuItem) => (
-                <MenuItemCustom
-                  key={menuItem.page}
-                  path={menuItem.path}
-                  menuItem={menuItem.page}
-                  onClickHandler={handleClose}
-                  sx={{
-                    fontWeight: location.pathname === menuItem.path ? 800 : '',
-                  }}
-                />
-              ))
+              <MenuItemCustom
+                key={menuItem.page}
+                path={menuItem.path}
+                menuItem={menuItem.page}
+                onClickHandler={handleClose}
+                sx={{
+                  fontWeight: location.pathname === menuItem.path ? 800 : '',
+                }}
+              />
+            ))
             : ''}
 
           {user ? (

@@ -2,13 +2,13 @@ import { useParams } from 'react-router-dom';
 import { apiUrl } from '../js/App';
 import { useState } from 'react';
 import axios from 'axios';
-import { useUserStore } from '../js/useUserStore';
+import { useStore } from '../js/useStore';
 
 export const useGetRequestedSongs = (setIsLoading) => {
   const [requestedSongs, setRequestedSongs] = useState([]);
   const [serverErrorMessage, setServerErrorMessage] = useState('');
   const { id } = useParams();
-  const { user } = useUserStore();
+  const { user } = useStore();
   let endpoint = '';
 
   if (!user) {

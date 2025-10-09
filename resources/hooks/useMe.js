@@ -1,10 +1,10 @@
-import { useUserStore } from '../js/useUserStore';
 import { apiUrl } from '../js/App';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useStore } from '../js/useStore';
 
 export const useMe = () => {
-  const { setUser, user } = useUserStore();
+  const { setUser, user } = useStore();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

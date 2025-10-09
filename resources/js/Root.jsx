@@ -1,20 +1,31 @@
-import React from 'react';
-import { CircularProgress, Stack, CssBaseline } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Stack, CssBaseline, ThemeProvider } from '@mui/material';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useMe } from '../hooks/useMe';
-import { CustomThemeProvider } from '../helpers/CustomThemeProvider';
+import { useGetCompany } from '../hooks/useGetCompany';
+import { useCustomTheme } from '../helpers/useCustomTheme';
+import { useEffect } from 'react';
+import CustomLoader from '../components/Loader/Loader';
 
 export default function Root() {
-  const { isLoading } = useMe();
+  const navigate = useNavigate();
+  const { isLoading: isUserLoading } = useMe();
+  const { company, isLoading: isCompanyLoading, errorStatus } = useGetCompany();
+  const theme = useCustomTheme({ company });
 
-  return isLoading ? (
+  useEffect(() => {
+      if (errorStatus === 404) {
+        navigate("/");
+      }
+    }, [errorStatus, navigate]);
+
+  return (isUserLoading || isCompanyLoading) ? (
     <Stack justifyContent="center" alignItems="center" mt={5}>
-      <CircularProgress />
+      <CustomLoader />
     </Stack>
   ) : (
-    <CustomThemeProvider>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Outlet />
-    </CustomThemeProvider>
+    </ThemeProvider>
   );
 }

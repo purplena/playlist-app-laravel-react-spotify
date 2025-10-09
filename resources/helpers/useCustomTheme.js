@@ -1,9 +1,6 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
-import { useGetCompany } from '../hooks/useGetCompany';
 
-export const useCustomTheme = () => {
-  const { company } = useGetCompany();
-
+export const useCustomTheme = ({company}) => {
   const primaryColor = company?.background_color ?? '#cff86e';
   const contrastingFontColor = company?.font_color ?? '#000000';
 
