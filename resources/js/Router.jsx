@@ -39,10 +39,6 @@ export const router = createBrowserRouter([
         element: <ClientRoot />,
         children: [
           {
-            path: '/',
-            element: <LandingPage />,
-          },
-          {
             path: '/:companySlug',
             element: <Home />,
           },

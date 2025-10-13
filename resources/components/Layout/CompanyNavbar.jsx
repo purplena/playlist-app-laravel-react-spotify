@@ -7,15 +7,15 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import { useLogout } from '../../hooks/useLogout';
-import { generatePath, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MenuItemCustom from '../Menu/MenuItemCustom';
-import { Button } from '@mui/material';
-import LinkButton from '../Button/LinkButton';
+import { useStore } from '../../js/useStore';
 
 function CompanyNavbar() {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
-  const { user, logout } = useLogout();
+  const { user } = useStore();
+  const { logout } = useLogout();
 
   const handleLogout = async () => {
     const response = await logout();
@@ -32,27 +32,31 @@ function CompanyNavbar() {
     setAnchorElNav(null);
   };
 
+  const handleNavigate = (path) => {
+    handleCloseNavMenu();
+    navigate(path)
+  }
+
   const menuItems = [
     {
-      page: 'Accueil',
-      path: generatePath('/manager'),
-    },
-
-    {
-      page: 'Entreprise',
-      path: generatePath('/manager/entreprise'),
+      label: 'Accueil',
+      path: '/manager',
     },
     {
-      page: "Chansons d'aujourd'hui",
-      path: generatePath('/manager/songs'),
+      label: 'Entreprise',
+      path: '/manager/entreprise',
     },
     {
-      page: 'Blacklist',
-      path: generatePath('/manager/blacklist'),
+      label: "Chansons d'aujourd'hui",
+      path: '/manager/songs',
     },
     {
-      page: 'Carte',
-      path: generatePath('/manager/carte'),
+      label: 'Blacklist',
+      path: '/manager/blacklist',
+    },
+    {
+      label: 'Carte',
+      path: '/manager/carte',
     },
   ];
 
@@ -60,127 +64,95 @@ function CompanyNavbar() {
     <AppBar position="static" sx={{ boxShadow: 'none' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'flex', md: 'none' },
-            }}
-          >
-            <IconButton
-              size="large"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+          {user?.role === 1 && (
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'flex', md: 'none' },
+              }}
             >
-              <MenuIcon
-                sx={{
-                  color: (theme) => theme.palette.text.secondary,
-                  '&:hover': {
+              <IconButton
+                size="large"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+              >
+                <MenuIcon
+                  sx={{
                     color: (theme) => theme.palette.text.secondary,
+                    '&:hover': {
+                      color: (theme) => theme.palette.text.secondary,
+                    },
+                  }}
+                />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                PaperProps={{
+                  style: {
+                    width: '100%',
                   },
                 }}
-              />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              PaperProps={{
-                style: {
-                  width: '100%',
-                },
-              }}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-                top: '4px',
-              }}
-            >
-              {/* {menuItems.map((menuItem) => (
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                  top: '4px',
+                }}
+              >
+                {menuItems.map((menuItem) => (
+                  <MenuItemCustom
+                    key={menuItem.label}
+                    label={menuItem.label}
+                    onClickHandler={() => handleNavigate(menuItem.path)}
+                    sx={{
+                      fontWeight: location.pathname === menuItem.path ? 800 : '',
+                    }}
+                  />
+                ))}
                 <MenuItemCustom
-                  key={menuItem.page}
-                  path={menuItem.path}
-                  menuItem={menuItem.page}
-                  onClickHandler={handleCloseNavMenu}
+                  label={'Se deconnecter'}
+                  onClickHandler={handleLogout}
+                  sx={{}}
+                />
+              </Menu>
+          </Box>
+          )}
+
+          {/* Desktop */}
+          {user?.role === 1 && <Box
+            sx={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              display: { xxs: 'none', xs: 'none', md: 'flex' },
+            }}
+          >
+            {menuItems.map((menuItem) => (
+              <MenuItemCustom
+                  key={menuItem.label}
+                  label={menuItem.label}
+                  onClickHandler={() => handleNavigate(menuItem.path)}
                   sx={{
                     fontWeight: location.pathname === menuItem.path ? 800 : '',
                   }}
                 />
-              ))} */}
-            </Menu>
-          </Box>
-          {/* Desktop */}
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-            }}
-          >
-            {menuItems.map((menuItem) => (
-              <LinkButton
-                key={menuItem.page}
-                to={menuItem.path}
-                sx={{
-                  fontWeight: location.pathname === menuItem.path ? 800 : '',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: (theme) => theme.palette.text.secondary,
-                    fontWeight: 800,
-                  },
-                }}
-              >
-                {menuItem.page}
-              </LinkButton>
-
-              // <MenuItemCustom
-              //   key={menuItem.page}
-              //   path={menuItem.path}
-              //   menuItem={menuItem.page}
-              // />
             ))}
-          </Box>
-          {/* Desktop */}
-
-          {/* Login/Logout toggle  */}
-          <Box sx={{ flexGrow: 0 }}>
-            {user ? (
-              <Button
-                onClick={handleLogout}
-                color="inherit"
-                sx={{
-                  color: (theme) => theme.palette.text.secondary,
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: (theme) => theme.palette.text.secondary,
-                    fontWeight: 800,
-                  },
-                }}
-              >
-                Se deconnecter
-              </Button>
-            ) : (
-              ''
-              // <MenuItemCustom
-              //   path={generatePath('/manager/login')}
-              //   menuItem={'Se connecter'}
-              //   sx={{
-              //     color: (theme) => theme.palette.text.secondary,
-              //     '&:hover': {
-              //       color: (theme) => theme.palette.text.secondary,
-              //     },
-              //   }}
-              // />
-            )}
-          </Box>
+            <MenuItemCustom
+                label={'Se deconnecter'}
+                onClickHandler={handleLogout}
+                sx={{}}
+              />
+          </Box>}
         </Toolbar>
       </Container>
     </AppBar>

@@ -17,6 +17,7 @@ export const useGetCompany = () => {
 
       return;
     }
+
     setIsLoading(true);
     axios
       .get(`${apiUrl}/${companySlug}/show`)
