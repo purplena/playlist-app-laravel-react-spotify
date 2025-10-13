@@ -2,11 +2,11 @@ import { Box, Stack, Typography } from '@mui/material';
 import { generatePath, useParams } from 'react-router-dom';
 import LinkButton from '../components/Button/LinkButton';
 import LineComponent from '../components/Layout/LineComponent';
-import { useGetCompany } from '../hooks/useGetCompany';
+import { useStore } from '../js/useStore';
 
 const Home = () => {
   const { companySlug } = useParams();
-  const { company } = useGetCompany();
+  const { company } = useStore();
 
 
   const menuItems = [

@@ -105,7 +105,7 @@ function CompanyNavbar() {
                 top: '4px',
               }}
             >
-              {menuItems.map((menuItem) => (
+              {/* {menuItems.map((menuItem) => (
                 <MenuItemCustom
                   key={menuItem.page}
                   path={menuItem.path}
@@ -115,7 +115,7 @@ function CompanyNavbar() {
                     fontWeight: location.pathname === menuItem.path ? 800 : '',
                   }}
                 />
-              ))}
+              ))} */}
             </Menu>
           </Box>
           {/* Desktop */}
@@ -168,16 +168,17 @@ function CompanyNavbar() {
                 Se deconnecter
               </Button>
             ) : (
-              <MenuItemCustom
-                path={generatePath('/manager/login')}
-                menuItem={'Se connecter'}
-                sx={{
-                  color: (theme) => theme.palette.text.secondary,
-                  '&:hover': {
-                    color: (theme) => theme.palette.text.secondary,
-                  },
-                }}
-              />
+              ''
+              // <MenuItemCustom
+              //   path={generatePath('/manager/login')}
+              //   menuItem={'Se connecter'}
+              //   sx={{
+              //     color: (theme) => theme.palette.text.secondary,
+              //     '&:hover': {
+              //       color: (theme) => theme.palette.text.secondary,
+              //     },
+              //   }}
+              // />
             )}
           </Box>
         </Toolbar>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Root from './Root';
 import ClientRoot from './ClientRoot';
@@ -56,11 +55,11 @@ export const router = createBrowserRouter([
             element: <SearchSong />,
           },
           {
-            path: '/login',
+            path: '/:companySlug/login',
             element: <Login />,
           },
           {
-            path: '/signup',
+            path: '/:companySlug/signup',
             element: <SignUp />,
           },
         ],
