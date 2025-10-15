@@ -1,13 +1,14 @@
 import CompanyNavbar from '../components/Layout/CompanyNavbar';
 import { Box, ThemeProvider } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import { useMe } from '../hooks/useMe';
+// import { useMe } from '../hooks/useMe';
 import { useCustomTheme } from '../helpers/useCustomTheme';
+import { useStore } from './useStore';
 
 
 export default function CompanyRoot() {
-  const {user} = useMe();
-  const company = user?.company ?? null;
+  const { user } = useStore();
+  const company = user?.company;
   const theme = useCustomTheme({ company });
 
   return (

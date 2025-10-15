@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
@@ -17,9 +17,12 @@ class CompanyFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->name;
+        $slug = Str::slug($name);
+
         return [
-            'name' => fake()->name,
-            'slug' => fake()->slug(2),
+            'name' => $name,
+            'slug' => $slug,
             'tel' => fake()->phoneNumber(),
             'zip' => fake()->postcode(),
             'country' => fake()->country(),
@@ -29,13 +32,8 @@ class CompanyFactory extends Factory
                 'id' => fake()->bothify('?????-#####'),
                 'snapshot_id' => fake()->uuid(),
             ],
-            'logo' =>function () {
-                $sourcePath = public_path('images/seeders/fake-logo.png');
-                $fileName = 'fake-logo.png';
-                Storage::disk('public')->put($fileName, file_get_contents($sourcePath));
-
-                return $fileName;
-            },
+            'logo' => 'logo/fake-logo.png',
+            'qr_code' => 'qr/fake-qr.png',
         ];
     }
 }

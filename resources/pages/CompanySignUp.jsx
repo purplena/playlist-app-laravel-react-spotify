@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router';
@@ -6,8 +6,9 @@ import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
 import { SliderPicker } from 'react-color';
 import LinkButton from '../components/Button/LinkButton';
 import { Box } from '@mui/system';
+import PageLoaderCustom from '../components/Loader/PageLoaderCustom';
 
-const CompanySignUp = ({ redirect = '/manager' }) => {
+const CompanySignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -30,6 +31,8 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
     color: '',
   });
 
+  const [submitLoader, setSubmitLoader] = useState(false)
+
   const selectFile = (e) => {
     setLogo(e.target.files[0]);
     setPreviewImage(URL.createObjectURL(e.target.files[0]));
@@ -37,6 +40,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitLoader(true)
 
     const response = await signup({
       email,
@@ -54,7 +58,8 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
       font_color: fontColor.color,
     });
     if (response?.data?.status) {
-      navigate(redirect);
+      setSubmitLoader(false)
+      navigate('/manager');
     }
   };
 
@@ -69,6 +74,10 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
     backgroundColor?.color?.g,
     backgroundColor?.color?.b
   );
+
+  if (submitLoader) {
+    return <PageLoaderCustom />;
+  }
 
   return (
     <>
@@ -368,7 +377,7 @@ const CompanySignUp = ({ redirect = '/manager' }) => {
             </Stack>
           </Stack>
           <Stack>
-            <Button type="submit" variant="outlined" endIcon={<SendIcon />}>
+            <Button disabled={submitLoader} type="submit" variant="outlined" endIcon={<SendIcon />}>
               {"S'inscrire"}
             </Button>
           </Stack>

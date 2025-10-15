@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
-import { Box, CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
 import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
@@ -10,12 +9,6 @@ import { useStore } from '../js/useStore';
 const CompanyHome = () => {
   const { user } = useStore();
   const spotifyPlaylistIdd = user.company?.spotify_playlist_data?.id;
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if (user && user.company) {
-      setLoading(false);
-    }
-  }, [user]);
 
   const handleDownload = (event) => {
     event.preventDefault();
@@ -26,6 +19,7 @@ const CompanyHome = () => {
     link.click();
     document.body.removeChild(link);
   };
+
 
   return (
     <>
@@ -47,19 +41,18 @@ const CompanyHome = () => {
             <Typography variant="h3" component="h1" textAlign="center">
               Bienvenue dans votre espace personnel
             </Typography>
-            {loading ? (
-              <CircularProgress />
-            ) : (
               <Box
                 component="img"
                 sx={{
+                  height: 150,
                   width: 150,
                   maxWidth: { xs: 100, md: 150 },
+                  objectFit: 'contain',
                 }}
                 alt="Company Logo"
                 src={'/storage/' + user?.company?.logo}
+                loading='eager'
               />
-            )}
           </Stack>
           <Grid
             container
@@ -97,9 +90,6 @@ const CompanyHome = () => {
                       contenus en temps réel
                     </Typography>
                   </Stack>
-                  {loading ? (
-                    <CircularProgress />
-                  ) : (
                     <Box
                       justifySelf={'center'}
                       alignSelf={'center'}
@@ -111,7 +101,6 @@ const CompanyHome = () => {
                       alt="Company Logo"
                       src={'/storage/' + user?.company?.qr_code}
                     />
-                  )}
                   <LinkButton onClick={handleDownload}>
                     Télécharger QR-code
                   </LinkButton>

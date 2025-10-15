@@ -16,8 +16,7 @@ const ButtonAppBar = () => {
   const { user, logout } = useLogout();
   const navigate = useNavigate();
   const location = useLocation();
-  const { company } = useStore();
-  const companySlug = company.slug;
+  const { company: {slug: companySlug} } = useStore();
 
   const handleLogout = async () => {
     const response = await logout();

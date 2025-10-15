@@ -7,7 +7,20 @@
 import axios from 'axios';
 window.axios = axios;
 
+// Include cookies with all requests (required for Sanctum SPA auth)
+window.axios.defaults.withCredentials = true;
+
+// Helps Laravel detect AJAX requests
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// Automatically request CSRF cookie for state-changing requests
+axios.interceptors.request.use(async (config) => {
+  const csrfMethods = ['post', 'put', 'patch', 'delete'];
+  if (csrfMethods.includes(config.method)) {
+    await axios.get('/sanctum/csrf-cookie');
+  }
+  return config;
+});
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
