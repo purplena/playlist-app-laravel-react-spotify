@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useSignUp } from '../hooks/useSignUp';
 import { useNavigate } from 'react-router';
+import { useStore } from '../js/useStore';
 
-const SignUp = ({ redirect = '/' }) => {
+const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const { signup, errors } = useSignUp();
   const navigate = useNavigate();
+  const { company} = useStore();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await signup(email, password, username);
     if (response?.data?.status) {
-      navigate(redirect);
+      navigate(`/${company.slug}`);
     }
   };
 

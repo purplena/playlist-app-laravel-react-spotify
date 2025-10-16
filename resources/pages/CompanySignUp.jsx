@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router';
 import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
 import { SliderPicker } from 'react-color';
 import LinkButton from '../components/Button/LinkButton';
 import { Box } from '@mui/system';
-import PageLoaderCustom from '../components/Loader/PageLoaderCustom';
+import TextFieldCustom from '../components/CompanyForm/TextFieldCustom';
 
 const CompanySignUp = () => {
+  const navigate = useNavigate();
+  const [submitLoader, setSubmitLoader] = useState(false)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
@@ -22,7 +24,6 @@ const CompanySignUp = () => {
   const { signup, errors } = useSignUpCompany({
     action: actionController.storeCompany,
   });
-  const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState(undefined);
   const [logo, setLogo] = useState(null);
   const [fontColor, setFontColor] = useState({ color: '#fff' });
@@ -31,7 +32,6 @@ const CompanySignUp = () => {
     color: '',
   });
 
-  const [submitLoader, setSubmitLoader] = useState(false)
 
   const selectFile = (e) => {
     setLogo(e.target.files[0]);
@@ -40,8 +40,8 @@ const CompanySignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitLoader(true)
-
+    setSubmitLoader(true);
+    
     const response = await signup({
       email,
       password,
@@ -57,10 +57,16 @@ const CompanySignUp = () => {
       background_color: hexBackgroundColor,
       font_color: fontColor.color,
     });
-    if (response?.data?.status) {
-      setSubmitLoader(false)
-      navigate('/manager');
+
+    if (response?.data?.errors || response?.response?.data?.errors) {
+      setSubmitLoader(false);
+      return;
     }
+    if (response?.data?.status) {
+      navigate("/manager");
+    }
+
+    setSubmitLoader(false);
   };
 
   const changeBackgroungHandler = (colors) => {
@@ -75,9 +81,6 @@ const CompanySignUp = () => {
     backgroundColor?.color?.b
   );
 
-  if (submitLoader) {
-    return <PageLoaderCustom />;
-  }
 
   return (
     <>
@@ -116,59 +119,45 @@ const CompanySignUp = () => {
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information générale'}
               </Typography>
-
-              <TextField
-                error={!!errors?.email}
-                style={{ width: '250px' }}
-                id="email"
-                label={'Email'}
-                type="email"
-                variant="standard"
-                value={email}
-                helperText={errors?.email}
-                onChange={(e) => setEmail(e.target.value)}
+              <TextFieldCustom 
+                label={'Email'} 
+                id={"email"} 
+                type={"email"}
+                errors={errors} 
+                value={email} 
+                setValue={setEmail}
               />
-              <TextField
-                error={!!errors?.password}
-                style={{ width: '250px' }}
-                id="password"
-                label={'Mot de passe'}
-                type="password"
-                variant="standard"
-                value={password}
-                helperText={errors?.password}
-                onChange={(e) => setPassword(e.target.value)}
+              <TextFieldCustom 
+                label={'Mot de passe'} 
+                id={"password"} 
+                type={"password"}
+                errors={errors} 
+                value={password} 
+                setValue={setPassword}
               />
-              <TextField
-                error={!!errors?.password_confirmation}
-                style={{ width: '250px' }}
-                id="password_confirmation"
-                label={'Confirmez votre mot de passe'}
-                type="password"
-                variant="standard"
-                value={confirmPassword}
-                helperText={errors?.password_confirmation}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+              <TextFieldCustom 
+                label={'Confirmez votre mot de passe'} 
+                id={"password_confirmation"} 
+                type={"password"}
+                errors={errors} 
+                value={confirmPassword} 
+                setValue={setConfirmPassword}
               />
-              <TextField
-                error={!!errors?.name}
-                style={{ width: '250px' }}
-                id="name"
-                label={'Nom d\u0027entreprise'}
-                variant="standard"
-                value={name}
-                helperText={errors?.name}
-                onChange={(e) => setName(e.target.value)}
+              <TextFieldCustom 
+                label={'Nom d\u0027entreprise'} 
+                id={"name"} 
+                type={"text"}
+                errors={errors} 
+                value={name} 
+                setValue={setName}
               />
-              <TextField
-                error={!!errors?.username}
-                style={{ width: '250px' }}
-                id="username"
-                label={'Username'}
-                variant="standard"
-                value={username}
-                helperText={errors?.username ? errors?.username : 'optionel'}
-                onChange={(e) => setUsername(e.target.value)}
+              <TextFieldCustom 
+                label={'Username'} 
+                id={"username"} 
+                type={"text"}
+                errors={errors} 
+                value={username} 
+                setValue={setUsername}
               />
             </Stack>
 
@@ -377,8 +366,20 @@ const CompanySignUp = () => {
             </Stack>
           </Stack>
           <Stack>
-            <Button disabled={submitLoader} type="submit" variant="outlined" endIcon={<SendIcon />}>
+            <Button
+              disabled={submitLoader} 
+              type="submit" 
+              variant="contained" 
+              sx={{
+                boxShadow: 'none', 
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                  '&:hover': {boxShadow: 'none'}
+              }} 
+            >
               {"S'inscrire"}
+              {submitLoader ? <CircularProgress size={20} /> : <SendIcon size={20} />}
             </Button>
           </Stack>
         </Stack>

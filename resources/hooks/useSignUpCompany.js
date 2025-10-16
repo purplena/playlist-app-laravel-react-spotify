@@ -40,6 +40,8 @@ export const useSignUpCompany = ({ action }) => {
         if (error.response?.data?.errors) {
           setErrors(error.response.data.errors);
         }
+
+        return error;
       });
   };
 
