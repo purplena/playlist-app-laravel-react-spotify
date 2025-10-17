@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router';
 import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
@@ -7,20 +7,25 @@ import { SliderPicker } from 'react-color';
 import LinkButton from '../components/Button/LinkButton';
 import { Box } from '@mui/system';
 import TextFieldCustom from '../components/CompanyForm/TextFieldCustom';
+import LogoInput from '../components/CompanyForm/LogoInput';
+import { generalInfoFields } from '../components/CompanyForm/generalInfoFields';
 
 const CompanySignUp = () => {
   const navigate = useNavigate();
   const [submitLoader, setSubmitLoader] = useState(false)
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
-  const [tel, setTel] = useState('');
-  const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
-  const [zip, setZip] = useState('');
-  const [address, setAddress] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [formData, setFormData] = useState({
+  email: '',
+  password: '',
+  username: '',
+  name: '',
+  tel: '',
+  country: '',
+  city: '',
+  zip: '',
+  address: '',
+});
+
   const { signup, errors } = useSignUpCompany({
     action: actionController.storeCompany,
   });
@@ -31,6 +36,10 @@ const CompanySignUp = () => {
     background: 'rgb(1,1,1)',
     color: '',
   });
+
+  const handleChange = (field) => (value) => {
+  setFormData((prev) => ({ ...prev, [field]: value }));
+};
 
 
   const selectFile = (e) => {
@@ -43,16 +52,7 @@ const CompanySignUp = () => {
     setSubmitLoader(true);
     
     const response = await signup({
-      email,
-      password,
-      password_confirmation: confirmPassword,
-      username,
-      name,
-      tel,
-      country,
-      city,
-      zip,
-      address,
+      ...formData,
       logo,
       background_color: hexBackgroundColor,
       font_color: fontColor.color,
@@ -119,107 +119,37 @@ const CompanySignUp = () => {
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information générale'}
               </Typography>
-              <TextFieldCustom 
-                label={'Email'} 
-                id={"email"} 
-                type={"email"}
-                errors={errors} 
-                value={email} 
-                setValue={setEmail}
-              />
-              <TextFieldCustom 
-                label={'Mot de passe'} 
-                id={"password"} 
-                type={"password"}
-                errors={errors} 
-                value={password} 
-                setValue={setPassword}
-              />
-              <TextFieldCustom 
-                label={'Confirmez votre mot de passe'} 
-                id={"password_confirmation"} 
-                type={"password"}
-                errors={errors} 
-                value={confirmPassword} 
-                setValue={setConfirmPassword}
-              />
-              <TextFieldCustom 
-                label={'Nom d\u0027entreprise'} 
-                id={"name"} 
-                type={"text"}
-                errors={errors} 
-                value={name} 
-                setValue={setName}
-              />
-              <TextFieldCustom 
-                label={'Username'} 
-                id={"username"} 
-                type={"text"}
-                errors={errors} 
-                value={username} 
-                setValue={setUsername}
-              />
+
+             {generalInfoFields.general.map(({ label, id, type }) => (
+                  <TextFieldCustom
+                    key={id}
+                    label={label}
+                    id={id}
+                    type={type}
+                    errors={errors}
+                    value={formData[id]}
+                    setValue={handleChange(id)}
+                  />
+                ))
+              }
             </Stack>
 
             <Stack>
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information de contact'}
               </Typography>
-              <TextField
-                error={!!errors?.tel}
-                style={{ width: '250px' }}
-                id="tel"
-                label={'Téléphone'}
-                variant="standard"
-                value={tel}
-                helperText={errors?.tel}
-                onChange={(e) => setTel(e.target.value)}
-              />
-
-              <TextField
-                error={!!errors?.country}
-                style={{ width: '250px' }}
-                id="country"
-                label={'Pays'}
-                variant="standard"
-                value={country}
-                helperText={errors?.country}
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                }}
-              />
-
-              <TextField
-                error={!!errors?.city}
-                style={{ width: '250px' }}
-                id="city"
-                label={'Ville'}
-                variant="standard"
-                value={city}
-                helperText={errors?.city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-
-              <TextField
-                error={!!errors?.zip}
-                style={{ width: '250px' }}
-                id="zip"
-                label={'Code postale'}
-                variant="standard"
-                value={zip}
-                helperText={errors?.zip}
-                onChange={(e) => setZip(e.target.value)}
-              />
-              <TextField
-                error={!!errors?.address}
-                style={{ width: '250px' }}
-                id="address"
-                label={'Adresse'}
-                variant="standard"
-                value={address}
-                helperText={errors?.address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
+              {generalInfoFields.contact.map(({ label, id, type }) => (
+                  <TextFieldCustom
+                    key={id}
+                    label={label}
+                    id={id}
+                    type={type}
+                    errors={errors}
+                    value={formData[id]}
+                    setValue={handleChange(id)}
+                  />
+                ))
+              }
             </Stack>
 
             <Stack justifyContent={'center'} alignItems={'center'}>
@@ -228,66 +158,7 @@ const CompanySignUp = () => {
               </Typography>
 
               <Stack mb={3} justifyContent={'center'} alignItems={'center'}>
-                <Stack
-                  direction={'row'}
-                  spacing={2}
-                  mt={2}
-                  alignItems={'center'}
-                >
-                  <Typography variant="body2" component="p">
-                    {'Ajouter votre logo'}
-                  </Typography>
-                  <Typography variant="body2">{!!errors?.logo}</Typography>
-                  <input
-                    id="logo"
-                    name="logo"
-                    style={{ display: 'none' }}
-                    type="file"
-                    accept="image/*"
-                    onChange={selectFile}
-                  />
-                  <label htmlFor="logo">
-                    <Button
-                      variant="outlined"
-                      component="span"
-                      style={{ fontSize: '12px' }}
-                    >
-                      Choisir
-                    </Button>
-                  </label>
-                </Stack>
-                {previewImage && (
-                  <Stack
-                    mt={3}
-                    spacing={1}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                  >
-                    <Typography variant="body2">
-                      {'Vous avez choisi cette image'}
-                    </Typography>
-                    <img
-                      width={'150px'}
-                      className="preview"
-                      src={previewImage}
-                      alt=""
-                    />
-                  </Stack>
-                )}
-                <Stack mt={2}>
-                  {errors?.logo &&
-                    errors?.logo.map((error) => {
-                      return (
-                        <Typography
-                          key={error}
-                          variant="body1"
-                          sx={{ fontSize: '12px', color: '#D32F2F' }}
-                        >
-                          {error}
-                        </Typography>
-                      );
-                    })}
-                </Stack>
+                <LogoInput errors={errors} selectFile={selectFile} previewImage={previewImage} />
                 <Stack spacing={2}>
                   <Stack>
                     <Typography variant="body2" component="p">

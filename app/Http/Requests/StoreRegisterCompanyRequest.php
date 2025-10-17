@@ -19,10 +19,8 @@ class StoreRegisterCompanyRequest extends FormRequest
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => [
                     'required',
-                    'confirmed:password_confirmation',
                     'string',
                     'min:6',
-                    // 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
                 ],
                 'username' => 'nullable|string',
                 'company_id' => 'nullable|int',
