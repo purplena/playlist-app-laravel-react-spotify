@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Menu } from '@mui/material';
-import { generatePath, useParams } from 'react-router-dom';
 import { useLogout } from '../../hooks/useLogout';
 import { useNavigate, useLocation } from 'react-router';
 import MenuItemCustom from '../Menu/MenuItemCustom';
+import { useStore } from '../../js/useStore';
 
 const ButtonAppBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -17,6 +16,7 @@ const ButtonAppBar = () => {
   const { user, logout } = useLogout();
   const navigate = useNavigate();
   const location = useLocation();
+  const { company: {slug: companySlug} } = useStore();
 
   const handleLogout = async () => {
     const response = await logout();
@@ -25,9 +25,7 @@ const ButtonAppBar = () => {
     }
   };
 
-  const { id } = useParams();
-
-  const handleClick = (event) => {
+  const handleClick = (event) => { 
     setAnchorEl(event.currentTarget);
   };
 
@@ -35,38 +33,44 @@ const ButtonAppBar = () => {
     setAnchorEl(null);
   };
 
-  const handleRedirection = () => {
-    navigate('/login', { state: { from: location } });
-  };
 
-  const handleCloseAndRedirection = () => {
-    navigate('/login', { state: { from: location } });
-    setAnchorEl(null);
-  };
+  const handleLogin = () => {
+    navigate(`/${companySlug}/login`, { state: { from: location } });
+    handleClose();
+  }
+
+  const handleNavigate = (path) => {
+    handleClose();
+    navigate(path)
+  }
 
   const menuItems = [
     {
-      page: 'Accueil',
-      path: generatePath(`/${id}`),
+      label: 'Accueil',
+      path: `/${companySlug}`,
     },
     {
-      page: "Chansons d'aujourd'hui",
-      path: generatePath(`/${id}/songs`),
+      label: "Chansons d'aujourd'hui",
+      path: `/${companySlug}/songs`,
     },
     {
-      page: 'Suggérer une chanson',
-      path: generatePath(`/${id}/songs/search`),
+      label: 'Suggérer une chanson',
+      path: `/${companySlug}/songs/search`,
     },
   ];
 
+
   return (
-    <Box>
+    <>
       <AppBar position="static" sx={{ boxShadow: 'none' }}>
-        <Toolbar sx={{ justifyContent: 'center' }}>
+        <Toolbar 
+          sx={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
               maxWidth: 500,
               width: '100%',
             }}
@@ -76,7 +80,6 @@ const ButtonAppBar = () => {
               edge="start"
               color="inherit"
               aria-label="menu"
-              sx={{ mr: 2 }}
               id="basic-button"
               aria-controls={open ? 'basic-menu' : undefined}
               aria-haspopup="true"
@@ -89,42 +92,11 @@ const ButtonAppBar = () => {
                 }}
               />
             </IconButton>
-            {user ? (
-              <Button
-                onClick={handleLogout}
-                color="inherit"
-                sx={{
-                  color: (theme) => theme.palette.text.secondary,
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: (theme) => theme.palette.text.secondary,
-                    fontWeight: 800,
-                  },
-                }}
-              >
-                Se deconnecter
-              </Button>
-            ) : (
-              <Button
-                variant="text"
-                sx={{
-                  color: (theme) => theme.palette.text.secondary,
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: (theme) => theme.palette.text.secondary,
-                    fontWeight: 800,
-                  },
-                }}
-                onClick={handleRedirection}
-              >
-                Se connecter
-              </Button>
-            )}
           </Box>
         </Toolbar>
       </AppBar>
       <Menu
-        style={{ top: '10px', maxWidth: 500 }}
+        style={{ top: '5px', maxWidth: 500, width: '100%' }}
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
@@ -134,47 +106,31 @@ const ButtonAppBar = () => {
         }}
       >
         <Box sx={{ width: '100vw', paddingRight: '1rem' }}>
-          {user
-            ? menuItems.map((menuItem) => (
-                <MenuItemCustom
-                  key={menuItem.page}
-                  path={menuItem.path}
-                  menuItem={menuItem.page}
-                  onClickHandler={handleClose}
-                  sx={{
-                    fontWeight: location.pathname === menuItem.path ? 800 : '',
-                  }}
-                />
-              ))
-            : ''}
-
+          {menuItems.map((menuItem) => (
+            <MenuItemCustom
+              key={menuItem.label}
+              label={menuItem.label}
+              onClickHandler={() => handleNavigate(menuItem.path)}
+              sx={{
+                fontWeight: location.pathname === menuItem.path ? 800 : '',
+              }}
+            />
+          ))}
           {user ? (
             <MenuItemCustom
-              menuItem={'Se deconnecter'}
+              label={'Se deconnecter'}
               onClickHandler={handleLogout}
             />
           ) : (
-            <Button
-              onClick={handleCloseAndRedirection}
-              sx={{
-                color: (theme) => theme.palette.text.primary,
-                backgroundColor: 'transparent',
-                textTransform: 'capitalize',
-                fontSize: '1rem',
-                paddingLeft: '16px',
-                '&:hover': {
-                  backgroundColor: 'transparent',
-                  color: (theme) => theme.palette.text.primary,
-                  fontWeight: 800,
-                },
-              }}
-            >
-              Se connecter
-            </Button>
+            <MenuItemCustom
+              label={'Se connecter'}
+              onClickHandler={handleLogin}
+            />
+
           )}
         </Box>
       </Menu>
-    </Box>
+      </>
   );
 };
 

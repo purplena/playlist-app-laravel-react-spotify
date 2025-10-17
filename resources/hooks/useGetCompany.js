@@ -1,33 +1,38 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { apiUrl } from '../js/App';
-
 import { useParams } from 'react-router-dom';
-import { useUserStore } from '../js/useUserStore';
+import { useStore } from '../js/useStore';
 
 export const useGetCompany = () => {
-  const [company, setCompany] = useState('');
+  const { companySlug } = useParams();
+  const { company, setCompany } = useStore();
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useUserStore();
-  const { id } = useParams();
-  // console.log(slug);
-
-  const companySlug = id || user?.company?.slug;
+  const [errorStatus, setErrorStatus] = useState(null);
 
   useEffect(() => {
-    if (companySlug) {
-      setIsLoading(true);
-      axios
-        .get(`${apiUrl}/${companySlug}/show`)
-        .then((response) => {
-          setCompany(response.data.company);
-        })
-        .finally(() => setIsLoading(false));
+    if (!companySlug) {
+      setCompany(null);
+      setIsLoading(false);
+
+      return;
     }
+
+    setIsLoading(true);
+    axios
+      .get(`${apiUrl}/${companySlug}/show`)
+      .then((response) => {
+        setCompany(response.data.company);
+      })
+      .catch((error) => {
+        setErrorStatus(error.response.status);
+      })
+      .finally(() => setIsLoading(false));
   }, [companySlug]);
 
   return {
     company,
     isLoading,
+    errorStatus,
   };
 };

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Root from './Root';
 import ClientRoot from './ClientRoot';
@@ -40,27 +39,23 @@ export const router = createBrowserRouter([
         element: <ClientRoot />,
         children: [
           {
-            path: '/',
-            element: <LandingPage />,
-          },
-          {
-            path: '/:id',
+            path: '/:companySlug',
             element: <Home />,
           },
           {
-            path: '/:id/songs',
+            path: '/:companySlug/songs',
             element: <RequestedSongs />,
           },
           {
-            path: '/:id/songs/search',
+            path: '/:companySlug/songs/search',
             element: <SearchSong />,
           },
           {
-            path: '/login',
+            path: '/:companySlug/login',
             element: <Login />,
           },
           {
-            path: '/signup',
+            path: '/:companySlug/signup',
             element: <SignUp />,
           },
         ],

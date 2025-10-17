@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { generatePath } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
@@ -6,12 +6,15 @@ import SendIcon from '@mui/icons-material/Send';
 import LinkButton from '../components/Button/LinkButton';
 import { useAuthRedirect } from '../hooks/useAuthRedirect';
 import LoginInputs from '../components/Layout/LoginInputs';
+import { useStore } from '../js/useStore';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { errors, login } = useLogin();
   const redirectAfterLogin = useAuthRedirect();
+  const { company } = useStore();
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -49,7 +52,7 @@ const Login = () => {
               {"S'inscrire"}
             </LinkButton>
           ) : (
-            <LinkButton to={generatePath('/signup')} endIcon={<SendIcon />}>
+            <LinkButton to={generatePath(`/${company.slug}/signup`)} endIcon={<SendIcon />}>
               {"S'inscrire"}
             </LinkButton>
           )}

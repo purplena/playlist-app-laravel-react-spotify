@@ -1,12 +1,11 @@
 import { Box, Grid, Stack, Typography } from '@mui/material';
-import React from 'react';
 import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
 import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
-import { useUserStore } from '../js/useUserStore';
+import { useStore } from '../js/useStore';
 
 const CompanyInfo = () => {
-  const { user } = useUserStore();
+  const { user } = useStore();
 
   return (
     <Stack

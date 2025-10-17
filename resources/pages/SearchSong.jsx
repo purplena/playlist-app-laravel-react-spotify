@@ -5,13 +5,13 @@ import { Box, Grid, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import SongSearchCard from '../components/Playlist/SongSearchCard';
 import ModalWindow from '../components/Layout/ModalWindow';
-import { useUserStore } from '../js/useUserStore';
 import LineComponent from '../components/Layout/LineComponent';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import { useStore } from '../js/useStore';
 
 function Search() {
   const { isLoading, searchResults, handleInput } = useSearchSong();
-  const { user } = useUserStore();
+  const { user } = useStore();
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');

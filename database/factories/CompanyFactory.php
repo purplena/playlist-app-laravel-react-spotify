@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
@@ -16,9 +17,12 @@ class CompanyFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->name;
+        $slug = Str::slug($name);
+
         return [
-            'name' => fake()->name,
-            'slug' => fake()->slug(2),
+            'name' => $name,
+            'slug' => $slug,
             'tel' => fake()->phoneNumber(),
             'zip' => fake()->postcode(),
             'country' => fake()->country(),
@@ -28,8 +32,8 @@ class CompanyFactory extends Factory
                 'id' => fake()->bothify('?????-#####'),
                 'snapshot_id' => fake()->uuid(),
             ],
-            'qr_code' => fake()->image(null, 360, 360, 'animals', true),
-            'logo' => fake()->image(null, 360, 360, 'animals', true),
+            'logo' => 'logo/fake-logo.png',
+            'qr_code' => 'qr/fake-qr.png',
         ];
     }
 }

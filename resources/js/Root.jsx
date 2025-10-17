@@ -1,20 +1,23 @@
-import React from 'react';
-import { CircularProgress, Stack, CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { useMe } from '../hooks/useMe';
-import { CustomThemeProvider } from '../helpers/CustomThemeProvider';
+import { useCustomTheme } from '../helpers/useCustomTheme';
+import CustomLoader from '../components/Loader/Loader';
+
 
 export default function Root() {
   const { isLoading } = useMe();
+  const theme = useCustomTheme({});
 
-  return isLoading ? (
-    <Stack justifyContent="center" alignItems="center" mt={5}>
-      <CircularProgress />
-    </Stack>
-  ) : (
-    <CustomThemeProvider>
-      <CssBaseline />
-      <Outlet />
-    </CustomThemeProvider>
-  );
+
+    return  (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {isLoading ? <CustomLoader/> : <Outlet/>}
+      </ThemeProvider>
+    )
+    
 }
+
+
+

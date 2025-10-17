@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { apiUrl } from '../js/App';
 import { Grid, Stack, Typography } from '@mui/material';
 import ManagerBlacklistCard from '../components/Playlist/ManagerBlacklistCard';
-import { useUserStore } from '../js/useUserStore';
+
 import ModalWindow from '../components/Layout/ModalWindow';
 import LinkButton from '../components/Button/LinkButton';
 import {
   actions,
   useDeleteOrBlacklistAll,
 } from '../hooks/userDeleteOrBlacklistAll';
+import { useStore } from '../js/useStore';
 
 const CompanyBlacklist = () => {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const [blacklistedSongs, setBlacklistedSongs] = useState([]);
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');

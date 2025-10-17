@@ -1,9 +1,8 @@
-import React from 'react';
 import { Box, Paper, Stack, Typography, Grid } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useUpvote } from '../../hooks/useUpvote';
-import { useUserStore } from '../../js/useUserStore';
+import { useStore } from '../../js/useStore';
 
 const PlaylistCard = ({
   requestedSong,
@@ -12,7 +11,7 @@ const PlaylistCard = ({
   setModalMessage,
   setModalHeader,
 }) => {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const { upvote, isUpvoted, likes } = useUpvote(
     requestedSong,
     user,

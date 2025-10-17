@@ -2,8 +2,8 @@ import { useNavigate, useLocation } from 'react-router';
 import { apiUrl } from '../js/App';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
-import { useUserStore } from '../js/useUserStore';
 import axios from 'axios';
+import { useStore } from '../js/useStore';
 
 export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
   const [isAdded, setIsAdded] = useState(song.is_requested);
@@ -12,7 +12,7 @@ export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const spotifyId = song.spotify_id;
-  const { user } = useUserStore();
+  const { user } = useStore();
   const location = useLocation();
 
   const addSong = () => {

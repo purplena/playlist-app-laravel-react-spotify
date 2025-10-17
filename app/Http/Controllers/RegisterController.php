@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\QrCodeGenerator;
 use App\Http\Requests\StoreRegisterCompanyRequest;
 use App\Http\Requests\StoreRegisterRequest;
 use App\Http\Resources\UserResource;
@@ -11,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -45,32 +46,36 @@ class RegisterController extends Controller
             'role' => User::ROLE_OWNER,
         ]);
 
+        $name = $request->name;
+        $companySlug = Str::slug($name);
+
         if ($request->logo) {
-            $logoName = 'logo_'.time().'.'.$request->logo->extension();
-            Storage::disk('public')->put($logoName, file_get_contents($request->logo));
+            $logoName = 'logo_'.$companySlug.'_'.time().'.'.$request->logo->extension();
+            $logoPath = 'logo/'.$logoName;
+            Storage::disk('public')->put($logoPath, file_get_contents($request->logo));
         }
 
         $company = Company::create([
-            'name' => $request->name,
-            'slug' => $this->generateSlug($request->name),
+            'name' => $name,
+            'slug' => $companySlug,
             'tel' => $request->tel,
             'zip' => $request->zip,
             'country' => $request->country,
             'city' => $request->city,
             'address' => $request->address,
-            'logo' => $logoName ?? null,
+            'logo' => $logoPath ?? null,
             'background_color' => $request->background_color,
             'font_color' => $request->font_color,
         ]);
 
-        $url = route('front', ['any' => $company->slug.'/home']);
-        $qrCode = QrCode::format('png')->size(300)->generate($url);
-        $qrCodeName = 'qr_'.$company->slug.'_'.time().'.png';
-        Storage::disk('public')->put($qrCodeName, $qrCode);
+        $qrCodeName = 'qr_'.$companySlug.'_'.time().'.png';
+        $qrCodePath = 'qr/'.$qrCodeName;
+        Storage::disk('public')->put($qrCodePath, QrCodeGenerator::generate($companySlug));
 
-        $company->update(['qr_code' => $qrCodeName]);
+        $company->update(['qr_code' => $qrCodePath]);
 
         $user->update(['company_id' => $company->id]);
+        $user->load('company');
 
         Auth::login($user);
 
@@ -78,18 +83,5 @@ class RegisterController extends Controller
             'status' => true,
             'user' => new UserResource($user),
         ]);
-    }
-
-    protected function generateSlug($str): string
-    {
-        $words = explode(' ', $str);
-        foreach ($words as $key => $word) {
-            $words[$key] = strtolower($word);
-        }
-        if (count($words) > 1) {
-            return implode('-', $words);
-        } else {
-            return strtolower($str);
-        }
     }
 }

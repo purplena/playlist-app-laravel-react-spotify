@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Outlet, generatePath, useNavigate } from 'react-router-dom';
-import { useUserStore } from './useUserStore';
+import { useStore } from './useStore';
 
 export default function ProtectedCompanyRoot() {
-  const { user } = useUserStore();
+  const { user } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => {
