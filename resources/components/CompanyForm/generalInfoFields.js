@@ -1,15 +1,15 @@
 export const generalInfoFields = {
   general: [
-    { label: 'Email', id: 'email', type: 'email' },
-    { label: 'Mot de passe', id: 'password', type: 'password' },
-    { label: "Nom d'entreprise", id: 'name', type: 'text' },
-    { label: 'Username', id: 'username', type: 'text' },
+    { label: 'Email', name: 'email', type: 'email' },
+    { label: 'Mot de passe', name: 'password', type: 'password' },
+    { label: "Nom d'entreprise", name: 'name', type: 'text' },
+    { label: 'Username', name: 'username', type: 'text' },
   ],
   contact: [
-    { label: 'Téléphone', id: 'tel', type: 'text' },
-    { label: 'Pays', id: 'country', type: 'text' },
-    { label: 'Ville', id: 'city', type: 'text' },
-    { label: 'Code postale', id: 'zip', type: 'text' },
-    { label: 'Adresse', id: 'address', type: 'text' },
+    { label: 'Téléphone', name: 'tel', type: 'text' },
+    { label: 'Pays', name: 'country', type: 'text' },
+    { label: 'Ville', name: 'city', type: 'text' },
+    { label: 'Code postale', name: 'zip', type: 'text' },
+    { label: 'Adresse', name: 'address', type: 'text' },
   ],
 };
