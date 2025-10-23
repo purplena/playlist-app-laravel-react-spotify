@@ -1,6 +1,5 @@
 import { apiUrl } from '../js/App';
 import axios from 'axios';
-import { useState } from 'react';
 import { useStore } from '../js/useStore';
 
 export const actionController = {
@@ -8,9 +7,8 @@ export const actionController = {
   editCompany: 2,
 };
 
-export const useSignUpCompany = ({ action }) => {
+export const useSignUpCompany = ({ action, setError }) => {
   const { setUser } = useStore();
-  const [errors, setErrors] = useState(null);
 
   const signup = (data) => {
     const formData = new FormData();
@@ -38,7 +36,14 @@ export const useSignUpCompany = ({ action }) => {
       })
       .catch((error) => {
         if (error.response?.data?.errors) {
-          setErrors(error.response.data.errors);
+          const serverErrors = error.response.data.errors;
+
+          Object.entries(serverErrors).forEach(([field, messages]) => {
+            setError(field, {
+              type: 'server',
+              message: Array.isArray(messages) ? messages[0] : messages,
+            });
+          });
         }
 
         return error;
@@ -47,6 +52,5 @@ export const useSignUpCompany = ({ action }) => {
 
   return {
     signup,
-    errors,
   };
 };

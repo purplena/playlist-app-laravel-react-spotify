@@ -1,86 +1,62 @@
 import { useState } from 'react';
-import { Button, CircularProgress, Stack, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router';
 import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
-import { SliderPicker } from 'react-color';
-import LinkButton from '../components/Button/LinkButton';
-import { Box } from '@mui/system';
 import TextFieldCustom from '../components/CompanyForm/TextFieldCustom';
+import LogoInput from '../components/CompanyForm/LogoInput';
+import { generalInfoFields } from '../components/CompanyForm/generalInfoFields';
+import { useForm } from "react-hook-form"
+import CustomThemeInput from '../components/CompanyForm/CustomThemeInput';
+import { useTranslation } from 'react-i18next';
 
 const CompanySignUp = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [submitLoader, setSubmitLoader] = useState(false)
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [name, setName] = useState('');
-  const [tel, setTel] = useState('');
-  const [country, setCountry] = useState('');
-  const [city, setCity] = useState('');
-  const [zip, setZip] = useState('');
-  const [address, setAddress] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const { signup, errors } = useSignUpCompany({
-    action: actionController.storeCompany,
-  });
-  const [previewImage, setPreviewImage] = useState(undefined);
   const [logo, setLogo] = useState(null);
   const [fontColor, setFontColor] = useState({ color: '#fff' });
   const [backgroundColor, setBackgroundColor] = useState({
     background: 'rgb(1,1,1)',
     color: '',
   });
+  const { control, handleSubmit, setError, formState: { errors } } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      username: '',
+      name: '',
+      tel: '',
+      country: '',
+      city: '',
+      zip: '',
+      address: ''
+    },
+    criteriaMode: 'all'
+  })
 
-
-  const selectFile = (e) => {
-    setLogo(e.target.files[0]);
-    setPreviewImage(URL.createObjectURL(e.target.files[0]));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitLoader(true);
+ const { signup } = useSignUpCompany({
+    action: actionController.storeCompany,
+    setError, 
+  });
     
+  const onSubmit =  async (data) => {
+    setSubmitLoader(true);
     const response = await signup({
-      email,
-      password,
-      password_confirmation: confirmPassword,
-      username,
-      name,
-      tel,
-      country,
-      city,
-      zip,
-      address,
+      ...data,
       logo,
       background_color: hexBackgroundColor,
       font_color: fontColor.color,
     });
-
-    if (response?.data?.errors || response?.response?.data?.errors) {
-      setSubmitLoader(false);
-      return;
-    }
-    if (response?.data?.status) {
-      navigate("/manager");
-    }
-
     setSubmitLoader(false);
-  };
-
-  const changeBackgroungHandler = (colors) => {
-    const col =
-      'rgb(' + colors.rgb.r + ',' + colors.rgb.g + ',' + colors.rgb.b + ')';
-    setBackgroundColor({ background: col, color: colors.rgb });
-  };
+    if (response?.data?.status) navigate("/manager");
+  }
 
   const hexBackgroundColor = rgbToHex(
-    backgroundColor?.color?.r,
-    backgroundColor?.color?.g,
-    backgroundColor?.color?.b
+      backgroundColor?.color?.r,
+      backgroundColor?.color?.g,
+      backgroundColor?.color?.b
   );
-
 
   return (
     <>
@@ -91,20 +67,9 @@ const CompanySignUp = () => {
         spacing={4}
       >
         <Typography variant="h3" component="h1" textAlign="center">
-          Inscription de votre entreprise
+          {t('company.register_form.h1')}
         </Typography>
-
-        <Stack
-          component="form"
-          spacing={4}
-          noValidate
-          autoComplete="off"
-          textAlign="center"
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          onSubmit={handleSubmit}
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack
             direction={{ xs: 'column', md: 'row', lg: 'row', xl: 'row' }}
             spacing={6}
@@ -119,270 +84,74 @@ const CompanySignUp = () => {
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information générale'}
               </Typography>
-              <TextFieldCustom 
-                label={'Email'} 
-                id={"email"} 
-                type={"email"}
-                errors={errors} 
-                value={email} 
-                setValue={setEmail}
-              />
-              <TextFieldCustom 
-                label={'Mot de passe'} 
-                id={"password"} 
-                type={"password"}
-                errors={errors} 
-                value={password} 
-                setValue={setPassword}
-              />
-              <TextFieldCustom 
-                label={'Confirmez votre mot de passe'} 
-                id={"password_confirmation"} 
-                type={"password"}
-                errors={errors} 
-                value={confirmPassword} 
-                setValue={setConfirmPassword}
-              />
-              <TextFieldCustom 
-                label={'Nom d\u0027entreprise'} 
-                id={"name"} 
-                type={"text"}
-                errors={errors} 
-                value={name} 
-                setValue={setName}
-              />
-              <TextFieldCustom 
-                label={'Username'} 
-                id={"username"} 
-                type={"text"}
-                errors={errors} 
-                value={username} 
-                setValue={setUsername}
-              />
+
+             {generalInfoFields.general.map(({ label, name, type }) => (
+                  <TextFieldCustom
+                    control={control}
+                    name={name}
+                    key={name}
+                    label={label}
+                    type={type}
+                    errors={errors}
+                    rules={{ required: `${label} est obligatoire` }}
+                  />
+                ))
+              }
+              <LogoInput 
+                  control={control}
+                  errors={errors}
+                  setLogo={setLogo} 
+                />
             </Stack>
 
             <Stack>
               <Typography variant="h5" component="h2" textAlign="center">
                 {'Information de contact'}
               </Typography>
-              <TextField
-                error={!!errors?.tel}
-                style={{ width: '250px' }}
-                id="tel"
-                label={'Téléphone'}
-                variant="standard"
-                value={tel}
-                helperText={errors?.tel}
-                onChange={(e) => setTel(e.target.value)}
-              />
-
-              <TextField
-                error={!!errors?.country}
-                style={{ width: '250px' }}
-                id="country"
-                label={'Pays'}
-                variant="standard"
-                value={country}
-                helperText={errors?.country}
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                }}
-              />
-
-              <TextField
-                error={!!errors?.city}
-                style={{ width: '250px' }}
-                id="city"
-                label={'Ville'}
-                variant="standard"
-                value={city}
-                helperText={errors?.city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-
-              <TextField
-                error={!!errors?.zip}
-                style={{ width: '250px' }}
-                id="zip"
-                label={'Code postale'}
-                variant="standard"
-                value={zip}
-                helperText={errors?.zip}
-                onChange={(e) => setZip(e.target.value)}
-              />
-              <TextField
-                error={!!errors?.address}
-                style={{ width: '250px' }}
-                id="address"
-                label={'Adresse'}
-                variant="standard"
-                value={address}
-                helperText={errors?.address}
-                onChange={(e) => setAddress(e.target.value)}
-              />
+              {generalInfoFields.contact.map(({ label, name, type }) => (
+                  <TextFieldCustom
+                    control={control}
+                    name={name}
+                    key={name}
+                    label={label}
+                    type={type}
+                    errors={errors}
+                    rules={{ required: `${label} est obligatoire` }}
+                  />
+                ))
+              }
             </Stack>
 
-            <Stack justifyContent={'center'} alignItems={'center'}>
+            <Stack>
               <Typography variant="h5" component="h2" textAlign="center">
-                {'Personnalisez votre application!'}
+                  Personnalisez votre application
               </Typography>
-
-              <Stack mb={3} justifyContent={'center'} alignItems={'center'}>
-                <Stack
-                  direction={'row'}
-                  spacing={2}
-                  mt={2}
-                  alignItems={'center'}
-                >
-                  <Typography variant="body2" component="p">
-                    {'Ajouter votre logo'}
-                  </Typography>
-                  <Typography variant="body2">{!!errors?.logo}</Typography>
-                  <input
-                    id="logo"
-                    name="logo"
-                    style={{ display: 'none' }}
-                    type="file"
-                    accept="image/*"
-                    onChange={selectFile}
-                  />
-                  <label htmlFor="logo">
-                    <Button
-                      variant="outlined"
-                      component="span"
-                      style={{ fontSize: '12px' }}
-                    >
-                      Choisir
-                    </Button>
-                  </label>
-                </Stack>
-                {previewImage && (
-                  <Stack
-                    mt={3}
-                    spacing={1}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                  >
-                    <Typography variant="body2">
-                      {'Vous avez choisi cette image'}
-                    </Typography>
-                    <img
-                      width={'150px'}
-                      className="preview"
-                      src={previewImage}
-                      alt=""
-                    />
-                  </Stack>
-                )}
-                <Stack mt={2}>
-                  {errors?.logo &&
-                    errors?.logo.map((error) => {
-                      return (
-                        <Typography
-                          key={error}
-                          variant="body1"
-                          sx={{ fontSize: '12px', color: '#D32F2F' }}
-                        >
-                          {error}
-                        </Typography>
-                      );
-                    })}
-                </Stack>
-                <Stack spacing={2}>
-                  <Stack>
-                    <Typography variant="body2" component="p">
-                      Ajouter vos couleur principales
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      component="p"
-                      sx={{ color: '#979797', fontSize: '11px' }}
-                    >
-                      optionel
-                    </Typography>
-                  </Stack>
-
-                  <Stack>
-                    <Typography variant="body2" component="p">
-                      {'Couleur de navigation, bas de page et boutons'}
-                    </Typography>
-                    <SliderPicker
-                      className="picker"
-                      color={backgroundColor.color}
-                      onChange={changeBackgroungHandler}
-                    />
-                  </Stack>
-
-                  <Stack>
-                    <Typography variant="body2" component="p">
-                      {'Couleur de police'}
-                    </Typography>
-                    <Stack
-                      direction={'row'}
-                      spacing={3}
-                      justifyContent={'center'}
-                      alignItems={'center'}
-                    >
-                      <Box
-                        onClick={() => setFontColor({ color: '#000000' })}
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          background: '#000',
-                          border: '1px solid #000',
-                          borderRadius: '5px',
-                        }}
-                      ></Box>
-                      <Box
-                        onClick={() => setFontColor({ color: '#ffffff' })}
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          background: '#fff',
-                          border: '1px solid #000',
-                          borderRadius: '5px',
-                        }}
-                      ></Box>
-                    </Stack>
-                  </Stack>
-                  <Stack justifyContent={'center'} alignItems={'center'} mt={3}>
-                    <Typography variant="body2" component="p">
-                      Prévisualisation
-                    </Typography>
-
-                    <LinkButton
-                      style={{
-                        backgroundColor: backgroundColor.background,
-                        color: fontColor.color,
-                        width: '90px',
-                      }}
-                      mt={2}
-                    >
-                      {'Button'}
-                    </LinkButton>
-                  </Stack>
-                </Stack>
-              </Stack>
+              <CustomThemeInput 
+                fontColor={fontColor} 
+                backgroundColor={backgroundColor}
+                setFontColor={setFontColor}
+                setBackgroundColor={setBackgroundColor}
+              />
             </Stack>
           </Stack>
-          <Stack>
+          <Stack direction="row" justifyContent="center" my={3}>
             <Button
-              disabled={submitLoader} 
-              type="submit" 
-              variant="contained" 
+              disabled={submitLoader}
+              type="submit"
+              variant="contained"
               sx={{
-                boxShadow: 'none', 
+                boxShadow: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 1,
-                  '&:hover': {boxShadow: 'none'}
-              }} 
+                '&:hover': { boxShadow: 'none' },
+              }}
             >
               {"S'inscrire"}
               {submitLoader ? <CircularProgress size={20} /> : <SendIcon size={20} />}
             </Button>
           </Stack>
-        </Stack>
+        </form>
       </Stack>
     </>
   );
