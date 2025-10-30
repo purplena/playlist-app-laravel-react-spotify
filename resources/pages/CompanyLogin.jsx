@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import LoginInputs from '../components/Layout/LoginInputs';
 import { useLogin } from '../hooks/useLogin';
 import { useNavigate } from 'react-router-dom';
+import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
+
 
 const CompanyLogin = ({ redirect = '/manager' }) => {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { errors, login } = useLogin();
   const navigate = useNavigate();
+
+  useRedirectIfAuthenticated({redirect});
 
   const handleLogin = async (e) => {
     e.preventDefault();

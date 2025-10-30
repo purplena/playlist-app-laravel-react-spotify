@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button, CircularProgress, Stack, Typography } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { actionController, useSignUpCompany } from '../hooks/useSignUpCompany';
 import TextFieldCustom from '../components/CompanyForm/TextFieldCustom';
@@ -9,8 +8,13 @@ import { generalInfoFields } from '../components/CompanyForm/generalInfoFields';
 import { useForm } from "react-hook-form"
 import CustomThemeInput from '../components/CompanyForm/CustomThemeInput';
 import { useTranslation } from 'react-i18next';
+import FormBtn from '../components/CompanyForm/FormBtn';
+import { rgbToHex } from '../helpers/rgbToHexTransform';
+import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
 
 const CompanySignUp = () => {
+
+
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [submitLoader, setSubmitLoader] = useState(false)
@@ -24,19 +28,22 @@ const CompanySignUp = () => {
     defaultValues: {
       email: '',
       password: '',
-      username: '',
       name: '',
       tel: '',
       country: '',
       city: '',
       zip: '',
-      address: ''
+      address: '',
+      description: '',
     },
     criteriaMode: 'all'
   })
+  const mode = actionController.storeCompany;
+
+  useRedirectIfAuthenticated({redirect:"/manager"});
 
  const { signup } = useSignUpCompany({
-    action: actionController.storeCompany,
+    action: mode,
     setError, 
   });
     
@@ -67,7 +74,7 @@ const CompanySignUp = () => {
         spacing={4}
       >
         <Typography variant="h3" component="h1" textAlign="center">
-          {t('company.register_form.h1')}
+          {t('company.form.h1_register')}
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack
@@ -82,21 +89,23 @@ const CompanySignUp = () => {
           >
             <Stack>
               <Typography variant="h5" component="h2" textAlign="center">
-                {'Information générale'}
+                {t('company.form.h2_info')}
               </Typography>
 
-             {generalInfoFields.general.map(({ label, name, type }) => (
-                  <TextFieldCustom
-                    control={control}
-                    name={name}
-                    key={name}
-                    label={label}
-                    type={type}
-                    errors={errors}
-                    rules={{ required: `${label} est obligatoire` }}
-                  />
-                ))
-              }
+             {generalInfoFields.general
+              .filter(field => field.showOn.includes(mode))
+              .map(({ label, name, type, rows }) => (
+                <TextFieldCustom
+                  control={control}
+                  name={name}
+                  key={name}
+                  label={label}
+                  type={type}
+                  rows={rows}
+                  errors={errors}
+                  rules={{ required: `${label} est obligatoire` }}
+                />
+            ))}
               <LogoInput 
                   control={control}
                   errors={errors}
@@ -106,9 +115,11 @@ const CompanySignUp = () => {
 
             <Stack>
               <Typography variant="h5" component="h2" textAlign="center">
-                {'Information de contact'}
+                {t('company.form.h2_contact')}
               </Typography>
-              {generalInfoFields.contact.map(({ label, name, type }) => (
+              {generalInfoFields.contact
+                .filter(field => field.showOn.includes(mode))
+                .map(({ label, name, type }) => (
                   <TextFieldCustom
                     control={control}
                     name={name}
@@ -118,13 +129,12 @@ const CompanySignUp = () => {
                     errors={errors}
                     rules={{ required: `${label} est obligatoire` }}
                   />
-                ))
-              }
+              ))}
             </Stack>
 
             <Stack>
               <Typography variant="h5" component="h2" textAlign="center">
-                  Personnalisez votre application
+                  {t('company.form.h2_customize')}
               </Typography>
               <CustomThemeInput 
                 fontColor={fontColor} 
@@ -135,21 +145,7 @@ const CompanySignUp = () => {
             </Stack>
           </Stack>
           <Stack direction="row" justifyContent="center" my={3}>
-            <Button
-              disabled={submitLoader}
-              type="submit"
-              variant="contained"
-              sx={{
-                boxShadow: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                '&:hover': { boxShadow: 'none' },
-              }}
-            >
-              {"S'inscrire"}
-              {submitLoader ? <CircularProgress size={20} /> : <SendIcon size={20} />}
-            </Button>
+            <FormBtn label={t('company.form.btn_signup')} submitLoader={submitLoader} />
           </Stack>
         </form>
       </Stack>
@@ -157,12 +153,3 @@ const CompanySignUp = () => {
   );
 };
 export default CompanySignUp;
-
-function rgbToHex(r, g, b) {
-  const toHex = (c) => {
-    const hex = c?.toString(16);
-    return hex?.length === 1 ? '0' + hex : hex;
-  };
-
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}

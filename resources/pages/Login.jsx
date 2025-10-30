@@ -7,6 +7,7 @@ import LinkButton from '../components/Button/LinkButton';
 import { useAuthRedirect } from '../hooks/useAuthRedirect';
 import LoginInputs from '../components/Layout/LoginInputs';
 import { useStore } from '../js/useStore';
+import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +15,8 @@ const Login = () => {
   const { errors, login } = useLogin();
   const redirectAfterLogin = useAuthRedirect();
   const { company } = useStore();
+
+  useRedirectIfAuthenticated({redirect: `/${company.slug}`});
   
 
   const handleLogin = async (e) => {

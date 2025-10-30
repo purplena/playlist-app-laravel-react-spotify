@@ -15,14 +15,12 @@ class UpdateCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'nullable|string',
-            'name' => 'required|string',
-            'slug' => 'nullable|string',
             'tel' => 'required|string',
             'zip' => 'required|string',
             'country' => 'required|string',
             'city' => 'required|string',
             'address' => 'required|string',
+            'description' => 'required|max:255',
             'logo' => ['nullable',
                 'image', 'mimes:jpg,jpeg,png', File::image()->max('2mb'),
             ],

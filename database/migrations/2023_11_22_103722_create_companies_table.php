@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('city');
             $table->string('address');
+            $table->text('description');
             $table->json('spotify_playlist_data')->nullable();
             $table->string('qr_code')->nullable();
             $table->string('logo')->nullable();

@@ -2,8 +2,10 @@ import { SliderPicker } from 'react-color';
 import { Box } from '@mui/system';
 import { Stack, Typography } from '@mui/material';
 import LinkButton from '../Button/LinkButton';
+import { useTranslation } from 'react-i18next';
 
 const CustomThemeInput = ({fontColor, backgroundColor, setFontColor, setBackgroundColor }) => {
+    const { t } = useTranslation();
     const changeBackgroungHandler = (colors) => {
     const col =
       'rgb(' + colors.rgb.r + ',' + colors.rgb.g + ',' + colors.rgb.b + ')';
@@ -18,7 +20,7 @@ const CustomThemeInput = ({fontColor, backgroundColor, setFontColor, setBackgrou
     >
         <Stack>
             <Typography variant="body2" component="p">
-                Ajouter vos couleur principales
+                {t('company.form.custom_add_colors')}
             </Typography>
             <Typography
                 variant="body2"
@@ -26,12 +28,12 @@ const CustomThemeInput = ({fontColor, backgroundColor, setFontColor, setBackgrou
                 textAlign={'center'}
                 sx={{ color: '#979797', fontSize: '11px' }}
             >
-                optionel
+                {t('company.form.cutom_optional')}
             </Typography>
         </Stack>
         <Stack>
             <Typography variant="body2" component="p">
-                {'Couleur de navigation, bas de page et boutons'}
+                {t('company.form.cutom_main_color')}
             </Typography>
             <SliderPicker
                 className="picker"
@@ -41,7 +43,7 @@ const CustomThemeInput = ({fontColor, backgroundColor, setFontColor, setBackgrou
         </Stack>
         <Stack>
             <Typography variant="body2" component="p">
-                {'Couleur de police'}
+                {t('company.form.cutom_font_color')}
             </Typography>
             <Stack
                 direction={'row'}
@@ -73,7 +75,7 @@ const CustomThemeInput = ({fontColor, backgroundColor, setFontColor, setBackgrou
         </Stack>
         <Stack justifyContent={'center'} alignItems={'center'} mt={3}>
             <Typography variant="body2" component="p">
-                Prévisualisation du bouton
+                {t('company.form.custom_preview')}
             </Typography>
             <LinkButton
                 style={{

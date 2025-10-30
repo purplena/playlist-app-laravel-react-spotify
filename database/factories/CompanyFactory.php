@@ -28,6 +28,7 @@ class CompanyFactory extends Factory
             'country' => fake()->country(),
             'city' => fake()->city(),
             'address' => fake()->address(),
+            'description' => fake()->text(),
             'spotify_playlist_data' => [
                 'id' => fake()->bothify('?????-#####'),
                 'snapshot_id' => fake()->uuid(),

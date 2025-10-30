@@ -1,15 +1,51 @@
 export const generalInfoFields = {
   general: [
-    { label: 'Email', name: 'email', type: 'email' },
-    { label: 'Mot de passe', name: 'password', type: 'password' },
-    { label: "Nom d'entreprise", name: 'name', type: 'text' },
-    { label: 'Username', name: 'username', type: 'text' },
+    { label: 'Email', name: 'email', type: 'email', showOn: ['create'] },
+    {
+      label: 'Mot de passe',
+      name: 'password',
+      type: 'password',
+      showOn: ['create'],
+    },
+    {
+      label: "Nom d'entreprise",
+      name: 'name',
+      type: 'text',
+      showOn: ['create'],
+    },
+    {
+      label: 'Description',
+      name: 'description',
+      type: 'text',
+      rows: 6,
+      showOn: ['create', 'edit'],
+    },
   ],
   contact: [
-    { label: 'Téléphone', name: 'tel', type: 'text' },
-    { label: 'Pays', name: 'country', type: 'text' },
-    { label: 'Ville', name: 'city', type: 'text' },
-    { label: 'Code postale', name: 'zip', type: 'text' },
-    { label: 'Adresse', name: 'address', type: 'text' },
+    {
+      label: 'Téléphone',
+      name: 'tel',
+      type: 'text',
+      showOn: ['create', 'edit'],
+    },
+    {
+      label: 'Pays',
+      name: 'country',
+      type: 'text',
+      showOn: ['create', 'edit'],
+    },
+    { label: 'Ville', name: 'city', type: 'text', showOn: ['create', 'edit'] },
+    {
+      label: 'Code postale',
+      name: 'zip',
+      type: 'text',
+      showOn: ['create', 'edit'],
+    },
+    {
+      label: 'Adresse',
+      name: 'address',
+      type: 'text',
+      showOn: ['create', 'edit'],
+    },
   ],
 };

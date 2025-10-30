@@ -27,6 +27,7 @@ class CompanyResource extends JsonResource
                     'has_refresh_token' => Arr::get($this->spotify_playlist_data, 'refresh_token') ? true : false,
                 ];
             }),
+            'description' => $this->description,
             'tel' => $this->tel,
             'zip' => $this->zip,
             'country' => $this->country,

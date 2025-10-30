@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Mews\Purifier\Facades\Purifier;
 
 class RegisterController extends Controller
 {
@@ -42,7 +43,6 @@ class RegisterController extends Controller
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'username' => $request->username,
             'role' => User::ROLE_OWNER,
         ]);
 
@@ -63,6 +63,7 @@ class RegisterController extends Controller
             'country' => $request->country,
             'city' => $request->city,
             'address' => $request->address,
+            'description' => Purifier::clean($request->description),
             'logo' => $logoPath ?? null,
             'background_color' => $request->background_color,
             'font_color' => $request->font_color,

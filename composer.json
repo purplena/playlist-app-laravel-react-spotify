@@ -13,6 +13,7 @@
         "laravel/socialite": "^5.11",
         "laravel/telescope": "^5.13",
         "laravel/tinker": "^2.8",
+        "mews/purifier": "^3.4",
         "simplesoftwareio/simple-qrcode": "~4"
     },
     "require-dev": {

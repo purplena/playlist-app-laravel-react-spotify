@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useStore } from '../js/useStore';
 
 export const actionController = {
-  storeCompany: 1,
-  editCompany: 2,
+  storeCompany: 'create',
+  editCompany: 'edit',
 };
 
 export const useSignUpCompany = ({ action, setError }) => {
@@ -16,16 +16,21 @@ export const useSignUpCompany = ({ action, setError }) => {
       if (data[key]) formData.append(key, data[key]);
     });
 
-    const endpoint =
-      action === actionController.storeCompany
-        ? 'manager/register'
-        : 'manager/update';
+    const requestParams = {
+      endpoint:
+        action === actionController.storeCompany
+          ? 'manager/register'
+          : 'manager/update',
+      method: axios.post,
+    };
 
-    return axios
-      .post(`${apiUrl}/${endpoint}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+    if (action === actionController.editCompany) {
+      formData.append('_method', 'put');
+    }
+
+    return requestParams
+      .method(`${apiUrl}/${requestParams.endpoint}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((response) => {
         if (response.data.user) {
