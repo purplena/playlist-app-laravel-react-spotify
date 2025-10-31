@@ -19,6 +19,7 @@ class Company extends Model
         'country',
         'city',
         'address',
+        'description',
         'spotify_playlist_data',
         'qr_code',
         'logo',

@@ -4,6 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { useSignUp } from '../hooks/useSignUp';
 import { useNavigate } from 'react-router';
 import { useStore } from '../js/useStore';
+import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const { company} = useStore();
 
+  useRedirectIfAuthenticated({redirect: `/${company.slug}`});
 
   const handleSubmit = async (e) => {
     e.preventDefault();

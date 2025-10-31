@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateCompanyRequest;
-use App\Http\Resources\CompanyShortResource;
+use App\Http\Resources\CompanyResource;
 use App\Http\Resources\UserResource;
 use App\Models\Company;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use Mews\Purifier\Facades\Purifier;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CompanyController extends Controller
 {
     public function show(Company $company)
     {
-        return response()->json(['company' => new CompanyShortResource($company)]);
+        return response()->json(['company' => new CompanyResource($company)]);
     }
 
     public function downloadQrCode(): JsonResponse|StreamedResponse
@@ -50,16 +50,13 @@ class CompanyController extends Controller
     public function update(UpdateCompanyRequest $request)
     {
         $user = auth()->user();
-        User::where('id', $user->id)
-            ->update([
-                'username' => $request->username,
-            ]);
-
         $company = $user->company;
+        $companySlug = $company->slug;
 
         if ($request->logo) {
-            $logoName = 'logo_'.time().'.'.$request->logo->extension();
-            Storage::disk('public')->put($logoName, file_get_contents($request->logo));
+            $logoName = 'logo_'.$companySlug.'_'.time().'.'.$request->logo->extension();
+            $logoPath = 'logo/'.$logoName;
+            Storage::disk('public')->put($logoPath, file_get_contents($request->logo));
             Company::where('id', $company->id)
                 ->update([
                     'logo' => $logoName,
@@ -68,8 +65,7 @@ class CompanyController extends Controller
 
         Company::where('id', $company->id)
             ->update([
-                'name' => $request->name,
-                'slug' => $this->generateSlug($request->name),
+                'description' => Purifier::clean($request->description),
                 'tel' => $request->tel,
                 'zip' => $request->zip,
                 'country' => $request->country,
@@ -79,19 +75,11 @@ class CompanyController extends Controller
                 'font_color' => $request->font_color,
             ]);
 
-        return response()->json(['status' => true, 'user' => new UserResource($user)]);
-    }
+        $user->load('company');
 
-    protected function generateSlug($str): string
-    {
-        $words = explode(' ', $str);
-        foreach ($words as $key => $word) {
-            $words[$key] = strtolower($word);
-        }
-        if (count($words) > 1) {
-            return implode('-', $words);
-        } else {
-            return strtolower($str);
-        }
+        return response()->json([
+            'status' => true,
+            'user' => new UserResource($user),
+        ]);
     }
 }

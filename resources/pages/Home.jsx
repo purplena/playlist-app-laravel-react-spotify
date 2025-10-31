@@ -43,9 +43,7 @@ const Home = () => {
             </Typography>
           </Stack>
           <Typography variant="body1" component="p">
-            {
-              "Un authentique pub irlandais où déguster une bière avec ses amis autour d'un burger au bacon irlandais, devant un match de rugby ou un live musical."
-            }
+            {company.description}
           </Typography>
           <Box
             component="img"

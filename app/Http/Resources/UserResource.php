@@ -17,7 +17,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'username' => $this->username,
+            'username' => $this->username ?? null,
             'role' => $this->role,
             'company' => CompanyResource::make($this->whenLoaded('company')),
         ];

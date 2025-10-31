@@ -22,13 +22,19 @@ const CompanyInfo = () => {
         spacing={8}
         maxWidth={'1080px'}
       >
-        <Stack>
+        <Stack gap={3}>
           <Typography variant="h3" component="h1" textAlign="center">
             Votre entreprise
           </Typography>
-          <Typography variant="h6" component="p" textAlign="center">
+          <Typography variant="p" component="p" textAlign="center">
             Gardez à jour vos informations !
           </Typography>
+          <Typography textAlign="center" variant="h6" component="h2">
+                  {"Nom d'entreprise: "}
+                  <Box component="span" fontWeight="700">
+                    {user?.company?.name}
+                  </Box>
+                </Typography>
         </Stack>
 
         <Grid
@@ -48,21 +54,9 @@ const CompanyInfo = () => {
             <StackComponentForGrid>
               <Stack spacing={2}>
                 <Typography variant="body1" component="p">
-                  {"Nom d'entreprise: "}
+                  {"Description: "}
                   <Box component="span" fontWeight="700">
-                    {user?.company?.name}
-                  </Box>
-                </Typography>
-                <Typography variant="body1" component="p">
-                  {'Email: '}
-                  <Box component="span" fontWeight="700">
-                    {user?.email}
-                  </Box>
-                </Typography>
-                <Typography variant="body1" component="p">
-                  {"Nom d'utilisateur: "}
-                  <Box component="span" fontWeight="700">
-                    {user?.username}
+                    {user?.company?.description}
                   </Box>
                 </Typography>
               </Stack>
