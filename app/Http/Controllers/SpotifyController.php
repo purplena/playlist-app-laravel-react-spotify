@@ -28,7 +28,6 @@ class SpotifyController extends Controller
             abort(403);
         }
 
-        dd(request());
         $session = new Session(
             config('services.spotify.client_id'),
             config('services.spotify.client_secret'),
