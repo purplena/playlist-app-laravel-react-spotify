@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Stack, Typography } from '@mui/material';
+import { Button, Link, Stack, Typography } from '@mui/material';
 import { generatePath } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
 import SendIcon from '@mui/icons-material/Send';
@@ -8,6 +8,7 @@ import { useAuthRedirect } from '../hooks/useAuthRedirect';
 import LoginInputs from '../components/Layout/LoginInputs';
 import { useStore } from '../js/useStore';
 import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,8 +17,8 @@ const Login = () => {
   const redirectAfterLogin = useAuthRedirect();
   const { company } = useStore();
 
-  useRedirectIfAuthenticated({redirect: `/${company.slug}`});
-  
+  useRedirectIfAuthenticated({ redirect: `/${company.slug}` });
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,7 +30,8 @@ const Login = () => {
 
   return (
     <>
-      <Stack direction="column" spacing={8}>
+      <Stack direction="column" spacing={4} justifyContent="center"
+        alignItems="center">
         <LoginInputs
           handleLogin={handleLogin}
           errors={errors}
@@ -38,9 +40,29 @@ const Login = () => {
           password={password}
           setPassword={setPassword}
         />
+        <Link
+          href={`/auth/google/redirect?companySlug=${company.slug}`}
+          sx={{
+            textDecoration: 'none',
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              boxShadow: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              '&:hover': { boxShadow: 'none' },
+            }}
+            disableElevation
+            startIcon={<GoogleIcon />}>
+            Continue avec Google
+          </Button>
+        </Link>
         <Stack
           direction="column"
-          spacing={2}
+          spacing={1}
           justifyContent="center"
           alignItems="center"
         >
