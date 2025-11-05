@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 
-const TextFieldCustom = ({ control, name, label, type, errors, rules, rows}) => {
+const TextFieldCustom = ({ control, name, label, type, errors, rules={}, rows}) => {
   const hasError = errors?.[name]?.message;
 
   return <Controller
@@ -18,9 +18,14 @@ const TextFieldCustom = ({ control, name, label, type, errors, rules, rows}) => 
             : {})} 
         type={type}
         variant="standard"
-        style={{ width: '250px' }}  
         error={!!hasError}
         helperText={hasError}
+         sx={{
+          width: 250,
+          '& .MuiInputLabel-root': {
+            color: '#222',
+          }
+        }}
       />
     )}
   />

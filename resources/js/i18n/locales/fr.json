@@ -14,13 +14,26 @@
       "cutom_optional": "optionel",
       "cutom_main_color": "Couleur de navigation, bas de page et boutons",
       "cutom_font_color": "Couleur de police",
-      "custom_preview": "Prévisualisation du bouton", 
-      "btn_signup": "S'inscrire",
-      "btn_modify": "Modifier"
+      "custom_preview": "Prévisualisation du bouton"
+    },
+    "login": {
+      "h1": "Gerez votre entreprise",
+      "p1": "Continuez avec votre email"
     }
-    
+  },
+  "user": {
+    "login": {
+      "h1": "Vous avez un mot de passe?",
+      "p_with_email": "Continuez avec votre email",
+      "p_with_google": "Contunuez avec votre compte Google", 
+      "p_sigup_invitation": "Pas de compte? Inscrivez-vous s'il vous plaît"
+    }
   },
   "buttons": {
-    "btn_add": "Ajouter"
+    "btn_add": "Ajouter",
+    "btn_login": "Se connecter",
+    "btn_signup": "S'inscrire",
+    "btn_modify": "Modifier",
+    "btn_google": "Se connecter avec Google"
   }
 }

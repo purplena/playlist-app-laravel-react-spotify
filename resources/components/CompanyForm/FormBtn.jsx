@@ -1,22 +1,21 @@
 import { Button, CircularProgress } from "@mui/material"
-import SendIcon from '@mui/icons-material/Send';
 
-const FormBtn = ({label, submitLoader=false}) => {
+const FormBtn = ({ label, submitLoader = false, submit=true, Icon }) => {
   return (<>
     <Button
-        disabled={submitLoader}
-        type="submit"
-        variant="contained"
-        sx={{
+      disabled={submitLoader}
+      type={submit ? "submit" : 'button'}
+      variant="contained"
+      sx={{
         boxShadow: 'none',
         display: 'flex',
         alignItems: 'center',
         gap: 1,
         '&:hover': { boxShadow: 'none' },
-        }}
+      }}
     >
-        {label}
-        {submitLoader ? <CircularProgress size={20} /> : <SendIcon size={20} />}
+      {label}
+      {submitLoader ? <CircularProgress size={20} /> : <Icon size={20} />}
     </Button>
   </>
   )

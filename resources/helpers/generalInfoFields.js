@@ -1,4 +1,4 @@
-export const generalInfoFields = {
+export const companyFormInputs = {
   general: [
     { label: 'Email', name: 'email', type: 'email', showOn: ['create'] },
     {
@@ -49,3 +49,14 @@ export const generalInfoFields = {
     },
   ],
 };
+
+export const userFormInputs = [
+  { label: 'Email', name: 'email', type: 'email', required: true },
+  { label: 'Mot de passe', name: 'password', type: 'password', required: true },
+  {
+    label: "Nom d'utilisateur",
+    name: 'username',
+    type: 'text',
+    required: false,
+  },
+];

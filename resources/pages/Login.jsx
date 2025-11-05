@@ -1,87 +1,62 @@
-import { useState } from 'react';
-import { Button, Link, Stack, Typography } from '@mui/material';
-import { generatePath } from 'react-router-dom';
-import { useLogin } from '../hooks/useLogin';
+import { Link, Stack, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import LinkButton from '../components/Button/LinkButton';
-import { useAuthRedirect } from '../hooks/useAuthRedirect';
-import LoginInputs from '../components/Layout/LoginInputs';
 import { useStore } from '../js/useStore';
 import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
 import GoogleIcon from '@mui/icons-material/Google';
+import { useTranslation } from 'react-i18next';
+import LoginForm from '../components/Login/LoginForm';
+import FormBtn from '../components/CompanyForm/FormBtn';
+import LinkButton from '../components/Button/LinkButton';
+import { generatePath } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { errors, login } = useLogin();
-  const redirectAfterLogin = useAuthRedirect();
+  const { t } = useTranslation();
   const { company } = useStore();
-
-  useRedirectIfAuthenticated({ redirect: `/${company.slug}` });
-
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const response = await login(email, password);
-    if (response?.data?.status) {
-      redirectAfterLogin();
-    }
-  };
+  const redirecte = company.slug;
+  useRedirectIfAuthenticated({ redirect: redirecte });
 
   return (
     <>
       <Stack direction="column" spacing={4} justifyContent="center"
         alignItems="center">
-        <LoginInputs
-          handleLogin={handleLogin}
-          errors={errors}
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-        />
-        <Link
-          href={`/auth/google/redirect?companySlug=${company.slug}`}
-          sx={{
-            textDecoration: 'none',
-          }}
-        >
-          <Button
-            variant="contained"
-            sx={{
-              boxShadow: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-              '&:hover': { boxShadow: 'none' },
-            }}
-            disableElevation
-            startIcon={<GoogleIcon />}>
-            Continue avec Google
-          </Button>
-        </Link>
-        <Stack
-          direction="column"
-          spacing={1}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Typography variant="body1" component="h1" textAlign="center">
-            {"Pas de compte? Inscrivez-vous s'il vous plaît"}
+          <Typography variant="h1" component="h1" textAlign="center">
+            {t('user.login.h1')}
           </Typography>
-          {window.location.pathname === '/manager/login' ? (
-            <LinkButton
-              to={generatePath('/manager/registration')}
-              endIcon={<SendIcon />}
+          <Stack>
+            <Typography variant="body1" component="p" textAlign="center">
+              {t('user.login.p_with_email')}
+            </Typography>
+            <LoginForm redirect={redirecte} />
+          </Stack>
+          <Stack alignItems="center"> 
+            <Typography variant="body1" component="p" textAlign="center">
+              {t('user.login.p_with_google')}
+            </Typography>
+            <Link
+              href={`/auth/google/redirect?companySlug=${company.slug}`}
+              sx={{
+                textDecoration: 'none',
+              }}
             >
-              {"S'inscrire"}
-            </LinkButton>
-          ) : (
-            <LinkButton to={generatePath(`/${company.slug}/signup`)} endIcon={<SendIcon />}>
-              {"S'inscrire"}
-            </LinkButton>
-          )}
-        </Stack>
+              <FormBtn
+                label={t('buttons.btn_google')}
+                submit={false}
+                Icon={GoogleIcon}
+              />
+            </Link>
+          </Stack>
+          <Stack alignItems="center">
+            <Typography variant="body1" component="h1" textAlign="center">
+              {t('user.login.p_sigup_invitation')}
+            </Typography>
+              <LinkButton 
+                to={generatePath(`/${company.slug}/signup`)} 
+                endIcon={<SendIcon/>}
+              >
+                {t('buttons.btn_signup')}
+              </LinkButton>
+ 
+          </Stack>
       </Stack>
     </>
   );

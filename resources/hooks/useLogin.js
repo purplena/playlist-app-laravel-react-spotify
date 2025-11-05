@@ -1,41 +1,30 @@
 import { apiUrl } from '../js/App';
-import { useState } from 'react';
 import axios from 'axios';
 import { useStore } from '../js/useStore';
 
-export const useLogin = () => {
+export const useLogin = () => {  
   const { setUser } = useStore();
-  const [errors, setErrors] = useState(null);
 
-  const login = (email, password) => {
+  const login = (data) => {   
     return axios
       .post(`${apiUrl}/user/login`, {
-        email,
-        password,
+        ...data
       })
       .then((response) => {
         if (response.data.user) {
           setUser(response.data.user);
         }
 
-        return response;
+        return { success: true, data: response.data };
       })
       .catch((error) => {
-        if (!error.response?.data?.status) {
-          setErrors({
-            loginError: [error.response.data.message],
-          });
-        }
-        if (error.response.data.email || error.response.data.password) {
-          setErrors(error.response.data);
-        }
-
-        return error.response;
+        const serverData = error?.response?.data || {};
+        
+        return { success: false, errors: serverData };
       });
   };
 
   return {
     login,
-    errors,
   };
 };
