@@ -12,6 +12,6 @@ export default defineConfig({
     eslint(),
     react({
       jsxRuntime: 'automatic',
-    })
+    }),
   ],
 });

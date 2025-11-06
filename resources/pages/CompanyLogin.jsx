@@ -1,36 +1,34 @@
-import { useState } from 'react';
-import LoginInputs from '../components/Layout/LoginInputs';
-import { useLogin } from '../hooks/useLogin';
-import { useNavigate } from 'react-router-dom';
+import { Stack, Typography } from '@mui/material';
 import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
+import { useTranslation } from 'react-i18next';
+import LoginForm from '../components/Login/LoginForm';
 
 
 const CompanyLogin = ({ redirect = '/manager' }) => {
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { errors, login } = useLogin();
-  const navigate = useNavigate();
-
-  useRedirectIfAuthenticated({redirect});
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const response = await login(email, password);
-    if (response?.data?.status) {
-      navigate(redirect);
-    }
-  };
+  const { t } = useTranslation();
+  useRedirectIfAuthenticated({ redirect });
 
   return (
-    <LoginInputs
-      handleLogin={handleLogin}
-      errors={errors}
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
-    />
+    <>
+      <Stack
+        direction="column"
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Typography variant="h1" component="h1" textAlign="center">
+          {t('company.login.h1')}
+        </Typography>
+        <Typography variant="body1" component="p" textAlign="center">
+          {t('company.login.p1')}
+        </Typography>
+        <LoginForm redirect={redirect} />
+      </Stack>
+    </>
   );
 };
 export default CompanyLogin;
+
+
+
+

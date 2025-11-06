@@ -10,7 +10,7 @@
         "jwilsson/spotify-web-api-php": "^6.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/socialite": "^5.11",
+        "laravel/socialite": "^5.16",
         "laravel/telescope": "^5.13",
         "laravel/tinker": "^2.8",
         "mews/purifier": "^3.4",

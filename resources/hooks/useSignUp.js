@@ -1,36 +1,30 @@
 import { apiUrl } from '../js/App';
 import axios from 'axios';
-
-import { useState } from 'react';
 import { useStore } from '../js/useStore';
 
 export const useSignUp = () => {
   const { setUser } = useStore();
-  const [errors, setErrors] = useState(null);
 
-  const signup = (email, password, username) => {
+  const signup = (data) => {
     return axios
       .post(`${apiUrl}/user/register`, {
-        email,
-        password,
-        username,
+        ...data,
       })
       .then((response) => {
         if (response.data.user) {
           setUser(response.data.user);
         }
 
-        return response;
+        return { success: true, data: response.data };
       })
       .catch((error) => {
-        if (error.response.data.errors) {
-          setErrors(error.response.data.errors);
-        }
+        const serverData = error?.response?.data || {};
+
+        return { success: false, errors: serverData };
       });
   };
 
   return {
     signup,
-    errors,
   };
 };

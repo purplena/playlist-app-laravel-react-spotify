@@ -7,7 +7,7 @@ export const actionController = {
   editCompany: 'edit',
 };
 
-export const useSignUpCompany = ({ action, setError }) => {
+export const useSignUpCompany = ({ action }) => {
   const { setUser } = useStore();
 
   const signup = (data) => {
@@ -37,21 +37,12 @@ export const useSignUpCompany = ({ action, setError }) => {
           setUser(response.data.user);
         }
 
-        return response;
+        return { success: true, data: response.data };
       })
       .catch((error) => {
-        if (error.response?.data?.errors) {
-          const serverErrors = error.response.data.errors;
+        const serverData = error?.response?.data || {};
 
-          Object.entries(serverErrors).forEach(([field, messages]) => {
-            setError(field, {
-              type: 'server',
-              message: Array.isArray(messages) ? messages[0] : messages,
-            });
-          });
-        }
-
-        return error;
+        return { success: false, errors: serverData };
       });
   };
 
