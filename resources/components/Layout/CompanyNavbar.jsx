@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
+import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
+import Toolbar from '@mui/material/Toolbar';
 import { useLogout } from '../../hooks/useLogout';
-import { useNavigate } from 'react-router-dom';
-import MenuItemCustom from '../Menu/MenuItemCustom';
 import { useStore } from '../../js/useStore';
+import MenuItemCustom from '../Menu/MenuItemCustom';
 
 function CompanyNavbar() {
   const navigate = useNavigate();
@@ -34,8 +34,8 @@ function CompanyNavbar() {
 
   const handleNavigate = (path) => {
     handleCloseNavMenu();
-    navigate(path)
-  }
+    navigate(path);
+  };
 
   const menuItems = [
     {
@@ -120,25 +120,22 @@ function CompanyNavbar() {
                     }}
                   />
                 ))}
-                <MenuItemCustom
-                  label={'Se deconnecter'}
-                  onClickHandler={handleLogout}
-                  sx={{}}
-                />
+                <MenuItemCustom label={'Se deconnecter'} onClickHandler={handleLogout} sx={{}} />
               </Menu>
-          </Box>
+            </Box>
           )}
 
           {/* Desktop */}
-          {user?.role === 1 && <Box
-            sx={{
-              flexGrow: 1,
-              justifyContent: 'center',
-              display: { xxs: 'none', xs: 'none', md: 'flex' },
-            }}
-          >
-            {menuItems.map((menuItem) => (
-              <MenuItemCustom
+          {user?.role === 1 && (
+            <Box
+              sx={{
+                flexGrow: 1,
+                justifyContent: 'center',
+                display: { xxs: 'none', xs: 'none', md: 'flex' },
+              }}
+            >
+              {menuItems.map((menuItem) => (
+                <MenuItemCustom
                   key={menuItem.label}
                   label={menuItem.label}
                   onClickHandler={() => handleNavigate(menuItem.path)}
@@ -146,13 +143,10 @@ function CompanyNavbar() {
                     fontWeight: location.pathname === menuItem.path ? 800 : '',
                   }}
                 />
-            ))}
-            <MenuItemCustom
-                label={'Se deconnecter'}
-                onClickHandler={handleLogout}
-                sx={{}}
-              />
-          </Box>}
+              ))}
+              <MenuItemCustom label={'Se deconnecter'} onClickHandler={handleLogout} sx={{}} />
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

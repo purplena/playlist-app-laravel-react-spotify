@@ -1,16 +1,10 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router';
-import { apiUrl } from '../js/App';
+import { useLocation, useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { apiUrl } from '../js/App';
 
-export const useUpvote = (
-  requestedSong,
-  user,
-  setOpen,
-  setModalMessage,
-  setModalHeader
-) => {
+export const useUpvote = (requestedSong, user, setOpen, setModalMessage, setModalHeader) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [likes, setLikes] = useState(requestedSong.upvotes_count);

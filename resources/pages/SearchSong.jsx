@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useSearchSong } from '../hooks/useSearchSong';
-import SearchBar from '../components/Form/SearchBar';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import SongSearchCard from '../components/Playlist/SongSearchCard';
-import ModalWindow from '../components/Layout/ModalWindow';
+import SearchBar from '../components/Form/SearchBar';
 import LineComponent from '../components/Layout/LineComponent';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import ModalWindow from '../components/Layout/ModalWindow';
+import SongSearchCard from '../components/Playlist/SongSearchCard';
+import { useSearchSong } from '../hooks/useSearchSong';
 import { useStore } from '../js/useStore';
 
 function Search() {
@@ -18,12 +18,7 @@ function Search() {
 
   return (
     <>
-      <Stack
-        mb={2}
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Stack mb={2} direction="column" justifyContent="center" alignItems="center">
         <Typography variant="h1" component="h1" textAlign="center">
           {'Ajoutez vos chansons préférées'}
         </Typography>
@@ -40,12 +35,7 @@ function Search() {
         <LineComponent />
         <Stack mt={2} mb={2} spacing={2}>
           <SearchBar handleInput={handleInput} />
-          <Stack
-            direction="row"
-            spacing={1}
-            justifyContent={'center'}
-            alignItems={'center'}
-          >
+          <Stack direction="row" spacing={1} justifyContent={'center'} alignItems={'center'}>
             <Typography variant="body1" component="p" fontSize={'12px'}>
               cliquez sur
             </Typography>

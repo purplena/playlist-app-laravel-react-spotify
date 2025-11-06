@@ -1,23 +1,17 @@
-import { Box, Paper, Stack, Typography, Grid } from '@mui/material';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useStore } from '../../js/useStore';
 
-const PlaylistCard = ({
-  requestedSong,
-  index,
-  setOpen,
-  setModalMessage,
-  setModalHeader,
-}) => {
+const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader }) => {
   const { user } = useStore();
   const { upvote, isUpvoted, likes } = useUpvote(
     requestedSong,
     user,
     setOpen,
     setModalMessage,
-    setModalHeader
+    setModalHeader,
   );
 
   const handleUpvote = () => {
@@ -53,18 +47,8 @@ const PlaylistCard = ({
             </Stack>
           </Stack>
 
-          <Stack
-            direction={'row'}
-            justifyContent={'space-between'}
-            alignItems={'center'}
-          >
-            <Typography
-              gutterBottom
-              variant="h6"
-              component="p"
-              mb={0}
-              fontWeight={800}
-            >
+          <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+            <Typography gutterBottom variant="h6" component="p" mb={0} fontWeight={800}>
               #{index + 1}
             </Typography>
 
@@ -72,19 +56,11 @@ const PlaylistCard = ({
               <Typography variant="body2">
                 {likes} {likes === 1 ? ' like' : ' likes'}
               </Typography>
-              <Typography
-                sx={{ cursor: 'pointer' }}
-                variant="body2"
-                onClick={handleUpvote}
-              >
+              <Typography sx={{ cursor: 'pointer' }} variant="body2" onClick={handleUpvote}>
                 {isUpvoted ? (
-                  <ThumbUpIcon
-                    sx={{ color: (theme) => theme.palette.primary.dark }}
-                  />
+                  <ThumbUpIcon sx={{ color: (theme) => theme.palette.primary.dark }} />
                 ) : (
-                  <ThumbUpOutlinedIcon
-                    sx={{ color: (theme) => theme.palette.primary.dark }}
-                  />
+                  <ThumbUpOutlinedIcon sx={{ color: (theme) => theme.palette.primary.dark }} />
                 )}
               </Typography>
             </Stack>
@@ -99,9 +75,7 @@ export default PlaylistCard;
 function SongTrancatedComponent({ song, label, ...props }) {
   const MAX_SONG_NAME_LENGTH = 16;
   const truncatedSongName =
-    song.length <= MAX_SONG_NAME_LENGTH
-      ? song
-      : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
+    song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
 
   return (
     <div>

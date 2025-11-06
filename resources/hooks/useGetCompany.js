@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { apiUrl } from '../js/App';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
 export const useGetCompany = () => {

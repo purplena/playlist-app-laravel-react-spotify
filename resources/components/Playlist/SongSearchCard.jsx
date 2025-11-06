@@ -1,25 +1,15 @@
 import React from 'react';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { Box, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import { Box, Grid } from '@mui/material';
 import { useSongAdd } from '../../hooks/useSongAdd';
 
-export default function SongSearchCard({
-  song,
-  setOpen,
-  setModalMessage,
-  setModalHeader,
-}) {
-  const { addSong, isAdded } = useSongAdd(
-    song,
-    setOpen,
-    setModalMessage,
-    setModalHeader
-  );
+export default function SongSearchCard({ song, setOpen, setModalMessage, setModalHeader }) {
+  const { addSong, isAdded } = useSongAdd(song, setOpen, setModalMessage, setModalHeader);
   const handleSongAdd = () => {
     addSong();
   };
@@ -54,9 +44,7 @@ export default function SongSearchCard({
 function SongTrancatedComponent({ song }) {
   const MAX_SONG_NAME_LENGTH = 20;
   const truncatedSongName =
-    song.length <= MAX_SONG_NAME_LENGTH
-      ? song
-      : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
+    song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
 
   return (
     <div>

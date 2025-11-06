@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Stack, Typography } from '@mui/material';
-import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import { Grid, Stack, Typography } from '@mui/material';
 import LineComponent from './LineComponent';
 
 const Footer = ({ company }) => {
@@ -31,21 +31,12 @@ const Footer = ({ company }) => {
             <Typography variant="subtitle" component="p">
               {company.tel}
             </Typography>
-            <Typography
-              variant="subtitle"
-              component="p"
-              sx={{ textDecoration: 'underline' }}
-            >
+            <Typography variant="subtitle" component="p" sx={{ textDecoration: 'underline' }}>
               example@wallacepub.fr
             </Typography>
           </Grid>
         </Grid>
-        <Stack
-          direction={'row'}
-          spacing={3}
-          justifyContent={'center'}
-          alignItems={'center'}
-        >
+        <Stack direction={'row'} spacing={3} justifyContent={'center'} alignItems={'center'}>
           <InstagramIcon
             sx={{
               color: (theme) => theme.palette.primary.dark,

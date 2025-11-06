@@ -1,21 +1,20 @@
-import { Alert, Grid, Link, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { generatePath, useParams } from 'react-router-dom';
-import PlaylistCard from '../components/Playlist/PlaylistCard';
+import { Alert, Grid, Link, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
-import LinkButton from '../components/Button/LinkButton';
-import ModalWindow from '../components/Layout/ModalWindow';
-import LineComponent from '../components/Layout/LineComponent';
-import { useGetCompany } from '../hooks/useGetCompany';
 import { Box } from '@mui/system';
+import LinkButton from '../components/Button/LinkButton';
+import LineComponent from '../components/Layout/LineComponent';
+import ModalWindow from '../components/Layout/ModalWindow';
+import PlaylistCard from '../components/Playlist/PlaylistCard';
+import { useGetCompany } from '../hooks/useGetCompany';
+import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import { useStore } from '../js/useStore';
 
 const RequestedSongs = () => {
   const { user } = useStore();
   const [isLoading, setIsLoading] = useState(false);
-  const { getSongs, requestedSongs, serverErrorMessage } =
-    useGetRequestedSongs(setIsLoading);
+  const { getSongs, requestedSongs, serverErrorMessage } = useGetRequestedSongs(setIsLoading);
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
@@ -35,8 +34,8 @@ const RequestedSongs = () => {
         </Typography>
         <Stack spacing={2} justifyContent={'center'} alignItems={'center'}>
           <Typography variant="body1" component="p" textAlign="center">
-            Chaque jour, nous sélectionnons les chansons les plus votées pour
-            les ajouter à notre playlist
+            Chaque jour, nous sélectionnons les chansons les plus votées pour les ajouter à notre
+            playlist
           </Typography>
           <Typography variant="body1" component="p" textAlign="center">
             Découvrez notre playlist directement sur Spotify
@@ -71,12 +70,7 @@ const RequestedSongs = () => {
                 src="../images/spotify-logo.png"
                 alt="Logo Spotify"
               />
-              <Typography
-                variant="body1"
-                component="p"
-                textAlign="center"
-                mt={2}
-              >
+              <Typography variant="body1" component="p" textAlign="center" mt={2}>
                 Playlist
               </Typography>
             </Stack>
@@ -86,14 +80,7 @@ const RequestedSongs = () => {
 
       <LineComponent />
 
-      <Stack
-        direction="row"
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
-        mt={4}
-        mb={4}
-      >
+      <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" mt={4} mb={4}>
         <Typography variant="subtitle2" textAlign={'center'}>
           Voulez-vous suggérer une chanson?
         </Typography>

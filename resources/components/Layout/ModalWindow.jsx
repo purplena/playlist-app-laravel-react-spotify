@@ -1,10 +1,10 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import { generatePath, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Stack } from '@mui/material';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import LinkButton from '../Button/LinkButton';
 
 const style = {
@@ -41,11 +41,7 @@ export default function ModalWindow({
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Stack
-          direction={'row'}
-          justifyContent={'space-between'}
-          alignItems={'center'}
-        >
+        <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {modalHeader}
           </Typography>
@@ -64,20 +60,14 @@ export default function ModalWindow({
           </Button>
         </Stack>
 
-        <Typography
-          id="modal-modal-description"
-          sx={{ mt: 2, mb: 2, textAlign: 'justify' }}
-        >
+        <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2, textAlign: 'justify' }}>
           {modalMessage}
         </Typography>
         {user.company ? (
           <>
             {songClicked ? (
               <>
-                <Typography
-                  id="modal-modal-description"
-                  sx={{ mb: 2, fontSize: '12px' }}
-                >
+                <Typography id="modal-modal-description" sx={{ mb: 2, fontSize: '12px' }}>
                   Titre:{' '}
                   <Box component="span" fontWeight="700">
                     {songClicked}

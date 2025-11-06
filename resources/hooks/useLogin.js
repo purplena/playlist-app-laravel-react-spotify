@@ -1,14 +1,14 @@
-import { apiUrl } from '../js/App';
 import axios from 'axios';
+import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
-export const useLogin = () => {  
+export const useLogin = () => {
   const { setUser } = useStore();
 
-  const login = (data) => {   
+  const login = (data) => {
     return axios
       .post(`${apiUrl}/user/login`, {
-        ...data
+        ...data,
       })
       .then((response) => {
         if (response.data.user) {
@@ -19,7 +19,7 @@ export const useLogin = () => {
       })
       .catch((error) => {
         const serverData = error?.response?.data || {};
-        
+
         return { success: false, errors: serverData };
       });
   };

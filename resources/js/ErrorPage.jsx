@@ -1,7 +1,7 @@
 import React from 'react';
 import { generatePath, useRouteError } from 'react-router-dom';
-import { indigo } from '@mui/material/colors';
 import { Box, Typography } from '@mui/material';
+import { indigo } from '@mui/material/colors';
 import LinkButton from '../components/Button/LinkButton';
 
 export default function ErrorPage() {

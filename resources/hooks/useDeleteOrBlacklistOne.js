@@ -7,12 +7,7 @@ export const actions = {
   destroyRequestedSong: 3,
 };
 
-export const useDeleteOrBlacklistOne = ({
-  action,
-  setOpen,
-  onClick,
-  itemId,
-}) => {
+export const useDeleteOrBlacklistOne = ({ action, setOpen, onClick, itemId }) => {
   const deleteOrBlacklist = () => {
     const endpoint = (function () {
       switch (action) {

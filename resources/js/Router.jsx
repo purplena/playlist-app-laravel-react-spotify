@@ -1,23 +1,23 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Root from './Root';
-import ClientRoot from './ClientRoot';
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import LandingPage from '../pages/LandingPage';
-import SearchSong from '../pages/SearchSong';
-import RequestedSongs from '../pages/RequestedSongs';
-import SignUp from '../pages/SignUp';
-import CompanySignUp from '../pages/CompanySignUp';
-import CompanyRoot from './CompanyRoot';
-import CompanyLogin from '../pages/CompanyLogin';
-import CompanyHome from '../pages/CompanyHome';
-import ProtectedCompanyRoot from './ProtectedCompanyRoot';
-import CompanyRequestedSongs from '../pages/CompanyRequestedSongs';
 import CompanyBlacklist from '../pages/CompanyBlacklist';
-import ErrorPage from './ErrorPage';
 import CompanyEdit from '../pages/CompanyEdit';
+import CompanyHome from '../pages/CompanyHome';
 import CompanyInfo from '../pages/CompanyInfo';
+import CompanyLogin from '../pages/CompanyLogin';
 import CompanyMenu from '../pages/CompanyMenu';
+import CompanyRequestedSongs from '../pages/CompanyRequestedSongs';
+import CompanySignUp from '../pages/CompanySignUp';
+import Home from '../pages/Home';
+import LandingPage from '../pages/LandingPage';
+import Login from '../pages/Login';
+import RequestedSongs from '../pages/RequestedSongs';
+import SearchSong from '../pages/SearchSong';
+import SignUp from '../pages/SignUp';
+import ClientRoot from './ClientRoot';
+import CompanyRoot from './CompanyRoot';
+import ErrorPage from './ErrorPage';
+import ProtectedCompanyRoot from './ProtectedCompanyRoot';
+import Root from './Root';
 
 export const router = createBrowserRouter([
   {

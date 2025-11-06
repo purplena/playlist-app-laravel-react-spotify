@@ -1,20 +1,14 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
-import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
-import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
+import { Box, Grid, Stack, Typography } from '@mui/material';
+import LinkButton from '../components/Button/LinkButton';
+import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
 import { useStore } from '../js/useStore';
 
 const CompanyInfo = () => {
   const { user } = useStore();
 
   return (
-    <Stack
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
-      mt={6}
-      mb={10}
-    >
+    <Stack direction="column" justifyContent="center" alignItems="center" mt={6} mb={10}>
       <Stack
         direction="column"
         justifyContent="center"
@@ -30,11 +24,11 @@ const CompanyInfo = () => {
             Gardez à jour vos informations !
           </Typography>
           <Typography textAlign="center" variant="h6" component="h2">
-                  {"Nom d'entreprise: "}
-                  <Box component="span" fontWeight="700">
-                    {user?.company?.name}
-                  </Box>
-                </Typography>
+            {"Nom d'entreprise: "}
+            <Box component="span" fontWeight="700">
+              {user?.company?.name}
+            </Box>
+          </Typography>
         </Stack>
 
         <Grid
@@ -54,7 +48,7 @@ const CompanyInfo = () => {
             <StackComponentForGrid>
               <Stack spacing={2}>
                 <Typography variant="body1" component="p">
-                  {"Description: "}
+                  {'Description: '}
                   <Box component="span" fontWeight="700">
                     {user?.company?.description}
                   </Box>
@@ -148,9 +142,7 @@ const CompanyInfo = () => {
                     sx={{
                       width: '50px',
                       height: '50px',
-                      background: user?.company?.font_color
-                        ? user.company.font_color
-                        : '#ffffff',
+                      background: user?.company?.font_color ? user.company.font_color : '#ffffff',
                       border: '1px solid #000',
                       borderRadius: '5px',
                     }}
@@ -179,9 +171,7 @@ const CompanyInfo = () => {
             </StackComponentForGrid>
           </Grid>
         </Grid>
-        <LinkButton to={generatePath('/manager/entreprise/modifier')}>
-          Modifier
-        </LinkButton>
+        <LinkButton to={generatePath('/manager/entreprise/modifier')}>Modifier</LinkButton>
       </Stack>
     </Stack>
   );

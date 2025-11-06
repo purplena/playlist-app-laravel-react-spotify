@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Stack, Typography } from '@mui/material';
-import QrCode2Icon from '@mui/icons-material/QrCode2';
-import LineComponent from '../components/Layout/LineComponent';
-import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import EastIcon from '@mui/icons-material/East';
 import LanguageIcon from '@mui/icons-material/Language';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import SmartphoneIcon from '@mui/icons-material/Smartphone';
+import { Box, Stack, Typography } from '@mui/material';
+import LineComponent from '../components/Layout/LineComponent';
 
 const LandingPage = () => {
   const texts = [
@@ -59,12 +59,7 @@ const LandingPage = () => {
               <Typography variant="h5" component="h2">
                 Scannez un QR-code !
               </Typography>
-              <Stack
-                direction={'row'}
-                spacing={1}
-                justifyContent={'center'}
-                alignItems={'center'}
-              >
+              <Stack direction={'row'} spacing={1} justifyContent={'center'} alignItems={'center'}>
                 <SmartphoneIcon sx={{ fontSize: '48px' }} />
                 <EastIcon sx={{ fontSize: '48px' }} />
                 <QrCode2Icon sx={{ fontSize: '48px' }} />
@@ -90,9 +85,7 @@ const LandingPage = () => {
             {'Contactez notre equipe'}
           </Typography>
           <Stack direction={'row'} spacing={1} alignItems={'center'}>
-            <LanguageIcon
-              sx={{ color: (theme) => theme.palette.text.primary }}
-            />
+            <LanguageIcon sx={{ color: (theme) => theme.palette.text.primary }} />
             <Typography variant="body1" component="p" color="textPrimary">
               https://here.actual.site.web.fr
             </Typography>

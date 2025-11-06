@@ -1,6 +1,6 @@
-import { apiUrl } from '../js/App';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
 export const useMe = () => {

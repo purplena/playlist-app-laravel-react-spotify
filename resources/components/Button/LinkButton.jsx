@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@mui/material';
 import { Link as LinkRouterDom } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 const LinkButton = ({ variant = 'contained', to = '', children, ...props }) => {
   return (
