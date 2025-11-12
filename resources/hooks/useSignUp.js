@@ -1,5 +1,5 @@
-import { apiUrl } from '../js/App';
 import axios from 'axios';
+import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
 export const useSignUp = () => {

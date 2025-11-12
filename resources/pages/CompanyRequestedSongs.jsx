@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
-import CompanyPlaylistCard from '../components/Playlist/CompanyPlaylistCard';
 import ModalWindow from '../components/Layout/ModalWindow';
-import {
-  actions,
-  useDeleteOrBlacklistAll,
-} from '../hooks/userDeleteOrBlacklistAll';
+import CompanyPlaylistCard from '../components/Playlist/CompanyPlaylistCard';
+import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
+import { actions, useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
 import { useStore } from '../js/useStore';
 
 const CompanyRequestedSongs = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { getSongs, requestedSongs, setRequestedSongs } =
-    useGetRequestedSongs(setIsLoading);
+  const { getSongs, requestedSongs, setRequestedSongs } = useGetRequestedSongs(setIsLoading);
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
@@ -23,9 +19,7 @@ const CompanyRequestedSongs = () => {
   const [songClicked, setSongClicked] = useState('');
 
   const handleDeleteOrBlacklist = (id) => {
-    setRequestedSongs((prevSongs) =>
-      prevSongs.filter((song) => song.id !== id)
-    );
+    setRequestedSongs((prevSongs) => prevSongs.filter((song) => song.id !== id));
   };
 
   const handleAllSongsDeleteClick = () => {
@@ -76,25 +70,11 @@ const CompanyRequestedSongs = () => {
       <Typography variant="h4" component="h1" textAlign="center">
         {"Chansons sugérrées aujourd'hui"}
       </Typography>
-      <Stack
-        direction="row"
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
-        mt={4}
-      >
-        <LinkButton
-          disableElevation
-          size="small"
-          onClick={handleAllSongsDeleteClick}
-        >
+      <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" mt={4}>
+        <LinkButton disableElevation size="small" onClick={handleAllSongsDeleteClick}>
           supprimer tout
         </LinkButton>
-        <LinkButton
-          disableElevation
-          size="small"
-          onClick={handleAllSongsBlacklistClick}
-        >
+        <LinkButton disableElevation size="small" onClick={handleAllSongsBlacklistClick}>
           blacklister tout
         </LinkButton>
       </Stack>

@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { apiUrl } from '../js/App';
 import { Grid, Stack, Typography } from '@mui/material';
-import ManagerBlacklistCard from '../components/Playlist/ManagerBlacklistCard';
-
-import ModalWindow from '../components/Layout/ModalWindow';
+import axios from 'axios';
 import LinkButton from '../components/Button/LinkButton';
-import {
-  actions,
-  useDeleteOrBlacklistAll,
-} from '../hooks/userDeleteOrBlacklistAll';
+import ModalWindow from '../components/Layout/ModalWindow';
+import ManagerBlacklistCard from '../components/Playlist/ManagerBlacklistCard';
+import { actions, useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
+import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
 const CompanyBlacklist = () => {
@@ -38,16 +34,14 @@ const CompanyBlacklist = () => {
   };
 
   const handleDelete = (id) => {
-    setBlacklistedSongs((prevSongs) =>
-      prevSongs.filter((song) => song.blacklist_id !== id)
-    );
+    setBlacklistedSongs((prevSongs) => prevSongs.filter((song) => song.blacklist_id !== id));
   };
 
   const handleAllSongsDeleteClick = () => {
     setOpen(true);
     setModalHeader('Attention!');
     setModalMessage(
-      'Voulez-vous supprimer toutes les chansons de votre blacklist ? Après cette action, les utilisateurs pourront les ajouter à nouveau dans votre playlist.'
+      'Voulez-vous supprimer toutes les chansons de votre blacklist ? Après cette action, les utilisateurs pourront les ajouter à nouveau dans votre playlist.',
     );
     setAction('supprimer de blacklist');
     setSongClicked('');
@@ -70,24 +64,12 @@ const CompanyBlacklist = () => {
         <Typography variant="h4" component="h1">
           {'Blacklist'}
         </Typography>
-        <Typography
-          vatiant="body2"
-          component="p"
-          mt={4}
-          maxWidth={500}
-          textAlign="justify"
-        >
+        <Typography vatiant="body2" component="p" mt={4} maxWidth={500} textAlign="justify">
           {
             "Les chansons ajoutées au blacklist sont celles qui peuvent potentiellement perturber l'atmosphère positive que vous cherchez à promouvoir au sein de votre entreprise. Cela inclut des critères tels que des paroles explicites, des messages offensants, ou tout contenu susceptible de créer une ambiance inappropriée."
           }
         </Typography>
-        <Typography
-          vatiant="body2"
-          component="p"
-          mt={4}
-          maxWidth={500}
-          textAlign="justify"
-        >
+        <Typography vatiant="body2" component="p" mt={4} maxWidth={500} textAlign="justify">
           {
             "En ajoutant des chansons à votre blacklist, vous maintenez une culture d'entreprise respectueuse et inclusive, où chacun se sent à l'aise et valorisé."
           }

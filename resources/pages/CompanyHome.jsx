@@ -1,10 +1,9 @@
-import Link from '@mui/material/Link';
-import { Box, Grid, Stack, Typography } from '@mui/material';
-import LinkButton from '../components/Button/LinkButton';
 import { generatePath } from 'react-router-dom';
+import { Box, Grid, Stack, Typography } from '@mui/material';
+import Link from '@mui/material/Link';
+import LinkButton from '../components/Button/LinkButton';
 import StackComponentForGrid from '../components/Layout/StackComponentForGrid';
 import { useStore } from '../js/useStore';
-
 
 const CompanyHome = () => {
   const { user } = useStore();
@@ -20,16 +19,9 @@ const CompanyHome = () => {
     document.body.removeChild(link);
   };
 
-
   return (
     <>
-      <Stack
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        mt={6}
-        mb={10}
-      >
+      <Stack direction="column" justifyContent="center" alignItems="center" mt={6} mb={10}>
         <Stack
           direction="column"
           justifyContent="center"
@@ -41,18 +33,18 @@ const CompanyHome = () => {
             <Typography variant="h3" component="h1" textAlign="center">
               Bienvenue dans votre espace personnel
             </Typography>
-              <Box
-                component="img"
-                sx={{
-                  height: 150,
-                  width: 150,
-                  maxWidth: { xs: 100, md: 150 },
-                  objectFit: 'contain',
-                }}
-                alt="Company Logo"
-                src={'/storage/' + user?.company?.logo}
-                loading='eager'
-              />
+            <Box
+              component="img"
+              sx={{
+                height: 150,
+                width: 150,
+                maxWidth: { xs: 100, md: 150 },
+                objectFit: 'contain',
+              }}
+              alt="Company Logo"
+              src={'/storage/' + user?.company?.logo}
+              loading="eager"
+            />
           </Stack>
           <Grid
             container
@@ -86,24 +78,21 @@ const CompanyHome = () => {
                       Téléchargez et imprimez votre QR-code!
                     </Typography>
                     <Typography variant="body1" component="p" fontSize={'12px'}>
-                      En scannant le QR Code, vos clients accèdent à vos
-                      contenus en temps réel
+                      En scannant le QR Code, vos clients accèdent à vos contenus en temps réel
                     </Typography>
                   </Stack>
-                    <Box
-                      justifySelf={'center'}
-                      alignSelf={'center'}
-                      component="img"
-                      sx={{
-                        width: 70,
-                        maxWidth: { xs: 50, md: 70 },
-                      }}
-                      alt="Company Logo"
-                      src={'/storage/' + user?.company?.qr_code}
-                    />
-                  <LinkButton onClick={handleDownload}>
-                    Télécharger QR-code
-                  </LinkButton>
+                  <Box
+                    justifySelf={'center'}
+                    alignSelf={'center'}
+                    component="img"
+                    sx={{
+                      width: 70,
+                      maxWidth: { xs: 50, md: 70 },
+                    }}
+                    alt="Company Logo"
+                    src={'/storage/' + user?.company?.qr_code}
+                  />
+                  <LinkButton onClick={handleDownload}>Télécharger QR-code</LinkButton>
                 </Stack>
               </StackComponentForGrid>
             </Grid>
@@ -115,11 +104,7 @@ const CompanyHome = () => {
                 {spotifyPlaylistIdd ? (
                   <>
                     <Stack spacing={1}>
-                      <Typography
-                        variant="body1"
-                        component="p"
-                        fontWeight={600}
-                      >
+                      <Typography variant="body1" component="p" fontWeight={600}>
                         {'Vous êtes connecté(e) à Spotify'}
                       </Typography>
                       <Typography
@@ -147,9 +132,7 @@ const CompanyHome = () => {
                       <Typography variant="body1" component="p">
                         {"Gerez vos chansons d'aujourd'hui"}
                       </Typography>
-                      <LinkButton to={generatePath('/manager/songs')}>
-                        {'Chansons'}
-                      </LinkButton>
+                      <LinkButton to={generatePath('/manager/songs')}>{'Chansons'}</LinkButton>
                     </Stack>
                     <Stack>
                       <Typography variant="body1" component="p">
@@ -158,8 +141,7 @@ const CompanyHome = () => {
                       <LinkButton
                         to={generatePath('/manager/blacklist')}
                         sx={{
-                          backgroundColor: (theme) =>
-                            theme.palette.primary.main,
+                          backgroundColor: (theme) => theme.palette.primary.main,
                         }}
                       >
                         {'Blacklist'}
@@ -180,9 +162,7 @@ const CompanyHome = () => {
                         }
                       </Typography>
                       <Typography variant="body1" component="p">
-                        {
-                          'Pour commencer cette aventure inoubliable connectez-vous à Spotify!'
-                        }
+                        {'Pour commencer cette aventure inoubliable connectez-vous à Spotify!'}
                       </Typography>
                     </Stack>
 
@@ -201,8 +181,7 @@ const CompanyHome = () => {
                         borderRadius: '4px',
                         textAlign: 'center',
                         '&:hover': {
-                          backgroundColor: (theme) =>
-                            theme.palette.primary.dark,
+                          backgroundColor: (theme) => theme.palette.primary.dark,
                           color: '#ffffff',
                           textDecoration: 'none',
                         },
@@ -221,18 +200,15 @@ const CompanyHome = () => {
               <StackComponentForGrid>
                 <Stack spacing={2}>
                   <Typography variant="body1" component="p">
-                    En créant votre carte en ligne, vous pouvez
-                    significativement simplifier le processus de choix et
-                    améliorer la satisfaction globale de vos clients.
+                    En créant votre carte en ligne, vous pouvez significativement simplifier le
+                    processus de choix et améliorer la satisfaction globale de vos clients.
                   </Typography>
                   <Typography variant="body1" component="p">
-                    Suivez des instructions simples pour créer et mettre à jour
-                    la carte de votre établissement !
+                    Suivez des instructions simples pour créer et mettre à jour la carte de votre
+                    établissement !
                   </Typography>
                 </Stack>
-                <LinkButton to={generatePath('/manager/carte')}>
-                  Gerer la carte
-                </LinkButton>
+                <LinkButton to={generatePath('/manager/carte')}>Gerer la carte</LinkButton>
               </StackComponentForGrid>
             </Grid>
           </Grid>

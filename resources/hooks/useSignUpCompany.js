@@ -1,5 +1,5 @@
-import { apiUrl } from '../js/App';
 import axios from 'axios';
+import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
 export const actionController = {
@@ -17,10 +17,7 @@ export const useSignUpCompany = ({ action }) => {
     });
 
     const requestParams = {
-      endpoint:
-        action === actionController.storeCompany
-          ? 'manager/register'
-          : 'manager/update',
+      endpoint: action === actionController.storeCompany ? 'manager/register' : 'manager/update',
       method: axios.post,
     };
 

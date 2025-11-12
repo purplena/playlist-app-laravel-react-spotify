@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+import { useLocation, useNavigate } from 'react-router';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Menu } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
 import { useLogout } from '../../hooks/useLogout';
-import { useNavigate, useLocation } from 'react-router';
-import MenuItemCustom from '../Menu/MenuItemCustom';
 import { useStore } from '../../js/useStore';
+import MenuItemCustom from '../Menu/MenuItemCustom';
 
 const ButtonAppBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -16,7 +16,9 @@ const ButtonAppBar = () => {
   const { user, logout } = useLogout();
   const navigate = useNavigate();
   const location = useLocation();
-  const { company: {slug: companySlug} } = useStore();
+  const {
+    company: { slug: companySlug },
+  } = useStore();
 
   const handleLogout = async () => {
     const response = await logout();
@@ -25,7 +27,7 @@ const ButtonAppBar = () => {
     }
   };
 
-  const handleClick = (event) => { 
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -33,16 +35,15 @@ const ButtonAppBar = () => {
     setAnchorEl(null);
   };
 
-
   const handleLogin = () => {
     navigate(`/${companySlug}/login`, { state: { from: location } });
     handleClose();
-  }
+  };
 
   const handleNavigate = (path) => {
     handleClose();
-    navigate(path)
-  }
+    navigate(path);
+  };
 
   const menuItems = [
     {
@@ -59,14 +60,13 @@ const ButtonAppBar = () => {
     },
   ];
 
-
   return (
     <>
       <AppBar position="static" sx={{ boxShadow: 'none' }}>
-        <Toolbar 
+        <Toolbar
           sx={{
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <Box
@@ -117,20 +117,13 @@ const ButtonAppBar = () => {
             />
           ))}
           {user ? (
-            <MenuItemCustom
-              label={'Se deconnecter'}
-              onClickHandler={handleLogout}
-            />
+            <MenuItemCustom label={'Se deconnecter'} onClickHandler={handleLogout} />
           ) : (
-            <MenuItemCustom
-              label={'Se connecter'}
-              onClickHandler={handleLogin}
-            />
-
+            <MenuItemCustom label={'Se connecter'} onClickHandler={handleLogin} />
           )}
         </Box>
       </Menu>
-      </>
+    </>
   );
 };
 

@@ -1,27 +1,32 @@
-import { useState } from 'react';
-import { Stack, Typography } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import { useSignUp } from '../hooks/useSignUp';
-import { useNavigate } from 'react-router';
-import { useStore } from '../js/useStore';
-import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { userFormInputs } from '../helpers/generalInfoFields';
-import TextFieldCustom from '../components/CompanyForm/TextFieldCustom';
+import { useNavigate } from 'react-router';
+import SendIcon from '@mui/icons-material/Send';
+import { Stack, Typography } from '@mui/material';
 import FormBtn from '../components/CompanyForm/FormBtn';
+import TextFieldCustom from '../components/CompanyForm/TextFieldCustom';
+import { userFormInputs } from '../helpers/generalInfoFields';
 import { serverErrorsHandler } from '../helpers/serverErrorsHandler';
+import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
+import { useSignUp } from '../hooks/useSignUp';
+import { useStore } from '../js/useStore';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const SignUp = () => {
   const { t } = useTranslation();
-  const [submitLoader, setSubmitLoader] = useState(false)
-  const { control, handleSubmit, setError, formState: { errors } } = useForm({
+  const [submitLoader, setSubmitLoader] = useState(false);
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       email: '',
       password: '',
       username: '',
     },
-  })
+  });
   const { signup } = useSignUp();
   const navigate = useNavigate();
   const { company } = useStore();
@@ -30,7 +35,7 @@ const SignUp = () => {
 
   const onSubmit = async (data) => {
     setSubmitLoader(true);
-    const response = await signup({...data});
+    const response = await signup({ ...data });
     if (!response.success) {
       setSubmitLoader(false);
       serverErrorsHandler(response.errors, setError);
@@ -42,12 +47,7 @@ const SignUp = () => {
 
   return (
     <>
-      <Stack
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={2}
-      >
+      <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
         <Typography variant="h5" component="h1" textAlign="center">
           Vous êtes presque là!
         </Typography>
@@ -73,18 +73,10 @@ const SignUp = () => {
                 label={input.label}
                 type={input.type}
                 errors={errors}
-                 rules={
-                  input.required
-                    ? { required: `${input.label} est obligatoire` }
-                    : {}
-                }
+                rules={input.required ? { required: `${input.label} est obligatoire` } : {}}
               />
             ))}
-            <FormBtn
-              label={t('buttons.btn_signup')}
-              submitLoader={submitLoader}
-              Icon={SendIcon}
-            />
+            <FormBtn label={t('buttons.btn_signup')} submitLoader={submitLoader} Icon={SendIcon} />
           </Stack>
         </form>
       </Stack>

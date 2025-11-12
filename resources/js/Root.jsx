@@ -1,23 +1,17 @@
-import { CssBaseline, ThemeProvider } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import { useMe } from '../hooks/useMe';
-import { useCustomTheme } from '../helpers/useCustomTheme';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import CustomLoader from '../components/Loader/Loader';
-
+import { useCustomTheme } from '../helpers/useCustomTheme';
+import { useMe } from '../hooks/useMe';
 
 export default function Root() {
   const { isLoading } = useMe();
   const theme = useCustomTheme({});
 
-
-    return  (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {isLoading ? <CustomLoader/> : <Outlet/>}
-      </ThemeProvider>
-    )
-    
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {isLoading ? <CustomLoader /> : <Outlet />}
+    </ThemeProvider>
+  );
 }
-
-
-

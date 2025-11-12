@@ -1,5 +1,5 @@
-import { Box, Stack, Typography } from '@mui/material';
 import { generatePath, useParams } from 'react-router-dom';
+import { Box, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
 import LineComponent from '../components/Layout/LineComponent';
 import { useStore } from '../js/useStore';
@@ -7,7 +7,6 @@ import { useStore } from '../js/useStore';
 const Home = () => {
   const { companySlug } = useParams();
   const { company } = useStore();
-
 
   const menuItems = [
     {
@@ -22,7 +21,7 @@ const Home = () => {
   ];
 
   return (
-<>
+    <>
       <Stack direction="column" spacing={5}>
         <Typography variant="h1" component="h1">
           Profitons de ce moment !
@@ -33,12 +32,7 @@ const Home = () => {
             <Typography variant="h4" component="h2">
               Bienvenue chez
             </Typography>
-            <Typography
-              variant="h4"
-              component="h2"
-              fontWeight={800}
-              textAlign={'right'}
-            >
+            <Typography variant="h4" component="h2" fontWeight={800} textAlign={'right'}>
               {company.name}
             </Typography>
           </Stack>

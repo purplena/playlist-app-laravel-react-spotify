@@ -1,10 +1,7 @@
 import React from 'react';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
+import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
-import {
-  actions,
-  useDeleteOrBlacklistOne,
-} from '../../hooks/useDeleteOrBlacklistOne';
 
 const ManagerBlacklistCard = ({
   index,
@@ -21,7 +18,7 @@ const ManagerBlacklistCard = ({
     setOpen(true);
     setModalHeader('Attention!');
     setModalMessage(
-      "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist."
+      "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist.",
     );
     setSongClicked(blacklistedSong.song_data.song_name);
     setAction('supprimer de blacklist');

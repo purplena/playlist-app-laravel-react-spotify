@@ -1,22 +1,10 @@
 import React from 'react';
 import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 
-const LoginInputs = ({
-  handleLogin,
-  errors,
-  email,
-  setEmail,
-  password,
-  setPassword,
-}) => {
+const LoginInputs = ({ handleLogin, errors, email, setEmail, password, setPassword }) => {
   return (
     <>
-      <Stack
-        direction="column"
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Stack direction="column" spacing={2} justifyContent="center" alignItems="center">
         <Typography variant="h1" component="h1" textAlign="center">
           Vous avez un mot de passe?
         </Typography>
@@ -34,9 +22,7 @@ const LoginInputs = ({
           autoComplete="off"
           textAlign="center"
         >
-          {errors?.loginError && (
-            <Alert severity="error">{errors.loginError}</Alert>
-          )}
+          {errors?.loginError && <Alert severity="error">{errors.loginError}</Alert>}
 
           <TextField
             error={!!errors}

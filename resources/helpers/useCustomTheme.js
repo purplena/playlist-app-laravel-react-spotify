@@ -1,6 +1,6 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
-export const useCustomTheme = ({company}) => {
+export const useCustomTheme = ({ company }) => {
   const primaryColor = company?.background_color ?? '#cff86e';
   const contrastingFontColor = company?.font_color ?? '#000000';
 
