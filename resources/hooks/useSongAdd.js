@@ -1,73 +1,40 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
-export const useSongAdd = (song, setOpen, setModalMessage, setModalHeader) => {
+export const useSongAdd = (song) => {
   const [isAdded, setIsAdded] = useState(song.is_requested);
-  const [isLoading, setIsLoading] = useState(false);
   const intialStateIsAdded = isAdded;
-  const navigate = useNavigate();
-  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+
   const spotifyId = song.spotify_id;
-  const { user } = useStore();
-  const location = useLocation();
+  const { company } = useStore();
 
   const addSong = () => {
-    if (!user) {
-      navigate('/login', { state: { from: location } });
-    }
-
-    if (song.is_requested) {
-      setModalHeader('Oooooups!');
-      setModalMessage('Cette chanson a été déjà suggérée!');
-      setOpen(true);
-      return;
-    }
-
     if (isLoading) return;
-
     setIsLoading(true);
-
-    axios
-      .post(`${apiUrl}/${id}/songs/${spotifyId}/store`, [
-        {
-          spotifyId,
-        },
-      ])
+    setIsAdded(!isAdded);
+    return axios
+      .post(`${apiUrl}/${company.slug}/songs/${spotifyId}/store`, [{ spotifyId }])
       .then((response) => {
-        if (response.data.status === 'added') {
-          setModalHeader('BRAVO!');
-        } else {
-          setModalHeader("C'EST FAIT!");
-        }
-        setModalMessage(response.data.message);
-        setOpen(true);
+        return {
+          status: response.data.status,
+          message: response.data.message,
+        };
       })
       .catch((error) => {
-        if (error.response.data.error === 'forbidden') {
-          setIsAdded(isAdded);
-          setModalHeader('Oooooups!');
-          setModalMessage(error.response.data.message);
-          setOpen(true);
-        } else if (error.response.data.error === 'blacklisted') {
-          setIsAdded(isAdded);
-          setModalHeader('Oooooups!');
-          setModalMessage(error.response.data.message);
-          setOpen(true);
-        } else {
-          setIsAdded(isAdded);
-          setModalHeader('Oooooups!');
-          setModalMessage(error.response.data.message);
-          setOpen(true);
-        }
-        setIsAdded(intialStateIsAdded);
-      })
-      .finally(() => setIsLoading(false));
+        console.log(error);
 
-    setIsAdded(!isAdded);
+        setIsAdded(intialStateIsAdded);
+        return {
+          error: error.response.data.error,
+          message: error?.response?.data?.message,
+        };
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return {

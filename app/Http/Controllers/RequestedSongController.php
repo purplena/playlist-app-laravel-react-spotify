@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Throwable;
 
 class RequestedSongController extends Controller
 {
@@ -126,20 +127,27 @@ class RequestedSongController extends Controller
                     ], Response::HTTP_BAD_REQUEST);
                 }
 
-                $song = Song::where(['spotify_id' => $request->spotifyId])
-                    ->firstOr(function () use ($request) {
-                        return Song::create($this->getTrackInfo($request->spotifyId));
-                    });
-                RequestedSong::create([
-                    'song_id' => $song->id,
-                    'user_id' => auth()->id(),
-                    'company_id' => $company->id,
-                ]);
+                try {
+                    $song = Song::where(['spotify_id' => $request->spotifyId])
+                        ->firstOr(function () use ($request) {
+                            return Song::create($this->getTrackInfo($request->spotifyId));
+                        });
+                    RequestedSong::create([
+                        'song_id' => $song->id,
+                        'user_id' => auth()->id(),
+                        'company_id' => $company->id,
+                    ]);
 
-                return response()->json([
-                    'message' => 'Bravo! Vous avez suggéré une chanson!',
-                    'status' => 'added',
-                ], Response::HTTP_CREATED);
+                    return response()->json([
+                        'message' => 'Bravo! Vous avez suggéré une chanson!',
+                        'status' => 'added',
+                    ], Response::HTTP_CREATED);
+                } catch (Throwable $e) {
+                    return response()->json([
+                        'message' => 'Une erreur est survenue',
+                        'error' => 'unknown server error',
+                    ], Response::HTTP_BAD_REQUEST);
+                }
             }
         }
     }
