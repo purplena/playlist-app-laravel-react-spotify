@@ -3,19 +3,31 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useStore } from '../../js/useStore';
+import { useNavigate } from 'react-router-dom';
 
-const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader }) => {
-  const { user } = useStore();
-  const { upvote, isUpvoted, likes } = useUpvote(
-    requestedSong,
-    user,
-    setOpen,
-    setModalMessage,
-    setModalHeader,
-  );
+const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect }) => {
+  const navigate = useNavigate();
+  const { user, company } = useStore();
+  const { upvote, isUpvoted, likes } = useUpvote(requestedSong);
 
-  const handleUpvote = () => {
-    upvote();
+  const handleUpvote = async () => {
+     if (!user) {
+      navigate(`/${company.slug}/login`);
+    }
+    const response = await upvote();
+
+    if(response.status === 'like_status') {
+      setModalHeader("C'EST FAIT!");
+      setModalMessage(response.message);
+      setOpen(true);
+      setModalRedirect('song_suggest')
+    } 
+    if(response.error) {
+      setModalHeader('Oooooups!');
+      setModalMessage(response.message);
+      setOpen(true);
+      setModalRedirect('song_suggest')
+    }
   };
 
   return (
