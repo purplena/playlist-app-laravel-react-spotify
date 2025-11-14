@@ -74,7 +74,7 @@ const RequestedSongs = () => {
         <LinkButton
           disableElevation
           size="small"
-          to={generatePath(`'/${company.slug}/songs/search'`)}
+          to={generatePath(`/${company.slug}/songs/search`)}
         >
           {t('buttons.btn_suggest_song')}
         </LinkButton>

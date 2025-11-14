@@ -1,9 +1,5 @@
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
-import { useUpvote } from '../../hooks/useUpvote';
-import { useStore } from '../../js/useStore';
 import LinkButton from '../Button/LinkButton';
 
 const PlaylistCard = ({
@@ -17,18 +13,7 @@ const PlaylistCard = ({
   setActionHandler,
   setSongClicked,
 }) => {
-  const { user } = useStore();
-  const { upvote, isUpvoted, likes } = useUpvote(
-    requestedSong,
-    user,
-    setOpen,
-    setModalMessage,
-    setModalHeader,
-  );
-
-  const handleUpvote = () => {
-    upvote();
-  };
+  const likes = requestedSong.upvotes_count;
 
   const handleSongDeleteClick = () => {
     setOpen(true);
@@ -104,55 +89,38 @@ const PlaylistCard = ({
               #{index + 1}
             </Typography>
 
-            <Stack direction="row" spacing={2} alignItems="center">
-              {user?.company ? (
-                <>
-                  <Typography variant="body2" sx={{ fontSize: '10px' }}>
-                    {likes} {likes === 1 ? ' like' : ' likes'}
-                  </Typography>
-                  <LinkButton
-                    onClick={handleSongDeleteClick}
-                    sx={{
-                      fontSize: '10px',
-                      '&:hover': {
-                        backgroundColor: (theme) => theme.palette.primary.dark,
-                        color: (theme) => theme.palette.text.secondary,
-                      },
-                    }}
-                    variant="text"
-                    size="small"
-                  >
-                    Supprimer
-                  </LinkButton>
-                  <LinkButton
-                    sx={{
-                      fontSize: '10px',
-                      '&:hover': {
-                        backgroundColor: (theme) => theme.palette.primary.dark,
-                        color: (theme) => theme.palette.text.secondary,
-                      },
-                    }}
-                    variant="text"
-                    size="small"
-                    onClick={handleSongBlacklistingClick}
-                  >
-                    Blacklister
-                  </LinkButton>
-                </>
-              ) : (
-                <>
-                  <Typography variant="body2">
-                    {likes} {likes === 1 ? ' like' : ' likes'}
-                  </Typography>
-                  <Typography sx={{ cursor: 'pointer' }} variant="body2" onClick={handleUpvote}>
-                    {isUpvoted ? (
-                      <ThumbUpIcon sx={{ color: (theme) => theme.palette.primary.dark }} />
-                    ) : (
-                      <ThumbUpOutlinedIcon sx={{ color: (theme) => theme.palette.primary.dark }} />
-                    )}
-                  </Typography>
-                </>
-              )}
+            <Stack direction="row" spacing={2} alignItems="center">  
+              <Typography variant="body2" sx={{ fontSize: '10px' }}>
+                {likes} {likes === 1 ? ' like' : ' likes'}
+              </Typography>
+              <LinkButton
+                onClick={handleSongDeleteClick}
+                sx={{
+                  fontSize: '10px',
+                  '&:hover': {
+                    backgroundColor: (theme) => theme.palette.primary.dark,
+                    color: (theme) => theme.palette.text.secondary,
+                  },
+                }}
+                variant="text"
+                size="small"
+              >
+                Supprimer
+              </LinkButton>
+              <LinkButton
+                sx={{
+                  fontSize: '10px',
+                  '&:hover': {
+                    backgroundColor: (theme) => theme.palette.primary.dark,
+                    color: (theme) => theme.palette.text.secondary,
+                  },
+                }}
+                variant="text"
+                size="small"
+                onClick={handleSongBlacklistingClick}
+              >
+                Blacklister
+              </LinkButton>
             </Stack>
           </Stack>
         </Stack>

@@ -34,18 +34,18 @@ export default function ModalWindow({
   action = '',
   actionHandler = '',
   songClicked = '',
-  modalRedirect
+  modalRedirect = ''
 }) {
   const { company } = useStore();
   const { t } = useTranslation();
 
   const redirects = {
     'song_list': {
-      path: `/${company.slug}/songs`,
+      path: `/${company?.slug}/songs`,
       label: t('buttons.btn_song_list')
     },
     'song_suggest': {
-      path: `/${company.slug}/songs/search`, 
+      path: `/${company?.slug}/songs/search`, 
       label: t('buttons.btn_suggest_song')
     }
   }
