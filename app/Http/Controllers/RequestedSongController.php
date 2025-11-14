@@ -14,7 +14,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
-use Throwable;
 
 class RequestedSongController extends Controller
 {
@@ -59,26 +58,36 @@ class RequestedSongController extends Controller
 
         if ($userUpvote) {
             $userUpvote->delete();
-        } else {
-            $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
-            if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
-                $oldestRequestedSong = $upvotes->oldest('created_at')->first()->created_at;
-                $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
 
-                return response()->json([
-                    'message' => 'Vous avez déjà liké '.RequestedSong::MAX_SONGS_UPVOTED.' chansons. 
-                        Vous pouvez liker plus de chansons en '.$differenceInMinutes.' minutes.',
-                    'error' => 'upvote_limit',
-                ], Response::HTTP_BAD_REQUEST);
-            }
-
-            Upvote::create([
-                'requested_song_id' => $requestedSong->id,
-                'user_id' => auth()->id(),
-            ]);
+            return response()->json([
+                'message' => 'Vous avez supprimé votre like',
+                'status' => 'like_status',
+            ], Response::HTTP_OK);
         }
 
-        return response()->json(['status' => 'ok'], Response::HTTP_OK);
+        $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
+
+        if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
+            $oldestRequestedSong = $upvotes->oldest('created_at')->first()->created_at;
+            $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
+
+            return response()->json([
+                'message' => 'Vous avez déjà liké '.RequestedSong::MAX_SONGS_UPVOTED.' chansons. 
+                        Vous pouvez liker plus de chansons en '.$differenceInMinutes.' minutes.',
+                'error' => 'upvote_limit',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        Upvote::create([
+            'requested_song_id' => $requestedSong->id,
+            'user_id' => auth()->id(),
+        ]);
+
+        return response()->json([
+            'message' => 'Merci pour votre like',
+            'status' => 'like_status',
+        ], Response::HTTP_OK);
+
     }
 
     /**
@@ -127,27 +136,20 @@ class RequestedSongController extends Controller
                     ], Response::HTTP_BAD_REQUEST);
                 }
 
-                try {
-                    $song = Song::where(['spotify_id' => $request->spotifyId])
-                        ->firstOr(function () use ($request) {
-                            return Song::create($this->getTrackInfo($request->spotifyId));
-                        });
-                    RequestedSong::create([
-                        'song_id' => $song->id,
-                        'user_id' => auth()->id(),
-                        'company_id' => $company->id,
-                    ]);
+                $song = Song::where(['spotify_id' => $request->spotifyId])
+                    ->firstOr(function () use ($request) {
+                        return Song::create($this->getTrackInfo($request->spotifyId));
+                    });
+                RequestedSong::create([
+                    'song_id' => $song->id,
+                    'user_id' => auth()->id(),
+                    'company_id' => $company->id,
+                ]);
 
-                    return response()->json([
-                        'message' => 'Bravo! Vous avez suggéré une chanson!',
-                        'status' => 'added',
-                    ], Response::HTTP_CREATED);
-                } catch (Throwable $e) {
-                    return response()->json([
-                        'message' => 'Une erreur est survenue',
-                        'error' => 'unknown server error',
-                    ], Response::HTTP_BAD_REQUEST);
-                }
+                return response()->json([
+                    'message' => 'Bravo! Vous avez suggéré une chanson!',
+                    'status' => 'added',
+                ], Response::HTTP_CREATED);
             }
         }
     }

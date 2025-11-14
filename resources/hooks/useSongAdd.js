@@ -4,8 +4,8 @@ import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
 export const useSongAdd = (song) => {
-  const [isAdded, setIsAdded] = useState(song.is_requested);
-  const intialStateIsAdded = isAdded;
+  const intialStateIsAdded = song.is_requested;
+  const [isAdded, setIsAdded] = useState(intialStateIsAdded);
   const [isLoading, setIsLoading] = useState(false);
 
   const spotifyId = song.spotify_id;
@@ -24,8 +24,6 @@ export const useSongAdd = (song) => {
         };
       })
       .catch((error) => {
-        console.log(error);
-
         setIsAdded(intialStateIsAdded);
         return {
           error: error.response.data.error,

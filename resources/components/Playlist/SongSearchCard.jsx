@@ -9,10 +9,9 @@ import { useSongAdd } from '../../hooks/useSongAdd';
 import { useStore } from '../../js/useStore';
 import { useNavigate } from 'react-router-dom';
 
-export default function SongSearchCard({ song, setOpen, setModalMessage, setModalHeader }) {
+export default function SongSearchCard({ song, setOpen, setModalMessage, setModalHeader, setModalRedirect }) {
   const { user, company } = useStore();
   const navigate = useNavigate();
-
   const { addSong, isAdded } = useSongAdd(song);
 
   const handleSongAdd = async () => {
@@ -25,16 +24,19 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
       setModalHeader('BRAVO!');
       setModalMessage(response.message);
       setOpen(true);
+      setModalRedirect('song_list');
     } 
     else if (response.status === 'deleted') {
       setModalHeader("C'EST FAIT!");
       setModalMessage(response.message);
       setOpen(true);
+      setModalRedirect('song_list');
     }
     else if (response.error) {
       setModalHeader('Oooooups!');
       setModalMessage(response.message);
       setOpen(true);
+      setModalRedirect('song_list');
     }    
   };
 

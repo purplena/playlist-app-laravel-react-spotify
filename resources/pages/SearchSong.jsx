@@ -14,6 +14,7 @@ function Search() {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
+  const [modalRedirect, setModalRedirect] = useState('');
 
 
   return (
@@ -70,6 +71,7 @@ function Search() {
                   setOpen={setOpen}
                   setModalMessage={setModalMessage}
                   setModalHeader={setModalHeader}
+                  setModalRedirect={setModalRedirect}
                   key={song.spotify_id}
                 />
               );
@@ -85,6 +87,7 @@ function Search() {
           setOpen={setOpen}
           modalMessage={modalMessage}
           modalHeader={modalHeader}
+          modalRedirect={modalRedirect}
           user={user}
         />
       ) : (
