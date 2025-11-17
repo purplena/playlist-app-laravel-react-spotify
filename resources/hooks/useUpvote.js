@@ -14,18 +14,12 @@ export const useUpvote = (requestedSong) => {
   const upvote = () => {
     if (isLoading) return;
 
+    setIsLoading(true);
     setIsUpvoted(!isUpvoted);
     isUpvoted ? setLikes(likes - 1) : setLikes(likes + 1);
-    setIsLoading(true);
 
     return axios
       .post(`${apiUrl}/${company.slug}/songs/${requestedSong.id}/upvote`)
-      .then((response) => {
-        return {
-          status: response.data.status,
-          message: response.data.message,
-        };
-      })
       .catch((error) => {
         setIsUpvoted(intialStateUpvote);
         setLikes(intialStateLikes);

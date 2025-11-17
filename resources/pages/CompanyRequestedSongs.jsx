@@ -4,7 +4,7 @@ import LinkButton from '../components/Button/LinkButton';
 import ModalWindow from '../components/Layout/ModalWindow';
 import CompanyPlaylistCard from '../components/Playlist/CompanyPlaylistCard';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
-import { actions, useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
+import { actions, useDeleteOrBlacklistAll } from '../hooks/useDeleteOrBlacklistAll';
 import { useStore } from '../js/useStore';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,16 @@ const CompanyRequestedSongs = () => {
   const handleDeleteOrBlacklist = (id) => {
     setRequestedSongs((prevSongs) => prevSongs.filter((song) => song.id !== id));
   };
+
+  
+  // Check the functionality
+    const deleteAllSongs = useDeleteOrBlacklistAll({
+      action: actions.destroyAllRequestedSongs
+    })
+
+    // const blacklistAllSongs = useDeleteOrBlacklistAll({
+    //   action: actions.storeAllInBlacklist
+    // })
 
   const handleAllSongsDeleteClick = () => {
     setOpen(true);
@@ -54,14 +64,31 @@ const CompanyRequestedSongs = () => {
     deleteOrBlacklistAll();
   };
 
-  const handleAllSongsDelete = () => {
-    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
-      action: actions.destroyAllRequestedSongs,
-      setOpen,
-      setSongs: setRequestedSongs,
-    });
+  // const handleAllSongsDelete = () => {
+  //   const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
+  //     action: actions.destroyAllRequestedSongs,
+  //     setOpen,
+  //     setSongs: setRequestedSongs,
+  //   });
 
-    deleteOrBlacklistAll();
+  //   deleteOrBlacklistAll();
+  // };
+
+  const handleAllSongsDelete = async () => {
+    const response = await deleteAllSongs.deleteOrBlacklistAll()
+
+    if (response.status) {
+      setOpen(false); 
+      setRequestedSongs([]);
+    }
+
+    // const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
+    //   action: actions.destroyAllRequestedSongs,
+    //   setOpen,
+    //   setSongs: setRequestedSongs,
+    // });
+
+    // deleteOrBlacklistAll();
   };
 
   const getRequestedSongs = async () => {

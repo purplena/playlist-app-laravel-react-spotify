@@ -169,7 +169,7 @@ class RequestedSongController extends Controller
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
 
-        return response()->json();
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
     public function destroyAll(): JsonResponse
@@ -181,6 +181,6 @@ class RequestedSongController extends Controller
         });
         $company->requestedSongs()->whereDate('created_at', today())->delete();
 
-        return response()->json();
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 }

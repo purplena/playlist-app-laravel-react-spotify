@@ -2,29 +2,29 @@ import axios from 'axios';
 import { apiUrl as baseUrl } from '../js/App';
 
 export const actions = {
-  storeBlacklist: 1,
-  destroyBlacklist: 2,
-  destroyRequestedSong: 3,
+  storeAllInBlacklist: 1,
+  destroyAllRequestedSongs: 2,
+  destroyAllBlacklist: 3,
 };
 
-export const useDeleteOrBlacklistOne = ({ action, itemId }) => {
-  const deleteOrBlacklist = () => {
+export const useDeleteOrBlacklistAll = ({ action }) => {
+  const deleteOrBlacklistAll = () => {
     const apiCallProps = (function () {
       switch (action) {
-        case actions.storeBlacklist:
+        case actions.storeAllInBlacklist:
           return {
             method: axios.post,
-            endpoint: `manager/blacklist/store/${itemId}`,
+            endpoint: 'manager/blacklist/store',
           };
-        case actions.destroyBlacklist:
+        case actions.destroyAllRequestedSongs:
           return {
             method: axios.delete,
-            endpoint: `manager/blacklist/destroy/${itemId}`,
+            endpoint: 'manager/songs/destroy',
           };
-        case actions.destroyRequestedSong:
+        case actions.destroyAllBlacklist:
           return {
             method: axios.delete,
-            endpoint: `manager/songs/destroy/${itemId}`,
+            endpoint: 'manager/blacklist/destroy',
           };
       }
     })();
@@ -42,6 +42,6 @@ export const useDeleteOrBlacklistOne = ({ action, itemId }) => {
   };
 
   return {
-    deleteOrBlacklist,
+    deleteOrBlacklistAll,
   };
 };

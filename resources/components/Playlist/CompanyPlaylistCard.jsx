@@ -1,6 +1,7 @@
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
+import SongTrancatedComponent from './SongTrancatedComponent';
 
 const PlaylistCard = ({
   requestedSong,
@@ -14,6 +15,26 @@ const PlaylistCard = ({
   setSongClicked,
 }) => {
   const likes = requestedSong.upvotes_count;
+  const deleteSong = useDeleteOrBlacklistOne({
+    action: actions.destroyRequestedSong,
+    itemId: requestedSong.id,
+  });
+
+  const blacklistSong = useDeleteOrBlacklistOne({
+    action: actions.storeBlacklist,
+    itemId: requestedSong.id,
+  });
+
+  const executeAction = async (actionFn) => {
+    const response = await actionFn();
+    if (response.status) {
+      setOpen(false);
+      onClick(requestedSong.id);
+    }
+  };
+
+  const handleSongDelete = () =>
+    executeAction(deleteSong.deleteOrBlacklist);
 
   const handleSongDeleteClick = () => {
     setOpen(true);
@@ -24,16 +45,8 @@ const PlaylistCard = ({
     setActionHandler(() => handleSongDelete);
   };
 
-  const handleSongDelete = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
-      action: actions.destroyRequestedSong,
-      setOpen,
-      onClick,
-      itemId: requestedSong.id,
-    });
-
-    deleteOrBlacklist();
-  };
+  const handleSongBlacklisting = () =>
+    executeAction(blacklistSong.deleteOrBlacklist);
 
   const handleSongBlacklistingClick = () => {
     setOpen(true);
@@ -42,17 +55,6 @@ const PlaylistCard = ({
     setSongClicked(requestedSong.song.song_data.song_name);
     setAction('blacklister');
     setActionHandler(() => handleSongBlacklisting);
-  };
-
-  const handleSongBlacklisting = () => {
-    const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
-      action: actions.storeBlacklist,
-      setOpen,
-      onClick,
-      itemId: requestedSong.id,
-    });
-
-    deleteOrBlacklist();
   };
 
   return (
@@ -74,11 +76,13 @@ const PlaylistCard = ({
               <SongTrancatedComponent
                 song={requestedSong.song.song_data.song_name}
                 label={'Titre'}
+                maxNameLength='16'
                 fontSize={'14px'}
               />
               <SongTrancatedComponent
                 song={requestedSong.song.song_data.artist_name}
                 label={'Artiste'}
+                maxNameLength='16'
                 fontSize={'14px'}
               />
             </Stack>
@@ -129,21 +133,3 @@ const PlaylistCard = ({
   );
 };
 export default PlaylistCard;
-
-function SongTrancatedComponent({ song, label, ...props }) {
-  const MAX_SONG_NAME_LENGTH = 16;
-  const truncatedSongName =
-    song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
-
-  return (
-    <div>
-      <Typography {...props} gutterBottom variant="body1" component="h2">
-        {' '}
-        {label} {': '}
-        <Box component="span" fontWeight="700">
-          {truncatedSongName}
-        </Box>
-      </Typography>
-    </div>
-  );
-}

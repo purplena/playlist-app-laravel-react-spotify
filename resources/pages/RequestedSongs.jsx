@@ -23,6 +23,47 @@ const RequestedSongs = () => {
   const [modalHeader, setModalHeader] = useState('');
   const [modalRedirect, setModalRedirect] = useState('');  
 
+  const optimisticReorder = (updatedSongId) => {
+  setRequestedSongs((prevSongs) => {
+    
+    const newList = prevSongs.map((song) => {
+  
+      if (song.id === updatedSongId) {
+        if (song.is_upvoted_by) {
+            return {
+            ...song,
+            upvotes_count: song.upvotes_count - 1,
+            is_upvoted_by: false,
+          };
+        }
+        return {
+          ...song,
+          upvotes_count: song.upvotes_count + 1,
+          is_upvoted_by: true,
+        };
+      }
+      return song;
+    });
+
+    newList.sort((a, b) => b.upvotes_count - a.upvotes_count);
+
+    return newList;        
+  });
+};
+
+const silentRefreshRequestedSongs = async () => {
+  const result = await getSongs();
+
+  if (result?.error) return; 
+
+  setRequestedSongs((prevSongs) => {
+    const isSame =
+      JSON.stringify(prevSongs) === JSON.stringify(result.data);
+
+    return isSame ? prevSongs : result.data;
+  });
+};
+
 
   const getRequestedSongs = async () => {
     setIsLoading(true);
@@ -111,6 +152,8 @@ const RequestedSongs = () => {
                       setModalMessage={setModalMessage}
                       setModalHeader={setModalHeader}
                       setModalRedirect={setModalRedirect}
+                      onUpvoteOptimistic={optimisticReorder}
+                      onUpvoteRefetch={silentRefreshRequestedSongs}
                     />
                   );
               })

@@ -4,8 +4,9 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useStore } from '../../js/useStore';
 import { useNavigate } from 'react-router-dom';
+import SongTrancatedComponent from './SongTrancatedComponent';
 
-const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect }) => {
+const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect, onUpvoteOptimistic, onUpvoteRefetch }) => {
   const navigate = useNavigate();
   const { user, company } = useStore();
   const { upvote, isUpvoted, likes } = useUpvote(requestedSong);
@@ -14,14 +15,14 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
      if (!user) {
       navigate(`/${company.slug}/login`);
     }
+    onUpvoteOptimistic(requestedSong.id);
+
     const response = await upvote();
 
-    if(response.status === 'like_status') {
-      setModalHeader("C'EST FAIT!");
-      setModalMessage(response.message);
-      setOpen(true);
-      setModalRedirect('song_suggest')
-    } 
+    if (!response.error) {
+      onUpvoteRefetch(); 
+    }
+
     if(response.error) {
       setModalHeader('Oooooups!');
       setModalMessage(response.message);
@@ -48,11 +49,13 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
             <Stack>
               <SongTrancatedComponent
                 song={requestedSong.song.song_data.song_name}
+                maxNameLength='16'
                 label={'Titre'}
                 fontSize={'14px'}
               />
               <SongTrancatedComponent
                 song={requestedSong.song.song_data.artist_name}
+                maxNameLength='16'
                 label={'Artiste'}
                 fontSize={'14px'}
               />
@@ -83,21 +86,3 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
   );
 };
 export default PlaylistCard;
-
-function SongTrancatedComponent({ song, label, ...props }) {
-  const MAX_SONG_NAME_LENGTH = 16;
-  const truncatedSongName =
-    song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
-
-  return (
-    <div>
-      <Typography {...props} gutterBottom variant="body1" component="h2">
-        {' '}
-        {label} {': '}
-        <Box component="span" fontWeight="700">
-          {truncatedSongName}
-        </Box>
-      </Typography>
-    </div>
-  );
-}

@@ -4,10 +4,10 @@ import { Box, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
 import { useSongAdd } from '../../hooks/useSongAdd';
 import { useStore } from '../../js/useStore';
 import { useNavigate } from 'react-router-dom';
+import SongTrancatedComponent from './SongTrancatedComponent';
 
 export default function SongSearchCard({ song, setOpen, setModalMessage, setModalHeader, setModalRedirect }) {
   const { user, company } = useStore();
@@ -51,8 +51,8 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
             image={song.song_data.album_cover_img}
           />
           <CardContent>
-              <SongTrancatedComponent song={song.song_data.song_name} variant={'body1'}/>
-              <SongTrancatedComponent song={song.song_data.artist_name} variant={'body2'} />
+              <SongTrancatedComponent song={song.song_data.song_name} maxNameLength='20' variant='body2' />
+              <SongTrancatedComponent song={song.song_data.artist_name} maxNameLength='20' variant='body2' />
             <Box onClick={handleSongAdd}>
               {isAdded ? <PlaylistAddCheckIcon /> : <PlaylistAddIcon />}
             </Box>
@@ -62,16 +62,3 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
     </>
   );
 }
-
-function SongTrancatedComponent({ song, variant }) {
-  const MAX_SONG_NAME_LENGTH = 20;
-  const truncatedSongName =
-    song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
-
-  return (
-      <Typography gutterBottom variant={variant} component="p" noWrap>
-        {truncatedSongName}
-      </Typography>
-  );
-}
-

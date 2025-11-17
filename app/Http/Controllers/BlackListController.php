@@ -7,6 +7,7 @@ use App\Models\Blacklist;
 use App\Models\RequestedSong;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 
 class BlackListController extends Controller
 {
@@ -36,7 +37,7 @@ class BlackListController extends Controller
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
 
-        return response()->json();
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
     public function storeAll(): JsonResponse
@@ -54,7 +55,7 @@ class BlackListController extends Controller
 
         $company->requestedSongs()->whereDate('created_at', today())->delete();
 
-        return response()->json();
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
     /**
@@ -64,13 +65,13 @@ class BlackListController extends Controller
     {
         $blacklist->delete();
 
-        return response()->json();
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
     public function destroyAll(): JsonResponse
     {
         auth()->user()->company->blacklistedSongs()->detach();
 
-        return response()->json();
+        return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 }
