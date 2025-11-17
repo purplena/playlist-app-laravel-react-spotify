@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useDebounce } from '@uidotdev/usehooks';
 import axios from 'axios';
 import { apiUrl } from '../js/App';
+import { useStore } from '../js/useStore';
 
 export const useSearchSong = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
-  const { id } = useParams();
+  const { company } = useStore();
 
   const handleInput = (e) => {
     setSearchResults([]);
@@ -20,7 +20,7 @@ export const useSearchSong = () => {
     const handleSearch = async () => {
       setIsLoading(true);
       if (debouncedSearchTerm) {
-        const response = await axios.get(`${apiUrl}/${id}/songs/search`, {
+        const response = await axios.get(`${apiUrl}/${company.slug}/songs/search`, {
           params: {
             q: searchTerm,
           },

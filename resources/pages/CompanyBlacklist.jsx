@@ -4,7 +4,7 @@ import axios from 'axios';
 import LinkButton from '../components/Button/LinkButton';
 import ModalWindow from '../components/Layout/ModalWindow';
 import ManagerBlacklistCard from '../components/Playlist/ManagerBlacklistCard';
-import { actions, useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
+import { actions, useDeleteOrBlacklistAll } from '../hooks/useDeleteOrBlacklistAll';
 import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 

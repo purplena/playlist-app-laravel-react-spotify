@@ -1,11 +1,13 @@
 import React from 'react';
-import { generatePath, useParams } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Stack } from '@mui/material';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import LinkButton from '../Button/LinkButton';
+import { useTranslation } from 'react-i18next';
+import { useStore } from '../../js/useStore';
 
 const style = {
   position: 'absolute',
@@ -21,6 +23,8 @@ const style = {
   flexDirection: 'column',
 };
 
+
+
 export default function ModalWindow({
   modalMessage,
   open,
@@ -30,8 +34,23 @@ export default function ModalWindow({
   action = '',
   actionHandler = '',
   songClicked = '',
+  modalRedirect = ''
 }) {
-  const { companySlug } = useParams();
+  const { company } = useStore();
+  const { t } = useTranslation();
+
+  const redirects = {
+    'song_list': {
+      path: `/${company?.slug}/songs`,
+      label: t('buttons.btn_song_list')
+    },
+    'song_suggest': {
+      path: `/${company?.slug}/songs/search`, 
+      label: t('buttons.btn_suggest_song')
+    }
+  }
+
+  const redirectConfig = modalRedirect ? redirects[modalRedirect] : null;
 
   return (
     <Modal
@@ -80,9 +99,11 @@ export default function ModalWindow({
             <LinkButton onClick={actionHandler}>{action}</LinkButton>
           </>
         ) : (
-          <LinkButton disableElevation to={generatePath('/:companySlug/songs', { companySlug })}>
-            {"Chansons d'aujourd'hui"}
+          redirectConfig && (
+          <LinkButton disableElevation to={generatePath(redirectConfig.path)}>
+            {redirectConfig.label}
           </LinkButton>
+          )
         )}
       </Box>
     </Modal>

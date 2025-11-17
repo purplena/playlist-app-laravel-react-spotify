@@ -1,43 +1,27 @@
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
-export const useGetRequestedSongs = (setIsLoading) => {
-  const [requestedSongs, setRequestedSongs] = useState([]);
-  const [serverErrorMessage, setServerErrorMessage] = useState('');
-  const { id } = useParams();
-  const { user } = useStore();
-  let endpoint = '';
+export const useGetRequestedSongs = () => {
+  const { user, company } = useStore();
 
-  if (!user) {
-    endpoint = `${apiUrl}/${id}/songs`;
-  } else {
-    if (user.company) {
-      endpoint = `${apiUrl}/${user.company.slug}/songs`;
-    } else {
-      endpoint = `${apiUrl}/${id}/songs`;
-    }
-  }
+  const endpoint = user?.company ? user.company.slug : company.slug;
 
   const getSongs = () => {
-    axios
-      .get(endpoint)
+    return axios
+      .get(`${apiUrl}/${endpoint}/songs`)
       .then((response) => {
-        setRequestedSongs(response.data.data);
-        setIsLoading(false);
+        return { data: response.data.data };
       })
       .catch((error) => {
-        setIsLoading(true);
-        setServerErrorMessage(error);
+        return {
+          error: error.response.data.error,
+          message: error?.response?.data?.message,
+        };
       });
   };
 
   return {
     getSongs,
-    requestedSongs,
-    serverErrorMessage,
-    setRequestedSongs,
   };
 };
