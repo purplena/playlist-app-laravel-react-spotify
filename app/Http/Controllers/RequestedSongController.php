@@ -175,11 +175,17 @@ class RequestedSongController extends Controller
     public function destroyAll(): JsonResponse
     {
         $company = auth()->user()->company;
-        $requestedSongs = $company->requestedSongs;
-        $requestedSongs->each(function ($requestedSong) {
-            $requestedSong->upvotes()->whereDate('created_at', today())->delete();
-        });
-        $company->requestedSongs()->whereDate('created_at', today())->delete();
+        $requestedSongIds = $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->pluck('id');
+
+        Upvote::whereIn('requested_song_id', $requestedSongIds)
+            ->whereDate('created_at', today())
+            ->delete();
+
+        $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->delete();
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }

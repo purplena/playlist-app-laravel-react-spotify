@@ -2,6 +2,7 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
 import SongTrancatedComponent from './SongTrancatedComponent';
+import { useTranslation } from 'react-i18next';
 
 const PlaylistCard = ({
   requestedSong,
@@ -14,6 +15,7 @@ const PlaylistCard = ({
   setActionHandler,
   setSongClicked,
 }) => {
+  const { t } = useTranslation();
   const likes = requestedSong.upvotes_count;
   const deleteSong = useDeleteOrBlacklistOne({
     action: actions.destroyRequestedSong,
@@ -38,8 +40,8 @@ const PlaylistCard = ({
 
   const handleSongDeleteClick = () => {
     setOpen(true);
-    setModalHeader('Attention!');
-    setModalMessage('Voulez-vous supprimer cette chanson?');
+    setModalHeader(t('modal.attention'));
+    setModalMessage(t('modal.q_delete_song'));
     setSongClicked(requestedSong.song.song_data.song_name);
     setAction('supprimer');
     setActionHandler(() => handleSongDelete);
@@ -50,8 +52,8 @@ const PlaylistCard = ({
 
   const handleSongBlacklistingClick = () => {
     setOpen(true);
-    setModalHeader('Attention!');
-    setModalMessage('Voulez-vous blacklister cette chanson?');
+    setModalHeader(t('modal.attention'));
+    setModalMessage(t('modal.q_blacklist_song'));
     setSongClicked(requestedSong.song.song_data.song_name);
     setAction('blacklister');
     setActionHandler(() => handleSongBlacklisting);
@@ -109,7 +111,7 @@ const PlaylistCard = ({
                 variant="text"
                 size="small"
               >
-                Supprimer
+                {t('buttons.btn_delete')}
               </LinkButton>
               <LinkButton
                 sx={{
@@ -123,7 +125,7 @@ const PlaylistCard = ({
                 size="small"
                 onClick={handleSongBlacklistingClick}
               >
-                Blacklister
+                {t('buttons.btn_blacklist')}
               </LinkButton>
             </Stack>
           </Stack>

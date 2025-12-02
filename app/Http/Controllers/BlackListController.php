@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SongResource;
 use App\Models\Blacklist;
 use App\Models\RequestedSong;
+use App\Models\Upvote;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
@@ -43,15 +44,18 @@ class BlackListController extends Controller
     public function storeAll(): JsonResponse
     {
         $company = auth()->user()->company;
-        $requestedSongs = $company->requestedSongs;
+        $requestedSongs = $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->get(['id', 'song_id']);
 
-        $requestedSongs
-            ->each(function ($requestedSong) use ($company) {
-                $company->blacklistedSongs()->attach($requestedSong->song_id);
-            })
-            ->each(function ($requestedSong) {
-                $requestedSong->upvotes()->whereDate('created_at', today())->delete();
-            });
+        $songIds = $requestedSongs->pluck('song_id');
+        $requestedSongIds = $requestedSongs->pluck('id');
+
+        $company->blacklistedSongs()->attach($songIds);
+
+        Upvote::whereIn('requested_song_id', $requestedSongIds)
+            ->whereDate('created_at', today())
+            ->delete();
 
         $company->requestedSongs()->whereDate('created_at', today())->delete();
 

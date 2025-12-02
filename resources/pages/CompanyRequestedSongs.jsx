@@ -22,74 +22,55 @@ const CompanyRequestedSongs = () => {
   const [actionHandler, setActionHandler] = useState('');
   const [songClicked, setSongClicked] = useState('');
 
+    useEffect(() => {
+    getRequestedSongs();
+  }, []);
+
   const handleDeleteOrBlacklist = (id) => {
     setRequestedSongs((prevSongs) => prevSongs.filter((song) => song.id !== id));
   };
 
-  
-  // Check the functionality
     const deleteAllSongs = useDeleteOrBlacklistAll({
       action: actions.destroyAllRequestedSongs
     })
 
-    // const blacklistAllSongs = useDeleteOrBlacklistAll({
-    //   action: actions.storeAllInBlacklist
-    // })
+    const blacklistAllSongs = useDeleteOrBlacklistAll({
+      action: actions.storeAllInBlacklist
+    })
+
+    const executeAction = async (actionFn) => {
+      const response = await actionFn();
+      if (response.status) {
+        setOpen(false);
+        setRequestedSongs([]);
+      }
+  };
 
   const handleAllSongsDeleteClick = () => {
     setOpen(true);
-    setModalHeader('Attention!');
-    setModalMessage('Voulez-vous supprimer toutes les chansons?');
+    setModalHeader(t('modal.attention'));
+    setModalMessage(t('modal.q_delete_song_all'));
     setAction('supprimer');
     setSongClicked('');
     setActionHandler(() => handleAllSongsDelete);
   };
+  
+  const handleAllSongsDelete = () => {
+    executeAction(deleteAllSongs.deleteOrBlacklistAll);
+  }
 
   const handleAllSongsBlacklistClick = () => {
     setOpen(true);
-    setModalHeader('Attention!');
-    setModalMessage('Voulez-vous blacklister toutes les chansons?');
+    setModalHeader(t('modal.attention'));
+    setModalMessage(t('modal.q_blacklist_song_all'));
     setAction('blacklister');
     setSongClicked('');
     setActionHandler(() => handleAllSongsBlacklist);
   };
 
   const handleAllSongsBlacklist = () => {
-    const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
-      action: actions.storeAllInBlacklist,
-      setOpen,
-      setSongs: setRequestedSongs,
-    });
-
-    deleteOrBlacklistAll();
-  };
-
-  // const handleAllSongsDelete = () => {
-  //   const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
-  //     action: actions.destroyAllRequestedSongs,
-  //     setOpen,
-  //     setSongs: setRequestedSongs,
-  //   });
-
-  //   deleteOrBlacklistAll();
-  // };
-
-  const handleAllSongsDelete = async () => {
-    const response = await deleteAllSongs.deleteOrBlacklistAll()
-
-    if (response.status) {
-      setOpen(false); 
-      setRequestedSongs([]);
-    }
-
-    // const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
-    //   action: actions.destroyAllRequestedSongs,
-    //   setOpen,
-    //   setSongs: setRequestedSongs,
-    // });
-
-    // deleteOrBlacklistAll();
-  };
+    executeAction(blacklistAllSongs.deleteOrBlacklistAll);
+  }
 
   const getRequestedSongs = async () => {
     setIsLoading(true);
@@ -105,10 +86,6 @@ const CompanyRequestedSongs = () => {
     setServerErrorMessage("");
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    getRequestedSongs();
-  }, []);
 
   return (
     <>
