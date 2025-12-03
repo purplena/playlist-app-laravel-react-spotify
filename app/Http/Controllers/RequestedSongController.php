@@ -6,9 +6,9 @@ use App\Http\DTO\SongDTO;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
-use App\Models\Song;
 use App\Models\Upvote;
 use App\Repositories\SongRepository;
+use App\Services\RequestedSongService;
 use App\Services\SpotifyApi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ use Illuminate\Http\Response;
 
 class RequestedSongController extends Controller
 {
-    public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository)
+    public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository, private RequestedSongService $requestedSongService)
     {
         $this->authorizeResource(RequestedSong::class, 'requestedSong');
     }
@@ -54,40 +54,13 @@ class RequestedSongController extends Controller
 
     public function upvote(Company $company, RequestedSong $requestedSong): ?JsonResponse
     {
-        $userUpvote = $requestedSong->upvotes()->where('user_id', auth()->id())->first();
-
-        if ($userUpvote) {
-            $userUpvote->delete();
-
-            return response()->json([
-                'message' => 'Vous avez supprimé votre like',
-                'status' => 'like_status',
-            ], Response::HTTP_OK);
-        }
-
-        $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
-
-        if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
-            $oldestRequestedSong = $upvotes->oldest('created_at')->first()->created_at;
-            $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
-
-            return response()->json([
-                'message' => 'Vous avez déjà liké '.RequestedSong::MAX_SONGS_UPVOTED.' chansons. 
-                        Vous pouvez liker plus de chansons en '.$differenceInMinutes.' minutes.',
-                'error' => 'upvote_limit',
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        Upvote::create([
-            'requested_song_id' => $requestedSong->id,
-            'user_id' => auth()->id(),
-        ]);
+        $result = $this->requestedSongService->upvote($requestedSong);
 
         return response()->json([
-            'message' => 'Merci pour votre like',
-            'status' => 'like_status',
-        ], Response::HTTP_OK);
-
+            'message' => $result['message'],
+            'status' => $result['status'] ?? null,
+            'error' => $result['error'] ?? null,
+        ], $result['code']);
     }
 
     /**
@@ -95,70 +68,13 @@ class RequestedSongController extends Controller
      */
     public function store(Company $company, Request $request): JsonResponse
     {
-        $spotifyId = $request->spotifyId;
-        $requestedSong =
-        RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
-            $query->where('spotify_id', $spotifyId)->whereDate('created_at', today());
-        })->first();
+        $result = $this->requestedSongService->store($company, $request->spotifyId);
 
-        if ($requestedSong) {
-            if ($requestedSong->upvotes()->whereDate('created_at', today())->exists()) {
-                return response()->json([
-                    'message' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes".',
-                    'error' => 'forbidden',
-                ], Response::HTTP_BAD_REQUEST);
-            }
-            $requestedSong->delete();
-            $requestedSong->song()->delete();
-
-            return response()->json([
-                'message' => 'Cette chanson a été supprimée!',
-                'status' => 'deleted',
-            ], Response::HTTP_OK);
-        } else {
-            $requestedSongs = auth()->user()->requestedSongs()->where('created_at', '>=', now()->subMinutes(60));
-            if ($requestedSongs->get()->count() >= RequestedSong::MAX_SONGS_ADDED) {
-                $oldestRequestedSong = $requestedSongs->oldest('created_at')->first()->created_at;
-                $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
-
-                return response()->json([
-                    'message' => 'Vous avez déjà ajouté '.RequestedSong::MAX_SONGS_ADDED.' chansons. 
-                        Vous pouvez ajouter plus de chansons en '.$differenceInMinutes.' minutes.',
-                    'error' => 'song_limit',
-                ], Response::HTTP_BAD_REQUEST);
-
-            } else {
-                if (in_array($spotifyId, $company->blacklistedSongs()->pluck('spotify_id')->toArray())) {
-                    return response()->json([
-                        'message' => 'Cette chanson a été blacklistée par l\'établissement. 
-                        Vous ne pouvez pas l`\'ajouter dans le playlist.',
-                        'error' => 'blacklisted',
-                    ], Response::HTTP_BAD_REQUEST);
-                }
-
-                $song = Song::where(['spotify_id' => $request->spotifyId])
-                    ->firstOr(function () use ($request) {
-                        return Song::create($this->getTrackInfo($request->spotifyId));
-                    });
-                RequestedSong::create([
-                    'song_id' => $song->id,
-                    'user_id' => auth()->id(),
-                    'company_id' => $company->id,
-                ]);
-
-                return response()->json([
-                    'message' => 'Bravo! Vous avez suggéré une chanson!',
-                    'status' => 'added',
-                ], Response::HTTP_CREATED);
-            }
-        }
-    }
-
-    public function getTrackInfo($spotifyId): array
-    {
-        return SongDTO::fromObjectToArray(
-            $this->spotifyApi->getClient()->getTrack($spotifyId)
-        );
+        return response()->json([
+            'message' => $result['message'],
+            'status' => $result['status'] ?? null,
+            'error' => $result['error'] ?? null,
+        ], $result['code']);
     }
 
     /**

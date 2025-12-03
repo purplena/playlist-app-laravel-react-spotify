@@ -65,7 +65,10 @@
     "q_delete_song_all": "Voulez-vous supprimer toutes les chansons?",
     "q_blacklist_song_all": "Voulez-vous blacklister toutes les chansons?",
     "q_delete_blacklist_song_all": "Voulez-vous supprimer toutes les chansons de votre blacklist ? Après cette action, les utilisateurs pourront les ajouter à nouveau dans votre playlist.",
-    "q_delete_blackliste_song": "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist."
+    "q_delete_blackliste_song": "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist.",
+    "header_bravo": "BRAVO!",
+    "header_done": "C'EST FAIT!",
+    "header_error": "Oooooups!"
   }
 
 }

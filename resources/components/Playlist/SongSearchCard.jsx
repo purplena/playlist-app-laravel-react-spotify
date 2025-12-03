@@ -7,9 +7,11 @@ import CardMedia from '@mui/material/CardMedia';
 import { useSongAdd } from '../../hooks/useSongAdd';
 import { useStore } from '../../js/useStore';
 import { useNavigate } from 'react-router-dom';
-import SongTrancatedComponent from './SongTrancatedComponent';
+import SongTruncatedComponent from './SongTruncatedComponent';
+import { useTranslation } from 'react-i18next';
 
 export default function SongSearchCard({ song, setOpen, setModalMessage, setModalHeader, setModalRedirect }) {
+  const { t } = useTranslation();
   const { user, company } = useStore();
   const navigate = useNavigate();
   const { addSong, isAdded } = useSongAdd(song);
@@ -21,19 +23,19 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
     const response = await addSong();
     
     if(response.status === 'added') {
-      setModalHeader('BRAVO!');
+      setModalHeader(t('modal.header_bravo'));
       setModalMessage(response.message);
       setOpen(true);
       setModalRedirect('song_list');
     } 
     else if (response.status === 'deleted') {
-      setModalHeader("C'EST FAIT!");
+      setModalHeader(t('modal.header_done'));
       setModalMessage(response.message);
       setOpen(true);
       setModalRedirect('song_list');
     }
     else if (response.error) {
-      setModalHeader('Oooooups!');
+      setModalHeader(t('modal.header_error'));
       setModalMessage(response.message);
       setOpen(true);
       setModalRedirect('song_list');
@@ -51,8 +53,8 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
             image={song.song_data.album_cover_img}
           />
           <CardContent>
-              <SongTrancatedComponent song={song.song_data.song_name} maxNameLength='20' variant='body2' />
-              <SongTrancatedComponent song={song.song_data.artist_name} maxNameLength='20' variant='body2' />
+              <SongTruncatedComponent song={song.song_data.song_name} maxNameLength='20' variant='body2' />
+              <SongTruncatedComponent song={song.song_data.artist_name} maxNameLength='20' variant='body2' />
             <Box onClick={handleSongAdd}>
               {isAdded ? <PlaylistAddCheckIcon /> : <PlaylistAddIcon />}
             </Box>

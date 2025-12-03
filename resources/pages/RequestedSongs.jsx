@@ -10,6 +10,7 @@ import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import { useStore } from '../js/useStore';
 import { useTranslation } from 'react-i18next';
 import SpotifyPlaylistLinkButton from '../components/Button/SpotifyPlaylistLinkButton';
+import { optimisticReorder } from '../helpers/optimisticReorder';
 
 const RequestedSongs = () => {
   const { t } = useTranslation();
@@ -23,33 +24,6 @@ const RequestedSongs = () => {
   const [modalHeader, setModalHeader] = useState('');
   const [modalRedirect, setModalRedirect] = useState('');  
 
-  const optimisticReorder = (updatedSongId) => {
-  setRequestedSongs((prevSongs) => {
-    
-    const newList = prevSongs.map((song) => {
-  
-      if (song.id === updatedSongId) {
-        if (song.is_upvoted_by) {
-            return {
-            ...song,
-            upvotes_count: song.upvotes_count - 1,
-            is_upvoted_by: false,
-          };
-        }
-        return {
-          ...song,
-          upvotes_count: song.upvotes_count + 1,
-          is_upvoted_by: true,
-        };
-      }
-      return song;
-    });
-
-    newList.sort((a, b) => b.upvotes_count - a.upvotes_count);
-
-    return newList;        
-  });
-};
 
 const silentRefreshRequestedSongs = async () => {
   const result = await getSongs();
@@ -154,6 +128,7 @@ const silentRefreshRequestedSongs = async () => {
                       setModalRedirect={setModalRedirect}
                       onUpvoteOptimistic={optimisticReorder}
                       onUpvoteRefetch={silentRefreshRequestedSongs}
+                      setRequestedSongs={setRequestedSongs}
                     />
                   );
               })

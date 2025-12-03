@@ -4,9 +4,9 @@ import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useStore } from '../../js/useStore';
 import { useNavigate } from 'react-router-dom';
-import SongTrancatedComponent from './SongTrancatedComponent';
+import SongTruncatedComponent from './SongTruncatedComponent';
 
-const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect, onUpvoteOptimistic, onUpvoteRefetch }) => {
+const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect, onUpvoteOptimistic, onUpvoteRefetch, setRequestedSongs }) => {
   const navigate = useNavigate();
   const { user, company } = useStore();
   const { upvote, isUpvoted, likes } = useUpvote(requestedSong);
@@ -15,7 +15,7 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
      if (!user) {
       navigate(`/${company.slug}/login`);
     }
-    onUpvoteOptimistic(requestedSong.id);
+    onUpvoteOptimistic(requestedSong.id, setRequestedSongs);
 
     const response = await upvote();
 
@@ -47,13 +47,13 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
             />
 
             <Stack>
-              <SongTrancatedComponent
+              <SongTruncatedComponent
                 song={requestedSong.song.song_data.song_name}
                 maxNameLength='16'
                 label={'Titre'}
                 fontSize={'14px'}
               />
-              <SongTrancatedComponent
+              <SongTruncatedComponent
                 song={requestedSong.song.song_data.artist_name}
                 maxNameLength='16'
                 label={'Artiste'}

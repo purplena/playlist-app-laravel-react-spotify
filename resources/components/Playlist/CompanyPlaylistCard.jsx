@@ -1,7 +1,7 @@
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
-import SongTrancatedComponent from './SongTrancatedComponent';
+import SongTruncatedComponent from './SongTruncatedComponent';
 import { useTranslation } from 'react-i18next';
 
 const PlaylistCard = ({
@@ -75,13 +75,13 @@ const PlaylistCard = ({
             />
 
             <Stack>
-              <SongTrancatedComponent
+              <SongTruncatedComponent
                 song={requestedSong.song.song_data.song_name}
                 label={'Titre'}
                 maxNameLength='16'
                 fontSize={'14px'}
               />
-              <SongTrancatedComponent
+              <SongTruncatedComponent
                 song={requestedSong.song.song_data.artist_name}
                 label={'Artiste'}
                 maxNameLength='16'

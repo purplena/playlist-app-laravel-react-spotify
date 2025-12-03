@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-const SongTrancatedComponent = ({song, label, maxNameLength, variant='body1', ...props}) => {
+const SongTruncatedComponent = ({song, label, maxNameLength, variant='body1', ...props}) => {
   const MAX_SONG_NAME_LENGTH = maxNameLength;
   const truncatedSongName =
     song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
@@ -15,4 +15,4 @@ const SongTrancatedComponent = ({song, label, maxNameLength, variant='body1', ..
       </Typography>
   );
 }
-export default SongTrancatedComponent
+export default SongTruncatedComponent
