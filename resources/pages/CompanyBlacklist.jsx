@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Grid, Stack, Typography } from '@mui/material';
-import axios from 'axios';
+import { Alert, CircularProgress, Grid, Stack, Typography } from '@mui/material';
 import LinkButton from '../components/Button/LinkButton';
 import ModalWindow from '../components/Layout/ModalWindow';
 import ManagerBlacklistCard from '../components/Playlist/ManagerBlacklistCard';
-import { actions, useDeleteOrBlacklistAll } from '../hooks/userDeleteOrBlacklistAll';
-import { apiUrl } from '../js/App';
+import { actions, useDeleteOrBlacklistAll } from '../hooks/useDeleteOrBlacklistAll';
 import { useStore } from '../js/useStore';
+import { useTranslation } from 'react-i18next';
+import { useGetBlacklistedSongs } from '../hooks/useGetBlacklistedSongs';
 
 const CompanyBlacklist = () => {
+  const { t } = useTranslation();
   const { user } = useStore();
+  const { getBlacklistedSongsByCompany } = useGetBlacklistedSongs();
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
   const [blacklistedSongs, setBlacklistedSongs] = useState([]);
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -22,16 +26,21 @@ const CompanyBlacklist = () => {
     getBlacklistedSongs();
   }, []);
 
-  const getBlacklistedSongs = () => {
-    axios
-      .get(`${apiUrl}/manager/blacklist`)
-      .then((response) => {
-        setBlacklistedSongs(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const getBlacklistedSongs = async () => {
+    setIsLoading(true);
+
+    const result = await getBlacklistedSongsByCompany(); 
+
+    if (result?.error) {
+      setIsLoading(false);
+      return setServerErrorMessage(result.message || t("errors.unknown_error"));
+    }
+
+    setBlacklistedSongs(result.data);
+    setServerErrorMessage("");
+    setIsLoading(false);
+
+  }
 
   const handleDelete = (id) => {
     setBlacklistedSongs((prevSongs) => prevSongs.filter((song) => song.blacklist_id !== id));
@@ -39,77 +48,90 @@ const CompanyBlacklist = () => {
 
   const handleAllSongsDeleteClick = () => {
     setOpen(true);
-    setModalHeader('Attention!');
-    setModalMessage(
-      'Voulez-vous supprimer toutes les chansons de votre blacklist ? Après cette action, les utilisateurs pourront les ajouter à nouveau dans votre playlist.',
-    );
+    setModalHeader(t('modal.attention'));
+    setModalMessage(t('modal.q_delete_blacklist_song_all'));
     setAction('supprimer de blacklist');
     setSongClicked('');
     setActionHandler(() => handleAllSongsDelete);
   };
 
-  const handleAllSongsDelete = () => {
+  const handleAllSongsDelete = async () => {
     const { deleteOrBlacklistAll } = useDeleteOrBlacklistAll({
-      action: actions.destroyAllBlacklist,
-      setOpen,
-      setSongs: setBlacklistedSongs,
+      action: actions.destroyAllBlacklist
     });
-
-    deleteOrBlacklistAll();
-  };
+    
+    const response = await deleteOrBlacklistAll();
+    
+    if (response.status) {
+      setOpen(false);
+      setBlacklistedSongs([]);
+    }
+  }
 
   return (
     <>
       <Stack justifyContent="center" alignItems="center" mt={2} spacing={4}>
         <Typography variant="h4" component="h1">
-          {'Blacklist'}
+          {t('company.blacklist.h1')}
         </Typography>
         <Typography vatiant="body2" component="p" mt={4} maxWidth={500} textAlign="justify">
-          {
-            "Les chansons ajoutées au blacklist sont celles qui peuvent potentiellement perturber l'atmosphère positive que vous cherchez à promouvoir au sein de votre entreprise. Cela inclut des critères tels que des paroles explicites, des messages offensants, ou tout contenu susceptible de créer une ambiance inappropriée."
-          }
+          {t('company.blacklist.p_warning_1')}
         </Typography>
         <Typography vatiant="body2" component="p" mt={4} maxWidth={500} textAlign="justify">
-          {
-            "En ajoutant des chansons à votre blacklist, vous maintenez une culture d'entreprise respectueuse et inclusive, où chacun se sent à l'aise et valorisé."
-          }
+          {t('company.blacklist.p_warning_2')}
         </Typography>
       </Stack>
       {blacklistedSongs.length > 0 ? (
         <Stack justifyContent="center" alignItems="center" mt={2}>
           <LinkButton disableElevation onClick={handleAllSongsDeleteClick}>
-            supprimer tout de blacklist
+            {t('buttons.btn_delete_all_from_blacklist')}
           </LinkButton>
         </Stack>
       ) : (
         ''
       )}
-      <Grid container gap={3} mt={6} justifyContent="center">
-        {blacklistedSongs.length > 0 ? (
-          blacklistedSongs.map((blacklistedSong, index) => {
-            return (
-              <ManagerBlacklistCard
-                key={blacklistedSong.id}
-                title={blacklistedSong.song_data.song_name}
-                artist={blacklistedSong.song_data.artist_name}
-                index={index}
-                blacklistedSong={blacklistedSong}
-                onClick={handleDelete}
-                setOpen={setOpen}
-                setModalMessage={setModalMessage}
-                setModalHeader={setModalHeader}
-                setAction={setAction}
-                setActionHandler={setActionHandler}
-                setSongClicked={setSongClicked}
-              />
-            );
-          })
+      {isLoading ? (
+        <Stack justifyContent="center" alignItems="center" mt={4}>
+                  <CircularProgress />
+                </Stack>
         ) : (
-          <Typography variant="h6" textAlign={'center'} mt={21}>
-            {"Vous n'avez pas de chansons dans votre blacklist..."}
-          </Typography>
-        )}
-      </Grid>
+          serverErrorMessage ? (
+            <Stack justifyContent="center" alignItems="center" mt={4}>
+              <Alert variant="outlined" severity="error">
+                {serverErrorMessage}
+              </Alert>
+            </Stack>
+          ) : (
+              <Grid container gap={3} mt={6} justifyContent="center">
+                {blacklistedSongs.length > 0 ? (
+                  blacklistedSongs.map((blacklistedSong, index) => {
+                    return (
+                      <ManagerBlacklistCard
+                        key={blacklistedSong.id}
+                        title={blacklistedSong.song_data.song_name}
+                        artist={blacklistedSong.song_data.artist_name}
+                        index={index}
+                        blacklistedSong={blacklistedSong}
+                        onClick={handleDelete}
+                        setOpen={setOpen}
+                        setModalMessage={setModalMessage}
+                        setModalHeader={setModalHeader}
+                        setAction={setAction}
+                        setActionHandler={setActionHandler}
+                        setSongClicked={setSongClicked}
+                      />
+                    );
+                  })
+                ) : (
+                  <Typography variant="h6" textAlign={'center'} mt={21}>
+                    {t('company.blacklist.no_blacklisted_songs')}
+                  </Typography>
+                )}
+              </Grid>
+              )
+          )
+    
+    }
       <ModalWindow
         open={open}
         setOpen={setOpen}

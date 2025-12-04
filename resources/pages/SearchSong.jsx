@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, TextField, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import SearchBar from '../components/Form/SearchBar';
 import LineComponent from '../components/Layout/LineComponent';
 import ModalWindow from '../components/Layout/ModalWindow';
 import SongSearchCard from '../components/Playlist/SongSearchCard';
@@ -15,6 +14,8 @@ function Search() {
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
+  const [modalRedirect, setModalRedirect] = useState('');
+
 
   return (
     <>
@@ -34,7 +35,14 @@ function Search() {
         />
         <LineComponent />
         <Stack mt={2} mb={2} spacing={2}>
-          <SearchBar handleInput={handleInput} />
+          <Stack direction="column" maxWidth={500} alignItems="center" spacing={2}>
+            <TextField
+              id="outlined-basic"
+              label="Taper votre chanson"
+              variant="outlined"
+              onChange={handleInput}
+            />
+          </Stack>
           <Stack direction="row" spacing={1} justifyContent={'center'} alignItems={'center'}>
             <Typography variant="body1" component="p" fontSize={'12px'}>
               cliquez sur
@@ -63,6 +71,7 @@ function Search() {
                   setOpen={setOpen}
                   setModalMessage={setModalMessage}
                   setModalHeader={setModalHeader}
+                  setModalRedirect={setModalRedirect}
                   key={song.spotify_id}
                 />
               );
@@ -78,6 +87,7 @@ function Search() {
           setOpen={setOpen}
           modalMessage={modalMessage}
           modalHeader={modalHeader}
+          modalRedirect={modalRedirect}
           user={user}
         />
       ) : (

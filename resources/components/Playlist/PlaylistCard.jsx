@@ -3,19 +3,32 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useStore } from '../../js/useStore';
+import { useNavigate } from 'react-router-dom';
+import SongTruncatedComponent from './SongTruncatedComponent';
 
-const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader }) => {
-  const { user } = useStore();
-  const { upvote, isUpvoted, likes } = useUpvote(
-    requestedSong,
-    user,
-    setOpen,
-    setModalMessage,
-    setModalHeader,
-  );
+const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect, onUpvoteOptimistic, onUpvoteRefetch, setRequestedSongs }) => {
+  const navigate = useNavigate();
+  const { user, company } = useStore();
+  const { upvote, isUpvoted, likes } = useUpvote(requestedSong);
 
-  const handleUpvote = () => {
-    upvote();
+  const handleUpvote = async () => {
+     if (!user) {
+      navigate(`/${company.slug}/login`);
+    }
+    onUpvoteOptimistic(requestedSong.id, setRequestedSongs);
+
+    const response = await upvote();
+
+    if (!response.error) {
+      onUpvoteRefetch(); 
+    }
+
+    if(response.error) {
+      setModalHeader('Oooooups!');
+      setModalMessage(response.message);
+      setOpen(true);
+      setModalRedirect('song_suggest')
+    }
   };
 
   return (
@@ -34,13 +47,15 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
             />
 
             <Stack>
-              <SongTrancatedComponent
+              <SongTruncatedComponent
                 song={requestedSong.song.song_data.song_name}
+                maxNameLength='16'
                 label={'Titre'}
                 fontSize={'14px'}
               />
-              <SongTrancatedComponent
+              <SongTruncatedComponent
                 song={requestedSong.song.song_data.artist_name}
+                maxNameLength='16'
                 label={'Artiste'}
                 fontSize={'14px'}
               />
@@ -71,21 +86,3 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
   );
 };
 export default PlaylistCard;
-
-function SongTrancatedComponent({ song, label, ...props }) {
-  const MAX_SONG_NAME_LENGTH = 16;
-  const truncatedSongName =
-    song.length <= MAX_SONG_NAME_LENGTH ? song : `${song.substring(0, MAX_SONG_NAME_LENGTH)}...`;
-
-  return (
-    <div>
-      <Typography {...props} gutterBottom variant="body1" component="h2">
-        {' '}
-        {label} {': '}
-        <Box component="span" fontWeight="700">
-          {truncatedSongName}
-        </Box>
-      </Typography>
-    </div>
-  );
-}

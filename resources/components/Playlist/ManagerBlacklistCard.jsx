@@ -1,7 +1,7 @@
-import React from 'react';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
+import { useTranslation } from 'react-i18next';
 
 const ManagerBlacklistCard = ({
   index,
@@ -14,27 +14,29 @@ const ManagerBlacklistCard = ({
   setAction,
   setActionHandler,
 }) => {
+  const { t } = useTranslation();
   const handleSongDeleteClick = () => {
     setOpen(true);
-    setModalHeader('Attention!');
-    setModalMessage(
-      "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist.",
-    );
+    setModalHeader(t('modal.attention'));
+    setModalMessage(t('modal.q_delete_blackliste_song'));
     setSongClicked(blacklistedSong.song_data.song_name);
     setAction('supprimer de blacklist');
-    setActionHandler(() => handleDelete);
+    setActionHandler(() => handleDeleteSongFromBlacklist);
   };
 
-  const handleDelete = () => {
+  const handleDeleteSongFromBlacklist = async () => {
     const { deleteOrBlacklist } = useDeleteOrBlacklistOne({
       action: actions.destroyBlacklist,
-      setOpen,
-      onClick,
       itemId: blacklistedSong.blacklist_id,
     });
 
-    deleteOrBlacklist();
-  };
+    const response = await deleteOrBlacklist();
+
+    if (response.status) {
+      setOpen(false);
+      onClick(blacklistedSong.blacklist_id);
+    }
+  }
 
   return (
     <Paper
@@ -101,7 +103,7 @@ const ManagerBlacklistCard = ({
                 variant="text"
                 size="small"
               >
-                Supprimer
+                {t('buttons.btn_delete')}
               </LinkButton>
             </Stack>
           </Grid>

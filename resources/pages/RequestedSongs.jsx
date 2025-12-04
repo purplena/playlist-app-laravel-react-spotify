@@ -1,80 +1,82 @@
 import { useEffect, useState } from 'react';
-import { generatePath, useParams } from 'react-router-dom';
-import { Alert, Grid, Link, Stack, Typography } from '@mui/material';
+import { generatePath } from 'react-router-dom';
+import { Alert, Grid, Stack, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Box } from '@mui/system';
 import LinkButton from '../components/Button/LinkButton';
 import LineComponent from '../components/Layout/LineComponent';
 import ModalWindow from '../components/Layout/ModalWindow';
 import PlaylistCard from '../components/Playlist/PlaylistCard';
-import { useGetCompany } from '../hooks/useGetCompany';
 import { useGetRequestedSongs } from '../hooks/useGetRequestedSongs';
 import { useStore } from '../js/useStore';
+import { useTranslation } from 'react-i18next';
+import SpotifyPlaylistLinkButton from '../components/Button/SpotifyPlaylistLinkButton';
+import { optimisticReorder } from '../helpers/optimisticReorder';
 
 const RequestedSongs = () => {
-  const { user } = useStore();
+  const { t } = useTranslation();
+  const { user, company } = useStore();
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { getSongs, requestedSongs, serverErrorMessage } = useGetRequestedSongs(setIsLoading);
+  const [requestedSongs, setRequestedSongs] = useState([])
+  const { getSongs} = useGetRequestedSongs();
   const [open, setOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalHeader, setModalHeader] = useState('');
-  const { companySlug } = useParams();
-  const { company } = useGetCompany();
+  const [modalRedirect, setModalRedirect] = useState('');  
+
+
+const silentRefreshRequestedSongs = async () => {
+  const result = await getSongs();
+
+  if (result?.error) return; 
+
+  setRequestedSongs((prevSongs) => {
+    const isSame =
+      JSON.stringify(prevSongs) === JSON.stringify(result.data);
+
+    return isSame ? prevSongs : result.data;
+  });
+};
+
+
+  const getRequestedSongs = async () => {
+    setIsLoading(true);
+
+    const result = await getSongs();
+
+    if (result?.error) {
+      setIsLoading(false);
+      return setServerErrorMessage(result.message || t("errors.unknown_error"));
+    }
+
+    setRequestedSongs(result.data);
+    setServerErrorMessage("");
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    setIsLoading(true);
-    getSongs();
+    getRequestedSongs();
   }, []);
+
 
   return (
     <>
       <Stack mb={2}>
         <Typography variant="h1" component="h1" textAlign="center" mb={2}>
-          {"Créer de l'ambiance musicale"}
+          {t('user.requested_songs.h1')}
         </Typography>
         <Stack spacing={2} justifyContent={'center'} alignItems={'center'}>
           <Typography variant="body1" component="p" textAlign="center">
-            Chaque jour, nous sélectionnons les chansons les plus votées pour les ajouter à notre
-            playlist
+            {t('user.requested_songs.p1')}
           </Typography>
-          <Typography variant="body1" component="p" textAlign="center">
-            Découvrez notre playlist directement sur Spotify
-          </Typography>
-          <Link
-            underline="none"
-            href={`https://open.spotify.com/playlist/${company?.spotify_playlist_data?.id}`}
-            sx={{
-              color: '#000000',
-              width: '120px',
-            }}
-          >
-            <Stack
-              sx={{
-                padding: '10px 15px',
-                border: '1px solid #000000',
-                borderRadius: '5px',
-                '&:hover': {
-                  borderColor: (theme) => theme.palette.primary.main,
-                },
-              }}
-              direction={'row'}
-              spacing={2}
-              justifyContent={'center'}
-              alignItems={'center'}
-            >
-              <Box
-                component="img"
-                sx={{
-                  width: '24px',
-                }}
-                src="../images/spotify-logo.png"
-                alt="Logo Spotify"
-              />
-              <Typography variant="body1" component="p" textAlign="center" mt={2}>
-                Playlist
-              </Typography>
-            </Stack>
-          </Link>
+          {company.spotify_playlist_data && (
+              <>
+                <Typography variant="body1" component="p" textAlign="center">
+                  {t('user.requested_songs.check_out_spotify')}
+                </Typography>
+                <SpotifyPlaylistLinkButton company={company} />
+              </>
+          )}
         </Stack>
       </Stack>
 
@@ -82,22 +84,19 @@ const RequestedSongs = () => {
 
       <Stack direction="row" spacing={2} justifyContent="center" alignItems="center" mt={4} mb={4}>
         <Typography variant="subtitle2" textAlign={'center'}>
-          Voulez-vous suggérer une chanson?
+          {t('user.requested_songs.suggest_song')}
         </Typography>
         <LinkButton
           disableElevation
           size="small"
-          to={generatePath('/:companySlug/songs/search', { companySlug })}
+          to={generatePath(`/${company.slug}/songs/search`)}
         >
-          suggérer
+          {t('buttons.btn_suggest_song')}
         </LinkButton>
       </Stack>
+
       <LineComponent />
-      {isLoading && (
-        <Stack justifyContent="center" alignItems="center" mt={4}>
-          <CircularProgress />
-        </Stack>
-      )}
+
       <Grid
         container
         mt={4}
@@ -106,40 +105,50 @@ const RequestedSongs = () => {
         columnSpacing={{ xs: 1, sm: 2 }}
         rowSpacing={1}
       >
-        {serverErrorMessage && (
-          <Alert variant="outlined" severity="error">
-            Oups! Il y a un problem. Réessayez plus tard.
-          </Alert>
-        )}
-        {requestedSongs.length > 0 ? (
-          requestedSongs.map((requestedSong, index) => {
-            return (
-              <PlaylistCard
-                key={requestedSong.id}
-                requestedSong={requestedSong}
-                index={index}
-                setOpen={setOpen}
-                setModalMessage={setModalMessage}
-                setModalHeader={setModalHeader}
-              />
-            );
-          })
+        {isLoading ? (
+          <Stack justifyContent="center" alignItems="center" mt={4}>
+            <CircularProgress />
+          </Stack>
         ) : (
-          <Typography variant="subtitle2" textAlign={'center'}>
-            {"Oups! Il n'y a pas de chansons suggérées..."}
-          </Typography>
-        )}
+            serverErrorMessage ? (
+              <Alert variant="outlined" severity="error">
+                {serverErrorMessage}
+              </Alert>
+            ) : (
+              requestedSongs.length > 0 ? (
+                requestedSongs.map((requestedSong, index) => {
+                  return (
+                    <PlaylistCard
+                      key={requestedSong.id}
+                      requestedSong={requestedSong}
+                      index={index}
+                      setOpen={setOpen}
+                      setModalMessage={setModalMessage}
+                      setModalHeader={setModalHeader}
+                      setModalRedirect={setModalRedirect}
+                      onUpvoteOptimistic={optimisticReorder}
+                      onUpvoteRefetch={silentRefreshRequestedSongs}
+                      setRequestedSongs={setRequestedSongs}
+                    />
+                  );
+              })
+                ) : (
+                  <Typography variant="subtitle2" textAlign={'center'}>
+                     {t('user.requested_songs.no_songs')}
+                  </Typography>
+                )
+          )
+      )}
       </Grid>
-      {user ? (
+      {user && (
         <ModalWindow
           open={open}
           setOpen={setOpen}
           modalMessage={modalMessage}
           modalHeader={modalHeader}
+          modalRedirect={modalRedirect}
           user={user}
         />
-      ) : (
-        ''
       )}
     </>
   );

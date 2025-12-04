@@ -19,6 +19,12 @@
     "login": {
       "h1": "Gerez votre entreprise",
       "p1": "Continuez avec votre email"
+    }, 
+    "blacklist": {
+      "h1": "Blacklist",
+      "p_warning_1": "Les chansons ajoutées au blacklist sont celles qui peuvent potentiellement perturber l'atmosphère positive que vous cherchez à promouvoir au sein de votre entreprise. Cela inclut des critères tels que des paroles explicites, des messages offensants, ou tout contenu susceptible de créer une ambiance inappropriée.",
+      "p_warning_2": "En ajoutant des chansons à votre blacklist, vous maintenez une culture d'entreprise respectueuse et inclusive, où chacun se sent à l'aise et valorisé.",
+      "no_blacklisted_songs": "Vous n'avez pas de chansons dans votre blacklist..."
     }
   },
   "user": {
@@ -27,6 +33,14 @@
       "p_with_email": "Continuez avec votre email",
       "p_with_google": "Contunuez avec votre compte Google", 
       "p_sigup_invitation": "Pas de compte? Inscrivez-vous s'il vous plaît"
+    },
+    "requested_songs": {
+      "h1": "Créer de l'ambiance musicale",
+      "p1": "Chaque jour, nous sélectionnons les chansons les plus votées pour les ajouter à notre playlist",
+      "check_out_spotify": "Découvrez notre playlist directement sur Spotify",
+      "playlist_btn": "Playlist sur Spotify",
+      "suggest_song": "Voulez-vous suggérer une chanson?", 
+      "no_songs": "Oups! Il n'y a pas de chansons suggérées..."
     }
   },
   "buttons": {
@@ -34,6 +48,27 @@
     "btn_login": "Se connecter",
     "btn_signup": "S'inscrire",
     "btn_modify": "Modifier",
-    "btn_google": "Se connecter avec Google"
+    "btn_google": "Se connecter avec Google",
+    "btn_suggest_song": "Suggérer une chanson",
+    "btn_song_list": "Chansons d'aujourd'hui",
+    "btn_delete": "Supprimer",
+    "btn_blacklist": "Blacklister",
+    "btn_delete_all_from_blacklist": "supprimer tout de blacklist"
+  },
+  "errors": {
+    "unknown_error": "Erreur inconnue"
+  }, 
+  "modal": {
+    "attention": "Attention", 
+    "q_delete_song": "Voulez-vous supprimer cette chanson?",
+    "q_blacklist_song": "Voulez-vous blacklister cette chanson?",
+    "q_delete_song_all": "Voulez-vous supprimer toutes les chansons?",
+    "q_blacklist_song_all": "Voulez-vous blacklister toutes les chansons?",
+    "q_delete_blacklist_song_all": "Voulez-vous supprimer toutes les chansons de votre blacklist ? Après cette action, les utilisateurs pourront les ajouter à nouveau dans votre playlist.",
+    "q_delete_blackliste_song": "Voulez-vous supprimer cette chanson de votre blacklist ? Après cette action, les utilisateurs pourront l'ajouter à nouveau dans votre playlist.",
+    "header_bravo": "BRAVO!",
+    "header_done": "C'EST FAIT!",
+    "header_error": "Oooooups!"
   }
+
 }
