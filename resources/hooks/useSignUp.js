@@ -18,9 +18,9 @@ export const useSignUp = () => {
         return { success: true, data: response.data };
       })
       .catch((error) => {
-        const serverData = error?.response?.data || {};
+        const serverData = error?.response?.data || { errors: {} };
 
-        return { success: false, errors: serverData };
+        return { success: false, errors: serverData.errors };
       });
   };
 
