@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use App\Http\Requests\StoreRequestedSongRequest;
 
 class RequestedSongController extends Controller
 {
@@ -66,7 +67,7 @@ class RequestedSongController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Company $company, Request $request): JsonResponse
+    public function store(Company $company, StoreRequestedSongRequest $request): JsonResponse
     {
         $result = $this->requestedSongService->store($company, $request->spotifyId);
 
@@ -82,8 +83,7 @@ class RequestedSongController extends Controller
      */
     public function destroy(RequestedSong $requestedSong): JsonResponse
     {
-        $requestedSong->upvotes()->delete();
-        RequestedSong::where('id', $requestedSong->id)->delete();
+        $this->requestedSongService->deleteRequestedSong($requestedSong);
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
@@ -91,17 +91,7 @@ class RequestedSongController extends Controller
     public function destroyAll(): JsonResponse
     {
         $company = auth()->user()->company;
-        $requestedSongIds = $company->requestedSongs()
-            ->whereDate('created_at', today())
-            ->pluck('id');
-
-        Upvote::whereIn('requested_song_id', $requestedSongIds)
-            ->whereDate('created_at', today())
-            ->delete();
-
-        $company->requestedSongs()
-            ->whereDate('created_at', today())
-            ->delete();
+        $this->requestedSongService->deleteAllRequestedSongs($company);
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
