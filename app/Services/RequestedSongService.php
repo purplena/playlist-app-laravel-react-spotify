@@ -8,7 +8,6 @@ use App\Models\RequestedSong;
 use App\Models\Song;
 use App\Models\Upvote;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\RateLimiter;
 
 class RequestedSongService
 {
@@ -19,6 +18,7 @@ class RequestedSongService
     public function store(Company $company, string $spotifyId): array
     {
         $userId = auth()->id();
+
         $requestedSong = RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
             $query->where('spotify_id', $spotifyId)
                 ->whereDate('created_at', today());
@@ -28,36 +28,28 @@ class RequestedSongService
             return $this->handleExistingRequest($requestedSong);
         }
 
+        $maxSongs = RequestedSong::MAX_SONGS_ADDED;
+        $timeLimit = now()->subMinutes(RequestedSong::LIMIT_IN_MINS);
+
+        $currentSongCount = RequestedSong::where('user_id', $userId)
+            ->where('created_at', '>=', $timeLimit)
+            ->count();
+
+        if ($currentSongCount >= $maxSongs) {
+            return [
+                'status' => 'error',
+                'error' => 'song_limit',
+                'code' => 429,
+                'message' => "Vous avez déjà ajouté {$maxSongs} chansons dans la dernière heure.",
+            ];
+        }
+
         if ($company->blacklistedSongs()->pluck('spotify_id')->contains($spotifyId)) {
             return [
                 'status' => 'error',
                 'error' => 'blacklisted',
                 'code' => 400,
                 'message' => "Cette chanson a été blacklistée par l'établissement",
-            ];
-        }
-
-        $limitKey = "songs-added-{$userId}";
-        $max = RequestedSong::MAX_SONGS_ADDED;
-        $decaySeconds = RequestedSong::LIMIT_IN_MINS * 60;
-
-        $ok = RateLimiter::attempt(
-            $limitKey,
-            $max,
-            function () {
-            },
-            $decaySeconds
-        );
-
-        if (! $ok) {
-            $minutes = ceil(RateLimiter::availableIn($limitKey) / 60);
-
-            return [
-                'status' => 'error',
-                'error' => 'song_limit',
-                'code' => 429,
-                'message' => "Vous avez déjà ajouté {$max} chansons. "
-                    ."Vous pourrez ajouter plus de chansons dans {$minutes} minutes.",
             ];
         }
 
@@ -94,32 +86,19 @@ class RequestedSongService
             ];
         }
 
-        $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
+        $maxUpvotes = RequestedSong::MAX_SONGS_UPVOTED;
+        $timeLimit = now()->subMinutes(RequestedSong::LIMIT_IN_MINS);
 
-        if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
-            $key = "upvote-user-{$userId}";
-            $max = RequestedSong::MAX_SONGS_UPVOTED;
-            $decaySeconds = RequestedSong::LIMIT_IN_MINS * 60;
+        $currentUpvoteCount = Upvote::where('user_id', $userId)
+            ->where('created_at', '>=', $timeLimit)
+            ->count();
 
-            $allowedUpvotes = RateLimiter::attempt(
-                $key,
-                $max,
-                function () {
-                },
-                $decaySeconds
-            );
-
-            if (! $allowedUpvotes) {
-                $seconds = RateLimiter::availableIn($key);
-                $minutes = ceil($seconds / 60);
-
-                return [
-                    'code' => 429,
-                    'message' => "Vous avez déjà liké {$max} chansons. "
-                        ."Vous pourrez liker dans {$minutes} minutes.",
-                    'error' => 'upvote_limit',
-                ];
-            }
+        if ($currentUpvoteCount >= $maxUpvotes) {
+            return [
+                'code' => 429,
+                'message' => "Vous avez déjà liké {$maxUpvotes} chansons dans la dernière heure.",
+                'error' => 'upvote_limit',
+            ];
         }
 
         Upvote::create([
@@ -132,7 +111,6 @@ class RequestedSongService
             'message' => 'Merci pour votre like',
             'code' => Response::HTTP_OK,
         ];
-
     }
 
     private function handleExistingRequest(RequestedSong $requestedSong): array
@@ -161,5 +139,34 @@ class RequestedSongService
         return SongDTO::fromObjectToArray(
             $this->spotifyApi->getClient()->getTrack($spotifyId)
         );
+    }
+
+    public function deleteRequestedSong(RequestedSong $requestedSong): void
+    {
+        $requestedSong->upvotes()->delete();
+        $requestedSong->delete();
+        if ($requestedSong->song && $requestedSong->song->requestedSongs()->count() === 0) {
+            $requestedSong->song->delete();
+        }
+    }
+
+    public function deleteAllRequestedSongs(Company $company): void
+    {
+        $requestedSongIds = $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->pluck('id');
+
+        Upvote::whereIn('requested_song_id', $requestedSongIds)
+            ->whereDate('created_at', today())
+            ->delete();
+
+        $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->delete();
+
+        $songsToDelete = Song::whereDoesntHave('requestedSongs')->get();
+        foreach ($songsToDelete as $song) {
+            $song->delete();
+        }
     }
 }

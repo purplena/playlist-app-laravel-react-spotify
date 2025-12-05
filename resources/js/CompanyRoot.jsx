@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Box, ThemeProvider } from '@mui/material';
 import CompanyNavbar from '../components/Layout/CompanyNavbar';
-// import { useMe } from '../hooks/useMe';
 import { useCustomTheme } from '../helpers/useCustomTheme';
 import { useStore } from './useStore';
 
