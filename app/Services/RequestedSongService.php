@@ -7,8 +7,6 @@ use App\Models\Company;
 use App\Models\RequestedSong;
 use App\Models\Song;
 use App\Models\Upvote;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\RateLimiter;
 
 class RequestedSongService
 {
@@ -16,110 +14,28 @@ class RequestedSongService
     {
     }
 
-    public function store(Company $company, string $spotifyId): array
+    public function store(Company $company, string $spotifyId): RequestedSong
     {
-        $userId = auth()->id();
-        $requestedSong = RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
-            $query->where('spotify_id', $spotifyId)
-                ->whereDate('created_at', today());
-        })->first();
-
-        if ($requestedSong) {
-            return $this->handleExistingRequest($requestedSong);
-        }
-
-        if ($company->blacklistedSongs()->pluck('spotify_id')->contains($spotifyId)) {
-            return [
-                'status' => 'error',
-                'error' => 'blacklisted',
-                'code' => 400,
-                'message' => "Cette chanson a été blacklistée par l'établissement",
-            ];
-        }
-
-        $limitKey = "songs-added-{$userId}";
-        $max = RequestedSong::MAX_SONGS_ADDED;
-        $decaySeconds = RequestedSong::LIMIT_IN_MINS * 60;
-
-        $ok = RateLimiter::attempt(
-            $limitKey,
-            $max,
-            function () {
-            },
-            $decaySeconds
-        );
-
-        if (! $ok) {
-            $minutes = ceil(RateLimiter::availableIn($limitKey) / 60);
-
-            return [
-                'status' => 'error',
-                'error' => 'song_limit',
-                'code' => 429,
-                'message' => "Vous avez déjà ajouté {$max} chansons. "
-                    ."Vous pourrez ajouter plus de chansons dans {$minutes} minutes.",
-            ];
-        }
-
         $song = Song::firstOrCreate(
             ['spotify_id' => $spotifyId],
             $this->getTrackInfo($spotifyId)
         );
 
-        RequestedSong::create([
+        return RequestedSong::create([
             'song_id' => $song->id,
-            'user_id' => $userId,
+            'user_id' => auth()->id(),
             'company_id' => $company->id,
         ]);
-
-        return [
-            'status' => 'added',
-            'code' => 201,
-            'message' => 'Bravo! Vous avez suggéré une chanson!',
-        ];
     }
 
-    public function upvote(RequestedSong $requestedSong): array
+    public function upvote(RequestedSong $requestedSong): bool
     {
         $userId = auth()->id();
         $existingUserUpvote = $requestedSong->upvotes()->where('user_id', $userId)->first();
 
         if ($existingUserUpvote) {
             $existingUserUpvote->delete();
-
-            return [
-                'code' => Response::HTTP_OK,
-                'message' => 'Vous avez supprimé votre like',
-                'status' => 'like_status',
-            ];
-        }
-
-        $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
-
-        if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
-            $key = "upvote-user-{$userId}";
-            $max = RequestedSong::MAX_SONGS_UPVOTED;
-            $decaySeconds = RequestedSong::LIMIT_IN_MINS * 60;
-
-            $allowedUpvotes = RateLimiter::attempt(
-                $key,
-                $max,
-                function () {
-                },
-                $decaySeconds
-            );
-
-            if (! $allowedUpvotes) {
-                $seconds = RateLimiter::availableIn($key);
-                $minutes = ceil($seconds / 60);
-
-                return [
-                    'code' => 429,
-                    'message' => "Vous avez déjà liké {$max} chansons. "
-                        ."Vous pourrez liker dans {$minutes} minutes.",
-                    'error' => 'upvote_limit',
-                ];
-            }
+            return false;
         }
 
         Upvote::create([
@@ -127,33 +43,7 @@ class RequestedSongService
             'user_id' => $userId,
         ]);
 
-        return [
-            'status' => 'like_status',
-            'message' => 'Merci pour votre like',
-            'code' => Response::HTTP_OK,
-        ];
-
-    }
-
-    private function handleExistingRequest(RequestedSong $requestedSong): array
-    {
-        if ($requestedSong->upvotes()->whereDate('created_at', today())->exists()) {
-            return [
-                'status' => 'error',
-                'error' => 'forbidden',
-                'code' => 400,
-                'message' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes".',
-            ];
-        }
-
-        $requestedSong->delete();
-        $requestedSong->song()->delete();
-
-        return [
-            'status' => 'deleted',
-            'code' => 200,
-            'message' => 'Cette chanson a été supprimée!',
-        ];
+        return true;
     }
 
     private function getTrackInfo($spotifyId): array
@@ -161,5 +51,34 @@ class RequestedSongService
         return SongDTO::fromObjectToArray(
             $this->spotifyApi->getClient()->getTrack($spotifyId)
         );
+    }
+
+    public function deleteRequestedSong(RequestedSong $requestedSong): void
+    {
+        $requestedSong->upvotes()->delete();
+        $requestedSong->delete();
+        if ($requestedSong->song && $requestedSong->song->requestedSongs()->count() === 0) {
+            $requestedSong->song->delete();
+        }
+    }
+
+    public function deleteAllRequestedSongs(Company $company): void
+    {
+        $requestedSongIds = $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->pluck('id');
+
+        Upvote::whereIn('requested_song_id', $requestedSongIds)
+            ->whereDate('created_at', today())
+            ->delete();
+
+        $company->requestedSongs()
+            ->whereDate('created_at', today())
+            ->delete();
+
+        $songsToDelete = Song::whereDoesntHave('requestedSongs')->get();
+        foreach ($songsToDelete as $song) {
+            $song->delete();
+        }
     }
 }

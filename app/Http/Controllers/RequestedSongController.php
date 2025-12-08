@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\DTO\SongDTO;
+use App\Http\Requests\UpvoteRequest;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
-use App\Models\Upvote;
 use App\Repositories\SongRepository;
 use App\Services\RequestedSongService;
 use App\Services\SpotifyApi;
@@ -14,11 +14,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use App\Http\Requests\StoreRequestedSongRequest;
 
 class RequestedSongController extends Controller
 {
-    public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository, private RequestedSongService $requestedSongService)
-    {
+    public function __construct(
+        protected SpotifyApi $spotifyApi,
+        private SongRepository $songRepository,
+        private RequestedSongService $requestedSongService
+    ) {
         $this->authorizeResource(RequestedSong::class, 'requestedSong');
     }
 
@@ -52,29 +56,22 @@ class RequestedSongController extends Controller
         return response()->json($response);
     }
 
-    public function upvote(Company $company, RequestedSong $requestedSong): ?JsonResponse
+    public function upvote(UpvoteRequest $request, Company $company, RequestedSong $requestedSong): JsonResponse
     {
-        $result = $this->requestedSongService->upvote($requestedSong);
+        $hasUpvoted = $this->requestedSongService->upvote($requestedSong);
+        $message = $hasUpvoted ? 'Merci pour votre like' : 'Vous avez supprimé votre like';
 
-        return response()->json([
-            'message' => $result['message'],
-            'status' => $result['status'] ?? null,
-            'error' => $result['error'] ?? null,
-        ], $result['code']);
+        return response()->json(['message' => $message], Response::HTTP_OK);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Company $company, Request $request): JsonResponse
+    public function store(StoreRequestedSongRequest $request, Company $company): RequestedSongResource
     {
-        $result = $this->requestedSongService->store($company, $request->spotifyId);
+        $requestedSong = $this->requestedSongService->store($company, $request->spotifyId);
 
-        return response()->json([
-            'message' => $result['message'],
-            'status' => $result['status'] ?? null,
-            'error' => $result['error'] ?? null,
-        ], $result['code']);
+        return new RequestedSongResource($requestedSong);
     }
 
     /**
@@ -82,8 +79,7 @@ class RequestedSongController extends Controller
      */
     public function destroy(RequestedSong $requestedSong): JsonResponse
     {
-        $requestedSong->upvotes()->delete();
-        RequestedSong::where('id', $requestedSong->id)->delete();
+        $this->requestedSongService->deleteRequestedSong($requestedSong);
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
@@ -91,17 +87,7 @@ class RequestedSongController extends Controller
     public function destroyAll(): JsonResponse
     {
         $company = auth()->user()->company;
-        $requestedSongIds = $company->requestedSongs()
-            ->whereDate('created_at', today())
-            ->pluck('id');
-
-        Upvote::whereIn('requested_song_id', $requestedSongIds)
-            ->whereDate('created_at', today())
-            ->delete();
-
-        $company->requestedSongs()
-            ->whereDate('created_at', today())
-            ->delete();
+        $this->requestedSongService->deleteAllRequestedSongs($company);
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
