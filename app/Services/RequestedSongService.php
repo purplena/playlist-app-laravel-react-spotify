@@ -7,7 +7,6 @@ use App\Models\Company;
 use App\Models\RequestedSong;
 use App\Models\Song;
 use App\Models\Upvote;
-use Illuminate\Http\Response;
 
 class RequestedSongService
 {
@@ -15,90 +14,28 @@ class RequestedSongService
     {
     }
 
-    public function store(Company $company, string $spotifyId): array
+    public function store(Company $company, string $spotifyId): RequestedSong
     {
-        $userId = auth()->id();
-
-        $requestedSong = RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
-            $query->where('spotify_id', $spotifyId)
-                ->whereDate('created_at', today());
-        })->first();
-
-        if ($requestedSong) {
-            return $this->handleExistingRequest($requestedSong);
-        }
-
-        $maxSongs = RequestedSong::MAX_SONGS_ADDED;
-        $timeLimit = now()->subMinutes(RequestedSong::LIMIT_IN_MINS);
-
-        $currentSongCount = RequestedSong::where('user_id', $userId)
-            ->where('created_at', '>=', $timeLimit)
-            ->count();
-
-        if ($currentSongCount >= $maxSongs) {
-            return [
-                'status' => 'error',
-                'error' => 'song_limit',
-                'code' => 429,
-                'message' => "Vous avez déjà ajouté {$maxSongs} chansons dans la dernière heure.",
-            ];
-        }
-
-        if ($company->blacklistedSongs()->pluck('spotify_id')->contains($spotifyId)) {
-            return [
-                'status' => 'error',
-                'error' => 'blacklisted',
-                'code' => 400,
-                'message' => "Cette chanson a été blacklistée par l'établissement",
-            ];
-        }
-
         $song = Song::firstOrCreate(
             ['spotify_id' => $spotifyId],
             $this->getTrackInfo($spotifyId)
         );
 
-        RequestedSong::create([
+        return RequestedSong::create([
             'song_id' => $song->id,
-            'user_id' => $userId,
+            'user_id' => auth()->id(),
             'company_id' => $company->id,
         ]);
-
-        return [
-            'status' => 'added',
-            'code' => 201,
-            'message' => 'Bravo! Vous avez suggéré une chanson!',
-        ];
     }
 
-    public function upvote(RequestedSong $requestedSong): array
+    public function upvote(RequestedSong $requestedSong): bool
     {
         $userId = auth()->id();
         $existingUserUpvote = $requestedSong->upvotes()->where('user_id', $userId)->first();
 
         if ($existingUserUpvote) {
             $existingUserUpvote->delete();
-
-            return [
-                'code' => Response::HTTP_OK,
-                'message' => 'Vous avez supprimé votre like',
-                'status' => 'like_status',
-            ];
-        }
-
-        $maxUpvotes = RequestedSong::MAX_SONGS_UPVOTED;
-        $timeLimit = now()->subMinutes(RequestedSong::LIMIT_IN_MINS);
-
-        $currentUpvoteCount = Upvote::where('user_id', $userId)
-            ->where('created_at', '>=', $timeLimit)
-            ->count();
-
-        if ($currentUpvoteCount >= $maxUpvotes) {
-            return [
-                'code' => 429,
-                'message' => "Vous avez déjà liké {$maxUpvotes} chansons dans la dernière heure.",
-                'error' => 'upvote_limit',
-            ];
+            return false;
         }
 
         Upvote::create([
@@ -106,32 +43,7 @@ class RequestedSongService
             'user_id' => $userId,
         ]);
 
-        return [
-            'status' => 'like_status',
-            'message' => 'Merci pour votre like',
-            'code' => Response::HTTP_OK,
-        ];
-    }
-
-    private function handleExistingRequest(RequestedSong $requestedSong): array
-    {
-        if ($requestedSong->upvotes()->whereDate('created_at', today())->exists()) {
-            return [
-                'status' => 'error',
-                'error' => 'forbidden',
-                'code' => 400,
-                'message' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes".',
-            ];
-        }
-
-        $requestedSong->delete();
-        $requestedSong->song()->delete();
-
-        return [
-            'status' => 'deleted',
-            'code' => 200,
-            'message' => 'Cette chanson a été supprimée!',
-        ];
+        return true;
     }
 
     private function getTrackInfo($spotifyId): array

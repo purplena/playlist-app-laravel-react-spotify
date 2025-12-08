@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\HandleExistingRequest;
-use App\Rules\MaxSongsPerUser;
-use App\Rules\NotBlacklisted;
+use App\Rules\MaxUpvotesPerUser;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequestedSongRequest extends FormRequest
+class UpvoteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +23,7 @@ class StoreRequestedSongRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'spotifyId' => [
-                'required',
-                'string',
-                new HandleExistingRequest,
-                new MaxSongsPerUser,
-                new NotBlacklisted($this->route('company')),
-            ],
+            'requested_song_id' => ['required', new MaxUpvotesPerUser],
         ];
     }
 }

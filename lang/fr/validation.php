@@ -150,6 +150,23 @@ return [
     'ulid' => 'Le champ :attribute doit être un ULID valide.',
     'uuid' => 'Le champ :attribute doit être un UUID valide.',
 
+    'max_songs_per_user' => 'Vous avez déjà ajouté :max chansons dans la dernière heure.',
+    'not_blacklisted' => "Cette chanson a été blacklistée par l'établissement",
+    'max_upvotes_per_user' => 'Vous avez déjà liké :max chansons dans la dernière heure.',
+    'cannot_delete_song_with_upvotes' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes".',
+    'song_deleted_successfully' => 'Cette chanson a été supprimée!',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Validation Attributes
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used to swap our attribute placeholder
+    | with something more reader friendly such as "E-Mail Address" instead
+    | of "email". This simply helps us make our message more expressive.
+    |
+    */
+
     'attributes' => [
         'password' => 'mot de passe',
         'username' => 'nom d\'utilisateur',
