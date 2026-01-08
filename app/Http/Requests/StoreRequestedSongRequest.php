@@ -26,7 +26,6 @@ class StoreRequestedSongRequest extends FormRequest
     {
         return [
             'spotifyId' => [
-                'required',
                 'string',
                 new HandleExistingRequest,
                 new MaxSongsPerUser,

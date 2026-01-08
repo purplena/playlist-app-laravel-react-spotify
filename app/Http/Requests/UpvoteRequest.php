@@ -23,7 +23,7 @@ class UpvoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'requested_song_id' => ['required', new MaxUpvotesPerUser],
+            'requested_song_id' => [new MaxUpvotesPerUser],
         ];
     }
 }
