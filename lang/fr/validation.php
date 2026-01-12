@@ -149,6 +149,7 @@ return [
     'url' => 'Le champ :attribute doit être une URL valide.',
     'ulid' => 'Le champ :attribute doit être un ULID valide.',
     'uuid' => 'Le champ :attribute doit être un UUID valide.',
+    'max_upvotes_per_user' => 'Vous avez déjà liké :max chansons dans la dernière heure.',
 
     'attributes' => [
         'password' => 'mot de passe',

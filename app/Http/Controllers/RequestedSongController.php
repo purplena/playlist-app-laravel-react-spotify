@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\DTO\SongDTO;
+use App\Http\Requests\UpvoteRequest;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
@@ -10,6 +11,7 @@ use App\Models\Song;
 use App\Models\Upvote;
 use App\Repositories\SongRepository;
 use App\Services\SpotifyApi;
+use App\Services\UpvoteValidationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -52,9 +54,10 @@ class RequestedSongController extends Controller
         return response()->json($response);
     }
 
-    public function upvote(Company $company, RequestedSong $requestedSong): ?JsonResponse
+    public function upvote(Company $company, RequestedSong $requestedSong, UpvoteValidationService $upvoteValidator): JsonResponse
     {
-        $userUpvote = $requestedSong->upvotes()->where('user_id', auth()->id())->first();
+        $user = auth()->user();
+        $userUpvote = $requestedSong->upvotes()->where('user_id', $user->id)->first();
 
         if ($userUpvote) {
             $userUpvote->delete();
@@ -65,29 +68,17 @@ class RequestedSongController extends Controller
             ], Response::HTTP_OK);
         }
 
-        $upvotes = auth()->user()->upvotes()->where('created_at', '>=', now()->subMinutes(60));
-
-        if ($upvotes->get()->count() >= RequestedSong::MAX_SONGS_UPVOTED) {
-            $oldestRequestedSong = $upvotes->oldest('created_at')->first()->created_at;
-            $differenceInMinutes = RequestedSong::LIMIT_IN_MINS - (now()->diffInMinutes($oldestRequestedSong));
-
-            return response()->json([
-                'message' => 'Vous avez déjà liké '.RequestedSong::MAX_SONGS_UPVOTED.' chansons. 
-                        Vous pouvez liker plus de chansons en '.$differenceInMinutes.' minutes.',
-                'error' => 'upvote_limit',
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        $upvoteValidator->checkLimit($user);
 
         Upvote::create([
             'requested_song_id' => $requestedSong->id,
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
         ]);
 
         return response()->json([
             'message' => 'Merci pour votre like',
             'status' => 'like_status',
-        ], Response::HTTP_OK);
-
+        ], Response::HTTP_CREATED);
     }
 
     /**
