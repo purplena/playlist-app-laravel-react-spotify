@@ -23,10 +23,18 @@ export const useUpvote = (requestedSong) => {
       .catch((error) => {
         setIsUpvoted(intialStateUpvote);
         setLikes(intialStateLikes);
+        let errorMessage = 'An unexpected error occurred.';
+        if (error.response && error.response.data) {
+          if (error.response.data.errors && error.response.data.errors.limit) {
+            errorMessage = error.response.data.errors.limit[0];
+          } else if (error.response.data.message) {
+            errorMessage = error.response.data.message;
+          }
+        }
 
         return {
-          error: error.response.data.error,
-          message: error?.response?.data?.message,
+          error: true,
+          message: errorMessage,
         };
       })
       .finally(() => setIsLoading(false));

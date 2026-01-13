@@ -26,8 +26,8 @@ export const useSongAdd = (song) => {
       .catch((error) => {
         setIsAdded(intialStateIsAdded);
         return {
-          error: error.response.data.error,
-          message: error?.response?.data?.message,
+          error: true,
+          message: error?.response?.data?.errors?.message || error.response.data.message,
         };
       })
       .finally(() => {

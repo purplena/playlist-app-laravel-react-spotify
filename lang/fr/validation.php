@@ -151,10 +151,11 @@ return [
     'uuid' => 'Le champ :attribute doit être un UUID valide.',
 
     'max_songs_per_user' => 'Vous avez déjà ajouté :max chansons dans la dernière heure.',
-    'not_blacklisted' => "Cette chanson a été blacklistée par l'établissement",
+    'song_blacklisted' => "Cette chanson a été blacklistée par l'établissement",
     'max_upvotes_per_user' => 'Vous avez déjà liké :max chansons dans la dernière heure.',
     'cannot_delete_song_with_upvotes' => 'Nous ne pouvons pas supprimer cette chanson. Il y a déjà des "likes".',
     'song_deleted_successfully' => 'Cette chanson a été supprimée!',
+    'song_added' => 'Bravo! Vous avez suggéré une chanson!',
 
     /*
     |--------------------------------------------------------------------------
