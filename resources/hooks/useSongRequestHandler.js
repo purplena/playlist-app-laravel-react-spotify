@@ -3,7 +3,7 @@ import axios from 'axios';
 import { apiUrl } from '../js/App';
 import { useStore } from '../js/useStore';
 
-export const useSongAdd = (song) => {
+export const useSongRequestHandler = (song) => {
   const intialStateIsAdded = song.is_requested;
   const [isAdded, setIsAdded] = useState(intialStateIsAdded);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,9 +14,9 @@ export const useSongAdd = (song) => {
   const addSong = () => {
     if (isLoading) return;
     setIsLoading(true);
-    setIsAdded(!isAdded);
+    setIsAdded(true);
     return axios
-      .post(`${apiUrl}/${company.slug}/songs/${spotifyId}/store`, [{ spotifyId }])
+      .post(`${apiUrl}/${company.slug}/songs`, { spotifyId })
       .then((response) => {
         return {
           status: response.data.status,
@@ -24,7 +24,31 @@ export const useSongAdd = (song) => {
         };
       })
       .catch((error) => {
-        setIsAdded(intialStateIsAdded);
+        setIsAdded(false);
+        return {
+          error: true,
+          message: error?.response?.data?.errors?.message || error.response.data.message,
+        };
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const deleteSong = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    setIsAdded(false);
+    return axios
+      .delete(`${apiUrl}/${company.slug}/songs/${spotifyId}`)
+      .then((response) => {
+        return {
+          status: response.data.status,
+          message: response.data.message,
+        };
+      })
+      .catch((error) => {
+        setIsAdded(true);
         return {
           error: true,
           message: error?.response?.data?.errors?.message || error.response.data.message,
@@ -37,6 +61,8 @@ export const useSongAdd = (song) => {
 
   return {
     addSong,
+    deleteSong,
     isAdded,
+    isLoading,
   };
 };

@@ -21,20 +21,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/me', [LoginController::class, 'me']);
-    Route::post('/{company}/songs/{requestedSong}/upvote', [RequestedSongController::class, 'upvote']);
-    Route::post('/{company}/songs/{spotifyId}/store', [RequestedSongController::class, 'store']);
 
-    Route::group(['middleware' => IsManager::class], function () {
-        Route::get('/manager/blacklist', [BlackListController::class, 'index']);
-        Route::delete('/manager/blacklist/destroy/{blacklist}', [BlackListController::class, 'destroy']);
-        Route::delete('/manager/blacklist/destroy', [BlackListController::class, 'destroyAll']);
-        Route::post('/manager/blacklist/store/{requestedSong}', [BlackListController::class, 'store']);
-        Route::post('/manager/blacklist/store', [BlackListController::class, 'storeAll']);
-        Route::delete('/manager/songs/destroy/{requestedSong}', [RequestedSongController::class, 'destroy']);
-        Route::delete('/manager/songs/destroy', [RequestedSongController::class, 'destroyAll']);
-        Route::get('/manager/qr-code', [CompanyController::class, 'downloadQrCode']);
-        Route::put('/manager/update', [CompanyController::class, 'update']);
+    Route::group(['prefix' => 'manager', 'middleware' => IsManager::class], function () {
+        Route::get('/blacklist', [BlackListController::class, 'index']);
+        Route::delete('/blacklist/destroy/{blacklist}', [BlackListController::class, 'destroy']);
+        Route::delete('/blacklist/destroy', [BlackListController::class, 'destroyAll']);
+        Route::post('/blacklist/store/{requestedSong}', [BlackListController::class, 'store']);
+        Route::post('/blacklist/store', [BlackListController::class, 'storeAll']);
+        Route::delete('/songs/destroy/{requestedSong}', [RequestedSongController::class, 'managerDestroy']);
+        Route::delete('/songs/destroyAll', [RequestedSongController::class, 'managerDestroyAll']);
+        Route::get('/qr-code', [CompanyController::class, 'downloadQrCode']);
+        Route::put('/update', [CompanyController::class, 'update']);
     });
+
+    Route::post('/{company}/songs/{requestedSong}/upvote', [RequestedSongController::class, 'upvote']);
+    Route::post('/{company}/songs', [RequestedSongController::class, 'store']);
+    Route::delete('/{company}/songs/{spotifyId}', [RequestedSongController::class, 'destroy']);
 });
 
 Route::get('/{company}/songs', [RequestedSongController::class, 'index'])

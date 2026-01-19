@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\DTO\SongDTO;
-use App\Http\Requests\StoreRequestedSongRequest;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
@@ -23,9 +22,8 @@ class RequestedSongController extends Controller
 {
     public function __construct(
         protected SpotifyApi $spotifyApi,
-        private SongRepository $songRepository,
+        private SongRepository $songRepository
     ) {
-        $this->authorizeResource(RequestedSong::class, 'requestedSong');
     }
 
     /**
@@ -83,26 +81,10 @@ class RequestedSongController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequestedSongRequest $request, Company $company, DeleteRequestedSongValidationService $deleteRequestedSongValidator, RequestedSongLimitValidationService $requestedSongLimitValidator)
+    public function store(Request $request, Company $company, RequestedSongLimitValidationService $requestedSongLimitValidator)
     {
         $user = auth()->user();
         $spotifyId = $request->spotifyId;
-        $requestedSong =
-        RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
-            $query->where('spotify_id', $spotifyId)->whereDate('created_at', today());
-        })->first();
-
-        if ($requestedSong) {
-            $deleteRequestedSongValidator->checkIfHasUpvotes($requestedSong);
-
-            $requestedSong->delete();
-            $requestedSong->song()->delete();
-
-            return response()->json([
-                'message' => trans('validation.song_deleted_successfully'),
-                'status' => 'deleted',
-            ], Response::HTTP_OK);
-        }
 
         $requestedSongLimitValidator->checkLimit($user);
 
@@ -120,7 +102,7 @@ class RequestedSongController extends Controller
 
         RequestedSong::create([
             'song_id' => $song->id,
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
             'company_id' => $company->id,
         ]);
 
@@ -134,7 +116,7 @@ class RequestedSongController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RequestedSong $requestedSong): JsonResponse
+    public function managerDestroy(RequestedSong $requestedSong): JsonResponse
     {
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
@@ -142,7 +124,7 @@ class RequestedSongController extends Controller
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
-    public function destroyAll(): JsonResponse
+    public function managerDestroyAll(): JsonResponse
     {
         $company = auth()->user()->company;
         $requestedSongIds = $company->requestedSongs()
@@ -156,6 +138,26 @@ class RequestedSongController extends Controller
             ->delete();
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
+    }
+
+    public function destroy(Company $company, string $spotifyId, DeleteRequestedSongValidationService $deleteRequestedSongValidator): JsonResponse
+    {
+        $requestedSong =
+            RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
+                $query->where('spotify_id', $spotifyId);
+            })
+                ->where('company_id', $company->id)
+                ->whereDate('created_at', today())
+                ->first();
+
+        $deleteRequestedSongValidator->checkIfHasUpvotes($requestedSong);
+
+        $requestedSong->delete();
+
+        return response()->json([
+            'message' => trans('validation.song_deleted_successfully'),
+            'status' => 'deleted',
+        ], Response::HTTP_OK);
     }
 
     private function getTrackInfo($spotifyId): array
