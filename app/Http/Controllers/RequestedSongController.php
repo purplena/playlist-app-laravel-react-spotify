@@ -31,6 +31,7 @@ class RequestedSongController extends Controller
      */
     public function index(Company $company): JsonResource
     {
+        $this->authorize('viewAny', RequestedSong::class);
         $requestedSongs = $this->songRepository->getRequestedSongsWithUpvotesCount($company);
 
         return RequestedSongResource::collection($requestedSongs);
@@ -38,6 +39,7 @@ class RequestedSongController extends Controller
 
     public function search(Request $request, Company $company): JsonResponse
     {
+        $this->authorize('research', RequestedSong::class);
         $results = $this->spotifyApi->getClient()->search($request->query('q'), 'track');
 
         $spotifyIdCollection = collect($company->requestedSongs()
@@ -59,6 +61,7 @@ class RequestedSongController extends Controller
     public function upvote(Company $company, RequestedSong $requestedSong, UpvoteValidationService $upvoteValidator): JsonResponse
     {
         $user = auth()->user();
+        $this->authorize('vote', RequestedSong::class);
         $userUpvote = $requestedSong->upvotes()->where('user_id', $user->id)->first();
 
         if ($userUpvote) {
@@ -83,6 +86,7 @@ class RequestedSongController extends Controller
      */
     public function store(Request $request, Company $company, RequestedSongLimitValidationService $requestedSongLimitValidator)
     {
+        $this->authorize('create', RequestedSong::class);
         $user = auth()->user();
         $spotifyId = $request->spotifyId;
 
@@ -118,6 +122,8 @@ class RequestedSongController extends Controller
      */
     public function managerDestroy(RequestedSong $requestedSong): JsonResponse
     {
+        $this->authorize('managerDelete', $requestedSong);
+
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
 
@@ -126,6 +132,7 @@ class RequestedSongController extends Controller
 
     public function managerDestroyAll(): JsonResponse
     {
+        $this->authorize('managerDeleteAll', RequestedSong::class);
         $company = auth()->user()->company;
         $requestedSongIds = $company->requestedSongs()
             ->whereDate('created_at', today())
@@ -143,12 +150,14 @@ class RequestedSongController extends Controller
     public function destroy(Company $company, string $spotifyId, DeleteRequestedSongValidationService $deleteRequestedSongValidator): JsonResponse
     {
         $requestedSong =
-            RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
-                $query->where('spotify_id', $spotifyId);
-            })
-                ->where('company_id', $company->id)
-                ->whereDate('created_at', today())
-                ->first();
+        RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
+            $query->where('spotify_id', $spotifyId);
+        })
+            ->where('company_id', $company->id)
+            ->whereDate('created_at', today())
+            ->first();
+
+        $this->authorize('delete', $requestedSong);
 
         $deleteRequestedSongValidator->checkIfHasUpvotes($requestedSong);
 
@@ -160,6 +169,9 @@ class RequestedSongController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * Private methods
+     */
     private function getTrackInfo($spotifyId): array
     {
         return SongDTO::fromObjectToArray(
