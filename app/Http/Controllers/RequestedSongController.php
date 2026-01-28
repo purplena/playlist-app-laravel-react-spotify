@@ -6,10 +6,13 @@ use App\Http\DTO\SongDTO;
 use App\Http\Resources\RequestedSongResource;
 use App\Models\Company;
 use App\Models\RequestedSong;
+use App\Models\Song;
 use App\Models\Upvote;
 use App\Repositories\SongRepository;
-use App\Services\RequestedSongService;
+use App\Services\DeleteRequestedSongValidationService;
+use App\Services\RequestedSongLimitValidationService;
 use App\Services\SpotifyApi;
+use App\Services\UpvoteValidationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,9 +20,10 @@ use Illuminate\Http\Response;
 
 class RequestedSongController extends Controller
 {
-    public function __construct(protected SpotifyApi $spotifyApi, private SongRepository $songRepository, private RequestedSongService $requestedSongService)
-    {
-        $this->authorizeResource(RequestedSong::class, 'requestedSong');
+    public function __construct(
+        protected SpotifyApi $spotifyApi,
+        private SongRepository $songRepository
+    ) {
     }
 
     /**
@@ -27,6 +31,7 @@ class RequestedSongController extends Controller
      */
     public function index(Company $company): JsonResource
     {
+        $this->authorize('viewAny', RequestedSong::class);
         $requestedSongs = $this->songRepository->getRequestedSongsWithUpvotesCount($company);
 
         return RequestedSongResource::collection($requestedSongs);
@@ -34,6 +39,7 @@ class RequestedSongController extends Controller
 
     public function search(Request $request, Company $company): JsonResponse
     {
+        $this->authorize('research', RequestedSong::class);
         $results = $this->spotifyApi->getClient()->search($request->query('q'), 'track');
 
         $spotifyIdCollection = collect($company->requestedSongs()
@@ -52,57 +58,124 @@ class RequestedSongController extends Controller
         return response()->json($response);
     }
 
-    public function upvote(Company $company, RequestedSong $requestedSong): ?JsonResponse
+    public function upvote(Company $company, RequestedSong $requestedSong, UpvoteValidationService $upvoteValidator): JsonResponse
     {
-        $result = $this->requestedSongService->upvote($requestedSong);
+        $user = auth()->user();
+        $this->authorize('vote', RequestedSong::class);
+        $userUpvote = $requestedSong->upvotes()->where('user_id', $user->id)->first();
+
+        if ($userUpvote) {
+            $userUpvote->delete();
+        }
+
+        $upvoteValidator->checkLimit($user);
+
+        Upvote::create([
+            'requested_song_id' => $requestedSong->id,
+            'user_id' => $user->id,
+        ]);
 
         return response()->json([
-            'message' => $result['message'],
-            'status' => $result['status'] ?? null,
-            'error' => $result['error'] ?? null,
-        ], $result['code']);
+            'message' => 'Merci pour votre like',
+            'status' => 'like_status',
+        ], Response::HTTP_CREATED);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Company $company, Request $request): JsonResponse
+    public function store(Request $request, Company $company, RequestedSongLimitValidationService $requestedSongLimitValidator)
     {
-        $result = $this->requestedSongService->store($company, $request->spotifyId);
+        $this->authorize('create', RequestedSong::class);
+        $user = auth()->user();
+        $spotifyId = $request->spotifyId;
+
+        $requestedSongLimitValidator->checkLimit($user);
+
+        if (in_array($spotifyId, $company->blacklistedSongs()->pluck('spotify_id')->toArray())) {
+            return response()->json([
+                'message' => trans('validation.song_blacklisted'),
+                'error' => 'blacklisted',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $song = Song::where(['spotify_id' => $request->spotifyId])
+            ->firstOr(function () use ($request) {
+                return Song::create($this->getTrackInfo($request->spotifyId));
+            });
+
+        RequestedSong::create([
+            'song_id' => $song->id,
+            'user_id' => $user->id,
+            'company_id' => $company->id,
+        ]);
 
         return response()->json([
-            'message' => $result['message'],
-            'status' => $result['status'] ?? null,
-            'error' => $result['error'] ?? null,
-        ], $result['code']);
+            'message' => trans('validation.song_added'),
+            'status' => 'added',
+        ], Response::HTTP_CREATED);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RequestedSong $requestedSong): JsonResponse
+    public function managerDestroy(RequestedSong $requestedSong): JsonResponse
     {
+        $this->authorize('managerDelete', $requestedSong);
+
         $requestedSong->upvotes()->delete();
         RequestedSong::where('id', $requestedSong->id)->delete();
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
     }
 
-    public function destroyAll(): JsonResponse
+    public function managerDestroyAll(): JsonResponse
     {
+        $this->authorize('managerDeleteAll', RequestedSong::class);
         $company = auth()->user()->company;
         $requestedSongIds = $company->requestedSongs()
             ->whereDate('created_at', today())
             ->pluck('id');
-
         Upvote::whereIn('requested_song_id', $requestedSongIds)
             ->whereDate('created_at', today())
             ->delete();
-
         $company->requestedSongs()
             ->whereDate('created_at', today())
             ->delete();
 
         return response()->json(['status' => 'ok'], Response::HTTP_OK);
+    }
+
+    public function destroy(Company $company, string $spotifyId, DeleteRequestedSongValidationService $deleteRequestedSongValidator): JsonResponse
+    {
+        $requestedSong =
+        RequestedSong::whereHas('song', function ($query) use ($spotifyId) {
+            $query->where('spotify_id', $spotifyId);
+        })
+            ->where('company_id', $company->id)
+            ->whereDate('created_at', today())
+            ->first();
+
+        $this->authorize('delete', $requestedSong);
+
+        $deleteRequestedSongValidator->checkIfHasUpvotes($requestedSong);
+
+        $requestedSong->delete();
+
+        return response()->json([
+            'message' => trans('validation.song_deleted_successfully'),
+            'status' => 'deleted',
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Private methods
+     */
+    private function getTrackInfo($spotifyId): array
+    {
+        return SongDTO::fromObjectToArray(
+            $this->spotifyApi->getClient()->getTrack($spotifyId)
+        );
     }
 }

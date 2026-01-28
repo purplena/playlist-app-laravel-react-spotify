@@ -4,7 +4,7 @@ import { Box, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { useSongAdd } from '../../hooks/useSongAdd';
+import { useSongRequestHandler } from '../../hooks/useSongRequestHandler';
 import { useStore } from '../../js/useStore';
 import { useNavigate } from 'react-router-dom';
 import SongTruncatedComponent from './SongTruncatedComponent';
@@ -14,33 +14,28 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
   const { t } = useTranslation();
   const { user, company } = useStore();
   const navigate = useNavigate();
-  const { addSong, isAdded } = useSongAdd(song);
+  const { addSong, deleteSong, isAdded } = useSongRequestHandler(song);
 
-  const handleSongAdd = async () => {
-    if (!user) {
-      navigate(`/${company.slug}/login`);
-    }
-    const response = await addSong();
-    
-    if(response.status === 'added') {
-      setModalHeader(t('modal.header_bravo'));
-      setModalMessage(response.message);
-      setOpen(true);
-      setModalRedirect('song_list');
-    } 
-    else if (response.status === 'deleted') {
-      setModalHeader(t('modal.header_done'));
-      setModalMessage(response.message);
-      setOpen(true);
-      setModalRedirect('song_list');
-    }
-    else if (response.error) {
-      setModalHeader(t('modal.header_error'));
-      setModalMessage(response.message);
-      setOpen(true);
-      setModalRedirect('song_list');
-    }    
-  };
+    const handleSongRequest = async () => {
+        if (!user) {
+            navigate(`/${company.slug}/login`);
+        }
+
+        const songPromise = isAdded ? deleteSong() : addSong();
+        const response = await songPromise;
+
+        if (response.status === 'added' || response.status === 'deleted') {
+            setModalHeader(response.status === 'added' ? t('modal.header_bravo') : t('modal.header_done'));
+            setModalMessage(response.message);
+            setOpen(true);
+            setModalRedirect('song_list');
+        } else if (response.error) {
+            setModalHeader(t('modal.header_error'));
+            setModalMessage(response.message);
+            setOpen(true);
+            setModalRedirect('song_list');
+        }
+    };
 
   return (
     <>
@@ -55,7 +50,7 @@ export default function SongSearchCard({ song, setOpen, setModalMessage, setModa
           <CardContent>
               <SongTruncatedComponent song={song.song_data.song_name} maxNameLength='20' variant='body2' />
               <SongTruncatedComponent song={song.song_data.artist_name} maxNameLength='20' variant='body2' />
-            <Box onClick={handleSongAdd}>
+            <Box onClick={handleSongRequest}>
               {isAdded ? <PlaylistAddCheckIcon /> : <PlaylistAddIcon />}
             </Box>
           </CardContent>

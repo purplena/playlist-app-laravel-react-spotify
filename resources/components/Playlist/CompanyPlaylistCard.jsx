@@ -4,7 +4,7 @@ import LinkButton from '../Button/LinkButton';
 import SongTruncatedComponent from './SongTruncatedComponent';
 import { useTranslation } from 'react-i18next';
 
-const PlaylistCard = ({
+const CompanyPlaylistCard = ({
   requestedSong,
   index,
   onClick,
@@ -134,4 +134,4 @@ const PlaylistCard = ({
     </Grid>
   );
 };
-export default PlaylistCard;
+export default CompanyPlaylistCard;

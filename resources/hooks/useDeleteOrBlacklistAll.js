@@ -19,7 +19,7 @@ export const useDeleteOrBlacklistAll = ({ action }) => {
         case actions.destroyAllRequestedSongs:
           return {
             method: axios.delete,
-            endpoint: 'manager/songs/destroy',
+            endpoint: 'manager/songs/destroyAll',
           };
         case actions.destroyAllBlacklist:
           return {
@@ -35,6 +35,7 @@ export const useDeleteOrBlacklistAll = ({ action }) => {
         return { status: response.data.status };
       })
       .catch((error) => {
+        console.log(error);
         const serverData = error?.response?.data || {};
 
         return { success: false, errors: serverData };
