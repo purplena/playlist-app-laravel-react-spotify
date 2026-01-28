@@ -8,9 +8,7 @@ use SpotifyWebAPI\SpotifyWebAPI;
 
 class SpotifyApi
 {
-    public function __construct(protected Session $session, protected SpotifyWebAPI $client)
-    {
-    }
+    public function __construct(protected Session $session, protected SpotifyWebAPI $client) {}
 
     public function getClient(): SpotifyWebAPI
     {
@@ -25,7 +23,7 @@ class SpotifyApi
         $newAccessToken = $this->session->getAccessToken();
         $newRefreshToken = $this->session->getRefreshToken();
 
-        $api = new SpotifyWebAPI();
+        $api = new SpotifyWebAPI;
         $api->setAccessToken($newAccessToken);
 
         $company->update([

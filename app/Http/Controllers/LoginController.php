@@ -15,9 +15,7 @@ use Throwable;
 
 class LoginController extends Controller
 {
-    public function __construct(protected SpotifyApi $spotifyApi)
-    {
-    }
+    public function __construct(protected SpotifyApi $spotifyApi) {}
 
     /**
      * Store a newly created resource in storage.

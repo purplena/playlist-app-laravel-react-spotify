@@ -10,9 +10,7 @@ use SpotifyWebAPI\SpotifyWebAPI;
 
 class SpotifyController extends Controller
 {
-    public function __construct(protected SpotifyApi $spotifyApi)
-    {
-    }
+    public function __construct(protected SpotifyApi $spotifyApi) {}
 
     public function redirect()
     {
@@ -49,7 +47,7 @@ class SpotifyController extends Controller
             return redirect(route('front', ['any' => 'manager']));
         }
 
-        $api = new SpotifyWebAPI();
+        $api = new SpotifyWebAPI;
         $api->setAccessToken($accessToken);
 
         $userId = $api->me()->id;

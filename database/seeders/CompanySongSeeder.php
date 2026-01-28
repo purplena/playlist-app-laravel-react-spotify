@@ -8,9 +8,7 @@ use Illuminate\Database\Seeder;
 
 class CompanySongSeeder extends Seeder
 {
-    public function __construct(private SongRepository $songRepository)
-    {
-    }
+    public function __construct(private SongRepository $songRepository) {}
 
     public function run(): void
     {

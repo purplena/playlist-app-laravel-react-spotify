@@ -1,7 +1,7 @@
-import { Link, Stack, Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Box, Link, Stack, Typography } from '@mui/material';
 
-const SpotifyPlaylistLinkButton = ({company}) => {
+const SpotifyPlaylistLinkButton = ({ company }) => {
   const { t } = useTranslation();
   const playlistId = company?.spotify_playlist_data?.id;
   const spotifyUrl = `https://open.spotify.com/playlist/${playlistId}`;
@@ -36,7 +36,7 @@ const SpotifyPlaylistLinkButton = ({company}) => {
           transition: 'all 0.3s ease',
           '&:hover': {
             borderColor: 'primary.main',
-            color: 'primary.main'
+            color: 'primary.main',
           },
         }}
       >
@@ -58,5 +58,5 @@ const SpotifyPlaylistLinkButton = ({company}) => {
       </Stack>
     </Link>
   );
-}
-export default SpotifyPlaylistLinkButton
+};
+export default SpotifyPlaylistLinkButton;

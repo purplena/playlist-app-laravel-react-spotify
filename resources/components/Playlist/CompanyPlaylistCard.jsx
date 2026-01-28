@@ -1,8 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
 import SongTruncatedComponent from './SongTruncatedComponent';
-import { useTranslation } from 'react-i18next';
 
 const CompanyPlaylistCard = ({
   requestedSong,
@@ -35,8 +35,7 @@ const CompanyPlaylistCard = ({
     }
   };
 
-  const handleSongDelete = () =>
-    executeAction(deleteSong.deleteOrBlacklist);
+  const handleSongDelete = () => executeAction(deleteSong.deleteOrBlacklist);
 
   const handleSongDeleteClick = () => {
     setOpen(true);
@@ -47,8 +46,7 @@ const CompanyPlaylistCard = ({
     setActionHandler(() => handleSongDelete);
   };
 
-  const handleSongBlacklisting = () =>
-    executeAction(blacklistSong.deleteOrBlacklist);
+  const handleSongBlacklisting = () => executeAction(blacklistSong.deleteOrBlacklist);
 
   const handleSongBlacklistingClick = () => {
     setOpen(true);
@@ -78,13 +76,13 @@ const CompanyPlaylistCard = ({
               <SongTruncatedComponent
                 song={requestedSong.song.song_data.song_name}
                 label={'Titre'}
-                maxNameLength='16'
+                maxNameLength="16"
                 fontSize={'14px'}
               />
               <SongTruncatedComponent
                 song={requestedSong.song.song_data.artist_name}
                 label={'Artiste'}
-                maxNameLength='16'
+                maxNameLength="16"
                 fontSize={'14px'}
               />
             </Stack>
@@ -95,7 +93,7 @@ const CompanyPlaylistCard = ({
               #{index + 1}
             </Typography>
 
-            <Stack direction="row" spacing={2} alignItems="center">  
+            <Stack direction="row" spacing={2} alignItems="center">
               <Typography variant="body2" sx={{ fontSize: '10px' }}>
                 {likes} {likes === 1 ? ' like' : ' likes'}
               </Typography>
