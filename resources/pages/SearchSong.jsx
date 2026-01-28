@@ -16,7 +16,6 @@ function Search() {
   const [modalHeader, setModalHeader] = useState('');
   const [modalRedirect, setModalRedirect] = useState('');
 
-
   return (
     <>
       <Stack mb={2} direction="column" justifyContent="center" alignItems="center">

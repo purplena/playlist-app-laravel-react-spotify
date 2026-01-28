@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
                 route('spotify.callback')
             );
 
-            return new SpotifyApi($session, new SpotifyWebAPI());
+            return new SpotifyApi($session, new SpotifyWebAPI);
         });
     }
 

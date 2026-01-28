@@ -1,7 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { actions, useDeleteOrBlacklistOne } from '../../hooks/useDeleteOrBlacklistOne';
 import LinkButton from '../Button/LinkButton';
-import { useTranslation } from 'react-i18next';
 
 const ManagerBlacklistCard = ({
   index,
@@ -36,7 +36,7 @@ const ManagerBlacklistCard = ({
       setOpen(false);
       onClick(blacklistedSong.blacklist_id);
     }
-  }
+  };
 
   return (
     <Paper

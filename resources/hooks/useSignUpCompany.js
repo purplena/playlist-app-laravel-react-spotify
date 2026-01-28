@@ -37,9 +37,10 @@ export const useSignUpCompany = ({ action }) => {
         return { success: true, data: response.data };
       })
       .catch((error) => {
-            const serverData = error?.response?.data || { errors: {} };
-        
-            return { success: false, errors: serverData.errors };      });
+        const serverData = error?.response?.data || { errors: {} };
+
+        return { success: false, errors: serverData.errors };
+      });
   };
 
   return {

@@ -23,8 +23,7 @@ class RequestedSongController extends Controller
     public function __construct(
         protected SpotifyApi $spotifyApi,
         private SongRepository $songRepository
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of the resource.

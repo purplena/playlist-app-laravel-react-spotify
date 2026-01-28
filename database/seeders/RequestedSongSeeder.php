@@ -10,9 +10,7 @@ use Illuminate\Database\Seeder;
 
 class RequestedSongSeeder extends Seeder
 {
-    public function __construct(private SongRepository $songRepository)
-    {
-    }
+    public function __construct(private SongRepository $songRepository) {}
 
     public function run(): void
     {

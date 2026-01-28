@@ -110,7 +110,7 @@ class SyncPlaylist extends Command
         $songsSpotify = $this->getSongsSpotify($playlistId);
         $blacklistedSongs = $company->blacklistedSongs;
 
-        //Here is an updated version with filering through blacklist
+        // Here is an updated version with filering through blacklist
         $songsAddedToSpotify = $songsSpotify
             ->filter(function ($songSpotify) use ($songsSpotifyIdsDB) {
                 return ! in_array($songSpotify['spotify_id'], $songsSpotifyIdsDB);

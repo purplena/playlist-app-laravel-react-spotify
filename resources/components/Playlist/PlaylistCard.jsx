@@ -1,18 +1,28 @@
+import { useNavigate } from 'react-router-dom';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useUpvote } from '../../hooks/useUpvote';
 import { useStore } from '../../js/useStore';
-import { useNavigate } from 'react-router-dom';
 import SongTruncatedComponent from './SongTruncatedComponent';
 
-const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModalHeader, setModalRedirect, onUpvoteOptimistic, onUpvoteRefetch, setRequestedSongs }) => {
+const PlaylistCard = ({
+  requestedSong,
+  index,
+  setOpen,
+  setModalMessage,
+  setModalHeader,
+  setModalRedirect,
+  onUpvoteOptimistic,
+  onUpvoteRefetch,
+  setRequestedSongs,
+}) => {
   const navigate = useNavigate();
   const { user, company } = useStore();
   const { upvote, isUpvoted, likes } = useUpvote(requestedSong);
 
   const handleUpvote = async () => {
-     if (!user) {
+    if (!user) {
       navigate(`/${company.slug}/login`);
     }
     onUpvoteOptimistic(requestedSong.id, setRequestedSongs);
@@ -20,14 +30,14 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
     const response = await upvote();
 
     if (!response.error) {
-      onUpvoteRefetch(); 
+      onUpvoteRefetch();
     }
 
-    if(response.error) {
+    if (response.error) {
       setModalHeader('Oooooups!');
       setModalMessage(response.message);
       setOpen(true);
-      setModalRedirect('song_suggest')
+      setModalRedirect('song_suggest');
     }
   };
 
@@ -49,13 +59,13 @@ const PlaylistCard = ({ requestedSong, index, setOpen, setModalMessage, setModal
             <Stack>
               <SongTruncatedComponent
                 song={requestedSong.song.song_data.song_name}
-                maxNameLength='16'
+                maxNameLength="16"
                 label={'Titre'}
                 fontSize={'14px'}
               />
               <SongTruncatedComponent
                 song={requestedSong.song.song_data.artist_name}
-                maxNameLength='16'
+                maxNameLength="16"
                 label={'Artiste'}
                 fontSize={'14px'}
               />

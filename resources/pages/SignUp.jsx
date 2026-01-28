@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import SendIcon from '@mui/icons-material/Send';
@@ -9,8 +11,6 @@ import { serverErrorsHandler } from '../helpers/serverErrorsHandler';
 import { useRedirectIfAuthenticated } from '../hooks/useRedirectIfAuthenticated';
 import { useSignUp } from '../hooks/useSignUp';
 import { useStore } from '../js/useStore';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 const SignUp = () => {
   const { t } = useTranslation();
