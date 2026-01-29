@@ -2,9 +2,7 @@ version: "3.9"
 
 services:
   app:
-    build:
-      context: ..
-      dockerfile: .devcontainer/Dockerfile
+    image: mcr.microsoft.com/devcontainers/base:bullseye
     volumes:
       - ..:/workspace:cached
     command: sleep infinity
