@@ -1,7 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/php:8.2-bullseye
 
-RUN apt-get update
-RUN apt-get install -y libpng-dev libjpeg-dev libwebp-dev libfreetype6-dev
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get -y update && \
+    apt-get --no-install-recommends install -y libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev && \
+    rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg && \
+    docker-php-ext-install gd
