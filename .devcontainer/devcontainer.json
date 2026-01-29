@@ -12,8 +12,6 @@
 
   "forwardPorts": [8000, 5173],
 
-  "postCreateCommand": "composer install && npm install",
-
   "customizations": {
     "vscode": {
       "extensions": [
