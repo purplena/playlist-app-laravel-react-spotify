@@ -7,12 +7,6 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
-    },
-    "ghcr.io/devcontainers/features/php": {
-      "version": "latest",
-      "extensions": [
-        "gd"
-      ]
     }
   },
 
