@@ -8,8 +8,11 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
     },
-    "ghcr.io/devcontainers-extra/features/php-gd": {
-      "version": "1"
+    "ghcr.io/devcontainers/features/php": {
+      "version": "latest",
+      "extensions": [
+        "gd"
+      ]
     }
   },
 
