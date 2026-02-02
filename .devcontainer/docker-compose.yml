@@ -2,7 +2,10 @@ version: "3.9"
 
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/php:8.2
+    # image: mcr.microsoft.com/devcontainers/php:8.2
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspace:cached
     command: sleep infinity
