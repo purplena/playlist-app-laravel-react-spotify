@@ -8,9 +8,7 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
     },
-    "ghcr.io/cirolosapio/devcontainers-features/alpine-php-gd:0": {
-      "version": "lts"
-    }
+    "ghcr.io/cirolosapio/devcontainers-features/alpine-php-gd:0": {}
   },
 
   "forwardPorts": [8000, 5173],
