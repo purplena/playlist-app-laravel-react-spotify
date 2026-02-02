@@ -1,6 +1,6 @@
 {
   "name": "Laravel React App",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
 
