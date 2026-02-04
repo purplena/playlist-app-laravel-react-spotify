@@ -69,7 +69,7 @@ class RegisterController extends Controller
             'font_color' => $request->font_color,
         ]);
 
-        $qrCodeName = 'qr_'.$companySlug.'_'.time().'.png';
+        $qrCodeName = 'qr_'.$companySlug.'_'.time().'.svg';
         $qrCodePath = 'qr/'.$qrCodeName;
         Storage::disk('public')->put($qrCodePath, QrCodeGenerator::generate($companySlug));
 
