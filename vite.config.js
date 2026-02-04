@@ -5,8 +5,17 @@ import eslint from 'vite-plugin-eslint';
 
 export default defineConfig({
   server: {
+    hmr: process.env.CODESPACE_NAME
+      ? {
+          host: `${process.env.CODESPACE_NAME}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`,
+          protocol: 'https',
+          port: 443,
+        }
+      : undefined,
     cors: {
-      origin: 'https://localhost.purplena.io',
+      origin: process.env.CODESPACE_NAME
+        ? `https://${process.env.CODESPACE_NAME}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+        : 'https://localhost.purplena.io',
     },
   },
   plugins: [

@@ -10,6 +10,6 @@ class QrCodeGenerator
     {
         $url = route('front', ['any' => $companySlug]);
 
-        return Quar::format('png')->size(300)->generate($url);
+        return Quar::format('svg')->size(300)->generate($url);
     }
 }
