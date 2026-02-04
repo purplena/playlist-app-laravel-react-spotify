@@ -81,7 +81,7 @@ const CompanyHome = () => {
                       En scannant le QR Code, vos clients accèdent à vos contenus en temps réel
                     </Typography>
                   </Stack>
-                  <Box
+                  {user?.company?.qr_code ? <Box
                     justifySelf={'center'}
                     alignSelf={'center'}
                     component="img"
@@ -89,9 +89,15 @@ const CompanyHome = () => {
                       width: 70,
                       maxWidth: { xs: 50, md: 70 },
                     }}
-                    alt="Company Logo"
+                    alt="QRCode"
                     src={'/storage/' + user?.company?.qr_code}
-                  />
+                  /> : <Box
+                        justifySelf={'center'}
+                        alignSelf={'center'}
+                    >
+                      Oups...Pas de QR code
+                    </Box> }
+                  
                   <LinkButton onClick={handleDownload}>Télécharger QR-code</LinkButton>
                 </Stack>
               </StackComponentForGrid>

@@ -2,14 +2,14 @@
 
 namespace App\Helpers;
 
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use tbQuar\Facades\Quar;
 
 class QrCodeGenerator
 {
     public static function generate(string $companySlug): string
     {
-        $url = route('front', ['any' => $companySlug.'/home']);
+        $url = route('front', ['any' => $companySlug]);
 
-        return QrCode::format('png')->size(300)->generate($url);
+        return Quar::format('svg')->size(300)->generate($url);
     }
 }
