@@ -4,11 +4,6 @@ import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
 
 export default defineConfig({
-  server: {
-    cors: {
-      origin: 'https://localhost.purplena.io',
-    },
-  },
   plugins: [
     laravel({ input: ['resources/js/index.js'], refresh: true }),
     eslint(),
