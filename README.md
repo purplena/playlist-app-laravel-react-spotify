@@ -10,7 +10,7 @@
 
 <h3>2. Configure Spotify Environment Variables (optional)</h3>
 
-<p>If you plan to use Spotify authentication, provide:</p>    
+<p>If you plan to test Spotify fonctionality, provide:</p>
 
 <ul>
       <li><code>SPOTIFY_CLIENT_ID</code></li>
@@ -22,51 +22,48 @@
     </a>.
 </p>
 
-<h3>3. Build Docker Containers</h3>
+<h3>3. Bootstrap Laravel Sail</h3>
+<p>This command uses a small Docker container containing PHP and Composer to install the application's dependencies:</p>
+<pre><code>docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php83-composer:latest \
+    composer install --ignore-platform-reqs</code></pre>
+
+<h3>4. Build Docker Containers</h3>
 <p>Building the containers can take several minutes</p>
 <pre><code>./vendor/bin/sail build --no-cache</code></pre>
 
-<h3>4. Install Dependencies</h3>
+<h3>5. Sail Up the Application</h3>
+<pre><code>./vendor/bin/sail up -d</code></pre>
 
-<p>Install PHP and Node.js dependencies:</p>
-
-<pre><code>./vendor/bin/sail composer install
+<h3>6. Install Node Dependencies</h3>
+<pre><code>
 ./vendor/bin/sail npm install</code></pre>
 
-<h3>5. Generate Application Key</h3>
-
+<h3>7. Generate Application Key</h3>
 <pre><code>./vendor/bin/sail artisan key:generate</code></pre>
 
-<h3>6. Set Storage Permissions</h3>
-
+<h3>8. Set Storage Permissions</h3>
 <p>To start a Bash session within your application's container</p>
-
 <pre><code>./vendor/bin/sail root-shell</code></pre>
-
 <p>Ensure Laravel has write access to the storage directory:</p>
-
 <pre><code>cd ..
 chown -R sail:sail html</code></pre>
 
-<h3>7. Create Storage Symlink</h3>
-
+<h3>9. Create Storage Symlink</h3>
 <p>Create the symbolic link between
 <code>storage/app/public</code> and <code>public/storage</code>:</p>
-
 <pre><code>./vendor/bin/sail artisan storage:link</code></pre>
 
-<h3>8. Run Database Migrations</h3>
-
+<h3>10. Run Database Migrations</h3>
 <pre><code>./vendor/bin/sail artisan migrate</code></pre>
 
-<h3>9. Build Frontend Assets</h3>
-
+<h3>11. Build Frontend Assets</h3>
 <pre><code>./vendor/bin/sail npm run build</code></pre>
 
-<h3>10. Sail Up the Application</h3>
-
-<pre><code>./vendor/bin/sail up -d</code></pre>
-
+<h3>12. Check out the application's url</h3>
 <p><strong>The application should now be running and ready for testing 🎉</strong></p>
 
 <h2>About</h2>
